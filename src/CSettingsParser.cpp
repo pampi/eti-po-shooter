@@ -40,51 +40,67 @@ void CSettingsParser::Read()
 		gLogger << gLogger.LOG_ERROR << "Unable to read settings file";
 		return;
 	}
-
+	
 	std::string line, param, value;
-	char *tmp;
-
-	while( !in.eof())
+	std::string tmp2;
+	
+	while( std::getline(in, tmp2) )
 	{
-		tmp = new char[m_Max_width];
-		in.getline(tmp, m_Max_width);
-		line.assign(tmp);
-
-		if(line.size() > 0 && line[0] != '#' )
+		/* 
+		NIE POWINNO DZIA£AÆ, ALE DZIA£A. 
+		DEAL WITH IT
+		*/
+		param = ""; 
+		value = "";
+		
+		line.assign(tmp2);
+		
+		
+		if(line.length() > 0  )
 		{
-			unsigned int j = 0;
-			unsigned int length = line.size();
-
-			while(line[j] != ' ')
+			if(line[0] != '#')
 			{
-				j++;
+				unsigned int j = 0;
+				unsigned int length = line.size();
+			
+				while(line[j] != ' ' && j < length )
+				{
+					j++;
+				}
+			
+				param = line.substr(0, j);
+			
+				while((line[j] == ' ' || line[j] == '=') && j < length)
+				{
+					j++;
+				}
+			
+				int a = j;
+			
+				while(j < length && (line[j] != ' ' || line[j] != '\n'))
+				{
+					j++;
+				}
+			
+				int b = j;
+				value = line.substr(a, b);
+
+				m_data.push_back(make_pair(param, value));
+				m_Size++;
 			}
-
-			param = line.substr(0, j);
-
-			while(line[j] == ' ' || line[j] == '=')
+			else
 			{
-				j++;
+				continue;
 			}
-
-			int a = j;
-
-			while(j < length && (line[j] != ' ' || line[j] != '\n'))
-			{
-				j++;
-			}
-
-			int b = j;
-			value = line.substr(a, b);
+			
 		}
 		else
 		{
 			param = line;
 			value = "";
 		}
-
-		m_data.push_back(make_pair(param, value));
-		m_Size++;
+	
+		
 	}
 	in.close();
 	m_IsChanged = true;
@@ -155,13 +171,15 @@ void CSettingsParser::Get(std :: string param, char* value)
 	}
 }
 
-void CSettingsParser::Get(std :: string param, int* value)
+void CSettingsParser::Get(std :: string paramu, int *value)
 {
-	for(size_t i = 0; i < m_Size; ++i)
+	for(unsigned int i = 0; i < m_Size; ++i)
 	{
 		if(m_data[i].first[0] == '#')
+		{
 			continue;
-		if(m_data[i].first == param)
+		}
+		if(m_data[i].first == paramu)
 		{
 			std::stringstream ss(m_data[i].second);
 			ss >> *value;
