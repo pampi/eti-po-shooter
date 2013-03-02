@@ -7,7 +7,9 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <map>
 #include <utility>
+#include <ctime>
 
 // Biblioteki SFML
 #include <SFML/Audio.hpp>
@@ -17,6 +19,12 @@
 // Nasze:
 #include "CLogger.h"
 #include "CSettingsParser.h"
+#include "CFpsCounter.h"
+#include "CDebugDraw.h"
+#include "CScreen.h"
+#include "CScreenManager.h"
+#include "CResourceManager.h"
+#include "CGame.h"
 
 // Zewnêtrzne
 
@@ -24,7 +32,14 @@
 
 // Globalny logger
 extern CLogger gLogger;
-//extern CSettingsParser gSettings;
+// Globalny parser
+extern CSettingsParser gSettings;
+// Globalny ResourceManager
+extern CResourceManager gResources;
+// Globalny licznik FPS
+extern CFpsCounter gFPS;
+// Globalny Debug Drawer
+extern CDebugDraw gDDraw;
 
 #endif
 
@@ -35,3 +50,9 @@ extern CLogger gLogger;
 // Dane do CSettingsParser
 #define MAXBUFFERWIDTH 100
 #define SETTINGSPATH "config.ini"
+
+// Dane do czcionki
+#define PATHTOFONT "HelveticaLight.otf"
+
+// Czy wyœwietlaæ debug dane
+#define DRAWDEBUG 1
