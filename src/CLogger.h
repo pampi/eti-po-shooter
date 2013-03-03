@@ -39,6 +39,7 @@ private:
 
 	unsigned int m_numWarnings;
 	unsigned int m_numErrors;
+	unsigned int m_numInfos;
 
 	char m_buffor[64];
 	time_t m_czas;
@@ -95,6 +96,7 @@ public:
 			default:
 				{
 					logger.m_File << "[INFO] ";
+					logger.m_numInfos++;
 					break;
 				}
 		}
@@ -108,6 +110,7 @@ public:
 		{
 			m_File << std::endl << std::endl;
 
+			m_File << m_numInfos << " infos" << std::endl;
 			m_File << m_numWarnings << " warnings" << std::endl;
 			m_File << m_numErrors << " errors" << std::endl;
 

@@ -27,7 +27,7 @@
 #include "CGame.h"
 
 // Zewnêtrzne
-
+#include "lua5.2/lua.hpp"
 
 
 // Globalny logger
@@ -49,10 +49,10 @@ extern CDebugDraw gDDraw;
 
 // Dane do CSettingsParser
 #define MAXBUFFERWIDTH 100
-#define SETTINGSPATH "config.ini"
+#define SETTINGSPATH "res/misc/config.ini"
 
 // Dane do czcionki
-#define PATHTOFONT "HelveticaLight.otf"
+#define PATHTOFONT "res/misc/HelveticaWorld.ttf"
 
 // Czy wyœwietlaæ debug dane
 #define DRAWDEBUG 1

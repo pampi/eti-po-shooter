@@ -2,14 +2,20 @@
 
 CGame::CGame()
 {
+	m_inited = false;
 	gDDraw << "Dupa";
-	gLogger << gLogger.LOG_WARNING <<  "uops";
+	gLogger << gLogger.LOG_WARNING <<  "konstuktor game";
 }
 
 int CGame::Step(sf::RenderWindow & App)
 {
 	while(true)
 	{
+		if(!m_inited)
+		{
+			m_Init();
+		}
+
 		while( App.pollEvent(m_event) )
 		{
 			if( m_event.type == sf::Event::Closed )
@@ -48,4 +54,11 @@ int CGame::Step(sf::RenderWindow & App)
 
 		App.display();
 	} // main loop
+}
+
+void CGame::m_Init()
+{
+	gLogger << gLogger.LOG_WARNING <<  "initer game";
+
+	m_inited = true;
 }

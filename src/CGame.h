@@ -13,5 +13,8 @@ public:
 private:
 	sf::Event m_event;
 
+	bool m_inited;
+	void m_Init();
+
 };
 #endif

@@ -7,7 +7,7 @@ CScreenManager::CScreenManager()
 	window.create(sf::VideoMode(1280, 720), "Nobody expects...");
 
 	m_game = new CGame();
-
+	gResources.setDefaultFont();
 
 
 	m_screens.push_back(m_game);

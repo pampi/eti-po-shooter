@@ -12,6 +12,7 @@ const sf::Image & CResourceManager::getImage(const std::string & filename)
 	//	//	if not found nothing, use default blank
 	sf::Image _image;
 	m_images[filename] = _image;
+	gLogger << gLogger.LOG_ERROR<< "getImage() - Image Not Found: " << filename.c_str();
 	return m_images[filename];
 }
 
@@ -21,6 +22,7 @@ bool CResourceManager::loadImage(const std::string & filename)
 	if( _image.loadFromFile(filename) )
 	{
 		m_images[filename] = _image;
+		gLogger << gLogger.LOG_INFO << "Image loaded. Name: " << filename.c_str();
 		return true;
 	}
 	return false;
@@ -49,11 +51,18 @@ const sf::Font & CResourceManager::getFont()
 
 void CResourceManager::setDefaultFont(const char* path)
 {
-	m_font->loadFromFile(path);
+	if( !m_font->loadFromFile(path) )
+	{
+		gLogger << gLogger.LOG_ERROR << (std::string("Unable to load font. Path: ")+path).c_str();
+	}
+	else
+	{
+		gLogger << gLogger.LOG_INFO << (std::string("Font loaded. Path: ")+path).c_str();
+	}
 }
 
 CResourceManager::CResourceManager() 
 {
 	m_font = new sf::Font();
-	setDefaultFont();
+	//setDefaultFont();
 }

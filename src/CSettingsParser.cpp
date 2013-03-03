@@ -37,7 +37,7 @@ void CSettingsParser::Read()
 	std::ifstream in(m_Filename.c_str());
 	if(!in.is_open())
 	{
-		gLogger << gLogger.LOG_ERROR << "Unable to read settings file";
+		gLogger << gLogger.LOG_ERROR << std::string("Unable to read config file. Path: "+m_Filename).c_str();
 		return;
 	}
 	
@@ -111,7 +111,7 @@ void CSettingsParser::Write()
 	std::ofstream out(m_Filename.c_str());
 	if(!out.is_open())
 	{
-		gLogger<< gLogger.LOG_ERROR << "Unable to write to settings file";
+		gLogger<< gLogger.LOG_ERROR << "Unable to write to config file";
 		return;
 	}
 
