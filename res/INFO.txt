@@ -1,0 +1,9 @@
+Robocza wersja drzewa katalogow prezentuje sie nastepujaco:
+res/img - wszystkie tekstury/ikony
+res/audio - caly podklad dzwiekowy
+res/audio/speech - dubbing(jesli sie zdecydujmey podkladac glosy)
+res/level - wszystkie pliki dotyczace opisu poziomow(np. XML co ma byc 
+ladowane do ResourceManagera, jaki skrypt odpowiada za poziom; skrypty 
+poziomow sterujace gameplayem), mozliwe podzielenie struktury na foldery 
+od 0 do n
+res/misc - czcionki, solucje, licencje, etc...
