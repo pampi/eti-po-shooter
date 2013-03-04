@@ -19,6 +19,8 @@ private:
 
 	class CGame *m_game;
 
+	class CMainMenu *m_mMenu;
+
 	
 };
 #endif

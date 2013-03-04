@@ -27,7 +27,7 @@ int CGame::Step(sf::RenderWindow & App)
 			{
 				if( m_event.key.code == sf::Keyboard::Escape )
 				{
-					return -1; // wroc do menu(0), ale ze nie ma to wyjdz z gry(-1)
+					return 0; // wroc do menu(0), ale ze nie ma to wyjdz z gry(-1)
 				}
 
 			
@@ -42,6 +42,7 @@ int CGame::Step(sf::RenderWindow & App)
 		// tak se mo¿esz tu wrzuciæ coœ co potrzebujesz zobaczyæ, albo ³aduj w loga
 #if (DRAWDEBUG)
 		gDDraw.add((int) gFPS.getFPS() ,"FPS: ");
+		gDDraw.add("To jest wlasciwa gra");
 		gDDraw.draw(App);
 #endif
 

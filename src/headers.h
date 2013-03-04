@@ -24,6 +24,7 @@
 #include "CScreen.h"
 #include "CScreenManager.h"
 #include "CResourceManager.h"
+#include "CMainMenu.h"
 #include "CGame.h"
 
 // Zewnêtrzne

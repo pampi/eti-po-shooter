@@ -3,13 +3,16 @@
 CScreenManager::CScreenManager()
 {
 	m_curScreen = 0;
-
-	window.create(sf::VideoMode(1280, 720), "Nobody expects...");
-
-	m_game = new CGame();
 	gResources.setDefaultFont();
 
+	window.create(sf::VideoMode(1280, 720), "Nobody expects...");
+	window.setFramerateLimit(60U);
 
+	m_game = new CGame();
+	m_mMenu = new CMainMenu();
+
+
+	m_screens.push_back(m_mMenu);
 	m_screens.push_back(m_game);
 }
 
