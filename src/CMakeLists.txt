@@ -17,6 +17,7 @@ set( GAME_SRC
     CScreenManager.cpp
     CSettingsParser.cpp
     CResourceManager.cpp
+	CMainMenu.cpp
 )
 
 if(SFML_FOUND)
