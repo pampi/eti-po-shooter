@@ -17,6 +17,10 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+// Zewnêtrzne
+#include "lua5.2/lua.hpp"
+#include "tinyxml2/tinyxml2.h"
+
 // Nasze:
 #include "CLogger.h"
 #include "CSettingsParser.h"
@@ -26,13 +30,10 @@
 #include "CScreenManager.h"
 #include "CResourceManager.h"
 #include "CMainMenu.h"
+#include "CScript.h"
 #include "CGame.h"
 #include "CTextButton.h"
 #include "CMenuTextButton.h"
-
-// Zewnêtrzne
-#include "lua5.2/lua.hpp"
-#include "tinyxml2/tinyxml2.h"
 
 
 // Globalny logger

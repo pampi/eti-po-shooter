@@ -14,10 +14,12 @@ set( GAME_SRC
     globals.cpp
     CDebugDraw.cpp
     CGame.cpp
-    CScreenManager.cpp
-    CSettingsParser.cpp
+    CMainMenu.cpp
+    CMenuTextButton.cpp
     CResourceManager.cpp
-	CMainMenu.cpp
+    CScreenManager.cpp
+    CScript.cpp
+    CSettingsParser.cpp
 )
 
 if(SFML_FOUND)
@@ -29,7 +31,7 @@ if(SFML_FOUND)
         target_link_libraries(ETI_SHOOTER sfml-main sfml-window sfml-graphics sfml-system)
 #inne
     else(WIN32)
-        target_link_libraries(ETI_SHOOTER sfml-window sfml-graphics sfml-system)
+        target_link_libraries(ETI_SHOOTER sfml-window sfml-graphics sfml-system lua)
     endif(WIN32)
 else(SFML_FOUND)
     message(Nie znaleziono SFML!)
