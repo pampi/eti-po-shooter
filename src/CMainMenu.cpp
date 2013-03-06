@@ -35,15 +35,7 @@ int CMainMenu::Step(sf::RenderWindow & App)
 			{
 				if( m_event.mouseButton.button == sf::Mouse::Left )
 				{
-					if( m_playRect.contains((float)m_event.mouseButton.x, (float)m_event.mouseButton.y) )
-					{
-						return 1; // Zacznij grac
-					}
-
-					if( m_exitRect.contains((float)m_event.mouseButton.x, (float)m_event.mouseButton.y) )
-					{
-						return -1; // Wyjdz z gry
-					}
+					
 				}
 			}
 		} // events loop
@@ -52,8 +44,8 @@ int CMainMenu::Step(sf::RenderWindow & App)
 
 		// J¥DRO MENU G£ÓWNEGO \|/
 
-		m_drawMenuLables(App);
-
+		//m_drawMenuLables(App);
+		m_updateButtons(App);
 
 
 
@@ -86,46 +78,26 @@ void CMainMenu::m_Init()
 	gLogger << gLogger.LOG_WARNING <<  "initer main menu";
 
 
-	m_playText.setFont( gResources.getFont() );
-	m_playText.setString( sf::String("Start Game") );
-	m_playText.setColor( sf::Color(255,0,0,255) );
-	m_playText.setCharacterSize(80U);
-	m_playText.setPosition( 400, 200);
-
-	m_exitText.setFont( gResources.getFont() );
-	m_exitText.setString( sf::String("Exit Game") );
-	m_exitText.setColor( sf::Color(255,0,0,255) );
-	m_exitText.setCharacterSize(80U);
-	m_exitText.setPosition( 400, 300);
-
-	m_playRect = m_playText.getGlobalBounds();
-	m_exitRect = m_exitText.getGlobalBounds();
-
+	m_loadButtons();
 
 	m_inited = true;
 }
 
-void CMainMenu::m_drawMenuLables(sf::RenderWindow & App)
+
+void CMainMenu::m_loadButtons()
 {
-	if( m_playRect.contains( (float)sf::Mouse::getPosition(App).x, (float)sf::Mouse::getPosition(App).y) )
-	{
-		m_playText.setColor( sf::Color(0,255,0,255) );
-	}
-	else
-	{
-		m_playText.setColor( sf::Color(255,0,0,255) );
-	}
+	// Tu musisz ogarn¹æ wczytanie z xml wszystkich plików, skonfigurowanie ich i wrzucenie do listy
+	CMenuTextButton *lol = new CMenuTextButton(sf::Vector2f(100,100), 50U, sf::String("DUPA"), 2, sf::Color::Red, sf::Color::Green);
+	lol->setFont( gResources.getFont() );
+	m_buttons.push_back(lol);
+}
 
-	if( m_exitRect.contains( (float)sf::Mouse::getPosition(App).x, (float)sf::Mouse::getPosition(App).y) )
+void CMainMenu::m_updateButtons(sf::RenderWindow & App)
+{
+	for(std::list<class CTextButton*>::iterator it = m_buttons.begin(); it != m_buttons.end(); it++)
 	{
-		m_exitText.setColor( sf::Color(0,255,0,255) );
-	}
-	else
-	{
-		m_exitText.setColor( sf::Color(255,0,0,255) );
-	}
 
-
-	App.draw(m_playText);
-	App.draw(m_exitText);
+		(*it)->update(App);
+		(*it)->draw(App);
+	}
 }

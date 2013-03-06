@@ -7,6 +7,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <list>
 #include <map>
 #include <utility>
 #include <ctime>
@@ -26,9 +27,12 @@
 #include "CResourceManager.h"
 #include "CMainMenu.h"
 #include "CGame.h"
+#include "CTextButton.h"
+#include "CMenuTextButton.h"
 
 // Zewnêtrzne
 #include "lua5.2/lua.hpp"
+#include "tinyxml2/tinyxml2.h"
 
 
 // Globalny logger

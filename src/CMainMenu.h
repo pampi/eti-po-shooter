@@ -18,9 +18,11 @@ public:
 
 	sf::Event m_event;
 
-	sf::Text m_playText, m_exitText;
-	sf::FloatRect m_playRect, m_exitRect;
 
-	void m_drawMenuLables(sf::RenderWindow & App);
+private:
+	std::list<class CTextButton*> m_buttons;
+
+	void m_loadButtons();
+	void m_updateButtons(sf::RenderWindow & App);
 };
 #endif
