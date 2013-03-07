@@ -3,7 +3,7 @@
 CMainMenu::CMainMenu()
 {
 	m_inited = false;
-	gDDraw << "Omlet";
+    gDDraw << "Omlet";
 }
 
 int CMainMenu::Step(sf::RenderWindow & App)

@@ -66,3 +66,13 @@ CResourceManager::CResourceManager()
 	m_font = new sf::Font();
 	//setDefaultFont();
 }
+
+void CResourceManager::loadLevel(int lvl)
+{
+    clear_resources();
+}
+
+void CResourceManager::clear_resources()
+{
+    //
+}

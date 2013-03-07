@@ -2,9 +2,16 @@
 #define CRESNAGER_H
 
 #include "headers.h"
+#include "CTextButton.h"
+#include "CMenuTextButton.h"
+
+typedef CMenuTextButton CButton;
 
 class CResourceManager
 {
+private:
+    void clear_resources();
+
 public:
 	CResourceManager();
 
@@ -24,11 +31,18 @@ public:
 	const sf::Font & getFont();
 
 	void setDefaultFont(const char *pathToFont = PATHTOFONT);
+
+    //lvl = 0 - Menu glowne
+    void loadLevel(int lvl);
 	
 private:
 	std::map<std::string , sf::Image > m_images;
 
 	sf::Font *m_font;
+
+    std::list<CButton *> buttons;
+    //lista statycznych textow
+    //std::list<CStaticText *> labels;
 
 };
 #endif

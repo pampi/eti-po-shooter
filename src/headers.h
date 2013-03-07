@@ -22,6 +22,8 @@
 #include "tinyxml2/tinyxml2.h"
 
 // Nasze:
+//DEPRECATED
+//do wypierdolenia
 #include "CLogger.h"
 #include "CSettingsParser.h"
 #include "CFpsCounter.h"
@@ -34,6 +36,7 @@
 #include "CGame.h"
 #include "CTextButton.h"
 #include "CMenuTextButton.h"
+//koniec DEPRECATED
 
 
 // Globalny logger
