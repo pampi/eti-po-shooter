@@ -22,7 +22,6 @@
 #include "tinyxml2/tinyxml2.h"
 
 // Nasze:
-// stfu
 #include "CLogger.h"
 #include "CSettingsParser.h"
 #include "CFpsCounter.h"

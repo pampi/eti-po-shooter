@@ -6,9 +6,11 @@
 class CScript
 {
 private:
-   // lua_State *machine;
+    lua_State *machine;
+
 protected:
     virtual void RegisterEngineFunctions(){};
+
 public:
     CScript();
     ~CScript();
