@@ -80,6 +80,8 @@ void CMainMenu::m_Init()
 
 	m_loadButtons();
 
+
+
 	m_inited = true;
 }
 
@@ -90,6 +92,9 @@ void CMainMenu::m_loadButtons()
 	CMenuTextButton *lol = new CMenuTextButton(sf::Vector2f(100,100), 50U, sf::String("DUPA"), 2, sf::Color::Red, sf::Color::Green);
 	lol->setFont( gResources.getFont() );
 	m_buttons.push_back(lol);
+
+	
+	
 }
 
 void CMainMenu::m_updateButtons(sf::RenderWindow & App)

@@ -36,7 +36,14 @@
 #include "CGame.h"
 #include "CTextButton.h"
 #include "CMenuTextButton.h"
+<<<<<<< HEAD
+
+// Zewnêtrzne
+
+#include "tinyxml2/tinyxml2.h"
+=======
 //koniec DEPRECATED
+>>>>>>> da9fed6c4366ed53343a07f84897f58c98d306a6
 
 
 // Globalny logger
