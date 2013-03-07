@@ -5,12 +5,10 @@
 #include "CTextButton.h"
 #include "CMenuTextButton.h"
 
-typedef CMenuTextButton CButton;
-
 class CResourceManager
 {
 private:
-    void clear_resources();
+    void clearResources();
 
 public:
 	CResourceManager();
@@ -40,9 +38,6 @@ private:
 
 	sf::Font *m_font;
 
-    std::list<CButton *> buttons;
-    //lista statycznych textow
-    //std::list<CStaticText *> labels;
 
 };
 #endif

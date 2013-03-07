@@ -1,12 +1,12 @@
 #ifndef CSCRIPT_H
 #define CSCRIPT_H
 
-#include "lua5.2/lua.hpp"
+#include "headers.h"
 
 class CScript
 {
 private:
-    lua_State *machine;
+   // lua_State *machine;
 protected:
     virtual void RegisterEngineFunctions(){};
 public:

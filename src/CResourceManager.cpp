@@ -35,8 +35,6 @@ int CResourceManager::getMapSize()
 
 void CResourceManager::deleteImage(const std::string & filename)
 {
-    //Karny kutas nr. 1 (nie ważny jeśli używasz C++11 zamiast C++98) -> http://www.cplusplus.com/reference/map/map/erase/
-    //std::map<std::string, sf::Image>::const_iterator it = m_images.find(filename);
     std::map<std::string, sf::Image>::iterator it = m_images.find(filename);
 	if( it != m_images.end() )
 	{
@@ -69,10 +67,10 @@ CResourceManager::CResourceManager()
 
 void CResourceManager::loadLevel(int lvl)
 {
-    clear_resources();
+    clearResources();
 }
 
-void CResourceManager::clear_resources()
+void CResourceManager::clearResources()
 {
     //
 }
