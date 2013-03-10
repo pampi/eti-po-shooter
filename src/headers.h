@@ -32,8 +32,8 @@
 #include "CMainMenu.h"
 #include "CScript.h"
 #include "CGame.h"
-#include "CTextButton.h"
-#include "CMenuTextButton.h"
+#include "CGuiElement.h"
+#include "CButton.h"
 
 
 

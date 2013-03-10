@@ -1,4 +1,4 @@
-#All rights reserved to pastafarians from ETI
+﻿#All rights reserved to pastafarians from ETI
 message("\n\nThe fantasy program given by God")
 message("Come now, one, two, three! Overlap")
 message("Come now, one, two, three! Escape death\n")
@@ -20,6 +20,7 @@ set( GAME_SRC
     CScreenManager.cpp
     CScript.cpp
     CSettingsParser.cpp
+    CButton.cpp
 )
 
 if(SFML_FOUND)

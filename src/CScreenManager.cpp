@@ -9,10 +9,8 @@ CScreenManager::CScreenManager()
 	window.setFramerateLimit(60U);
 
 	m_game = new CGame();
-	m_mMenu = new CMainMenu();
 
 
-	m_screens.push_back(m_mMenu);
 	m_screens.push_back(m_game);
 }
 

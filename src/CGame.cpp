@@ -27,7 +27,7 @@ int CGame::Step(sf::RenderWindow & App)
 			{
 				if( m_event.key.code == sf::Keyboard::Escape )
 				{
-					return 0; // wroc do menu(0), ale ze nie ma to wyjdz z gry(-1)
+					return -1; // wyjdz z gry(-1)
 				}
 
 			

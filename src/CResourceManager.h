@@ -2,8 +2,7 @@
 #define CRESNAGER_H
 
 #include "headers.h"
-#include "CTextButton.h"
-#include "CMenuTextButton.h"
+
 
 class CResourceManager
 {
@@ -35,6 +34,9 @@ public:
 	
 private:
 	std::map<std::string , sf::Image > m_images;
+
+	// tu trzymasz wszystkie elementy z gui
+	std::list<class CGuiElement*> m_guiElements;
 
 	sf::Font *m_font;
 
