@@ -11,6 +11,7 @@
 #include <map>
 #include <utility>
 #include <ctime>
+#include <cstdio>
 
 // Biblioteki SFML
 #include <SFML/Audio.hpp>

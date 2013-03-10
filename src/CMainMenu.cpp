@@ -89,9 +89,6 @@ void CMainMenu::m_Init()
 void CMainMenu::m_loadButtons()
 {
 	// Tu musisz ogarn¹æ wczytanie z xml wszystkich plików, skonfigurowanie ich i wrzucenie do listy
-	CMenuTextButton *lol = new CMenuTextButton(sf::Vector2f(100,100), 50U, sf::String("DUPA"), 2, sf::Color::Red, sf::Color::Green);
-	lol->setFont( gResources.getFont() );
-	m_buttons.push_back(lol);
 
 	
 	
@@ -99,10 +96,5 @@ void CMainMenu::m_loadButtons()
 
 void CMainMenu::m_updateButtons(sf::RenderWindow & App)
 {
-	for(std::list<class CTextButton*>::iterator it = m_buttons.begin(); it != m_buttons.end(); it++)
-	{
-
-		(*it)->update(App);
-		(*it)->draw(App);
-	}
+    //tu byl CTextButton
 }

@@ -1,4 +1,4 @@
-﻿#All rights reserved to pastafarians from ETI
+#All rights reserved to pastafarians from ETI
 message("\n\nThe fantasy program given by God")
 message("Come now, one, two, three! Overlap")
 message("Come now, one, two, three! Escape death\n")
@@ -15,7 +15,6 @@ set( GAME_SRC
     CDebugDraw.cpp
     CGame.cpp
     CMainMenu.cpp
-    CMenuTextButton.cpp
     CResourceManager.cpp
     CScreenManager.cpp
     CScript.cpp
@@ -32,7 +31,7 @@ if(SFML_FOUND)
         target_link_libraries(ETI_SHOOTER sfml-main sfml-window sfml-graphics sfml-system)
 #inne
     else(WIN32)
-        target_link_libraries(ETI_SHOOTER sfml-window sfml-graphics sfml-system lua)
+        target_link_libraries(ETI_SHOOTER sfml-window sfml-graphics sfml-system lua tinyxml2)
     endif(WIN32)
 else(SFML_FOUND)
     message(Nie znaleziono SFML!)

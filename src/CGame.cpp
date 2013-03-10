@@ -62,4 +62,6 @@ void CGame::m_Init()
 	gLogger << gLogger.LOG_WARNING <<  "initer game";
 
 	m_inited = true;
+    // Laduj menu
+    gResources.loadLevel(0);
 }
