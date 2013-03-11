@@ -29,9 +29,9 @@ void CButton::draw(sf::RenderTarget & target)
 	target.draw( m_text );
 }
 
-sf::FloatRect *CButton::getRect()
+sf::FloatRect CButton::getRect()
 {
-	return &m_text.getGlobalBounds();
+	return m_text.getGlobalBounds();
 }
 
 sf::Text *CButton::getText()

@@ -52,7 +52,7 @@ extern CDebugDraw gDDraw;
 
 // Dane do CLogger [Loggera]
 #define LOGPATH "log.txt"
-#define ENGINEVERSION "0.0.1"
+#define ENGINEVERSION "0.0.9"
 
 // Dane do CSettingsParser
 #define MAXBUFFERWIDTH 100

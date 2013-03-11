@@ -86,7 +86,7 @@ void CResourceManager::loadLevel(int lvl)
         ::tinyxml2::XMLElement *xml_root=xml_level.FirstChildElement("gui");
         if(xml_root)
         {
-            gLogger << gLogger.LOG_INFO << file_path << "Resource root exist!";
+            gLogger << gLogger.LOG_INFO << (std::string(file_path)+" Resource root exist!").c_str();
 
             ::tinyxml2::XMLElement *xml_child=NULL;
             ::tinyxml2::XMLElement *xml_buttons=xml_root->FirstChildElement(BUTTON_SECTION);

@@ -9,7 +9,7 @@ CGame::CGame()
 
 int CGame::Step(sf::RenderWindow & App)
 {
-	while(true)
+	for(;;)
 	{
 		if(!m_inited)
 		{

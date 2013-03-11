@@ -12,7 +12,7 @@ public:
 
 	virtual void draw(sf::RenderTarget & target);
 
-	sf::FloatRect *getRect();
+	sf::FloatRect getRect();
 
 	sf::Text *getText();
 
