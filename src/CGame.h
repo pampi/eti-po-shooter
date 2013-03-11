@@ -16,5 +16,7 @@ private:
 	bool m_inited;
 	void m_Init();
 
+	void drawGui(sf::RenderTarget & App);
+
 };
 #endif

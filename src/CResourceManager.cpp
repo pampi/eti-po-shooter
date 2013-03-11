@@ -5,6 +5,8 @@ const char *TEXT_SECTION="texts";
 const char *IMAGE_SECTION="images";
 const char *EMPTY="";
 
+const char korektor[] = " ,.-";
+
 const sf::Image & CResourceManager::getImage(const std::string & filename)
 { 
 	//	//	checking is image exist in memory
@@ -95,10 +97,12 @@ void CResourceManager::loadLevel(int lvl)
                 const char* text_buffer;
                 const char* action_buffer;
                 const char* id_buffer;
+				char *tmp_buffer;
+				sf::Uint8 tab_color[4];
                 sf::Color normal_color;
                 sf::Color hover_color;
                 int hide;
-                sf::Vector2f pos;
+                sf::Vector2f *pos = new sf::Vector2f;
                 unsigned char_size;
                 int n=0;
 
@@ -110,7 +114,7 @@ void CResourceManager::loadLevel(int lvl)
                     text_buffer=action_buffer=id_buffer=EMPTY;
                     hide=1;
                     char_size=12;
-                    pos.x=pos.y=0.0f;
+                    pos->x=pos->y=0.0f;
                     normal_color=sf::Color::Red;
                     normal_color=sf::Color::Green;
 
@@ -118,25 +122,64 @@ void CResourceManager::loadLevel(int lvl)
                     if(xml_child->Attribute("id")) id_buffer=xml_child->Attribute("id");
                     if(xml_child->Attribute("text")) text_buffer=xml_child->Attribute("text");
                     if(xml_child->Attribute("action")) action_buffer=xml_child->Attribute("action");
+                    if(xml_child->Attribute("normal_color"))
+                    { 
+						 //sscanf(xml_child->Attribute("hover_color"), "%hhu%hhu%hhu%hhu", &hover_color.r, &hover_color.g, &hover_color.b, &hover_color.a);
+						int l=0;
+						tmp_buffer = strtok( const_cast<char*>( xml_child->Attribute("normal_color") ), korektor);
+						while( tmp_buffer != NULL )
+						{
+							tab_color[l] = static_cast<sf::Uint8>( strtoul(tmp_buffer, NULL, 10) );
+							//printf("%d ", tab_color[l]); // Debil poprostu DEBIL
+							tmp_buffer = strtok( NULL, korektor);
+							l++;
+						}
+						normal_color.r = tab_color[0];
+						normal_color.g = tab_color[1];
+						normal_color.b = tab_color[2];
+						normal_color.a = tab_color[3];
+                    }
+
                     if(xml_child->Attribute("hover_color"))
                     {
-                        sscanf(xml_child->Attribute("hover_color"), "%hhu%hhu%hhu%hhu", &hover_color.r, &hover_color.g, &hover_color.b, &hover_color.a);
+                        //sscanf(xml_child->Attribute("hover_color"), "%hhu%hhu%hhu%huh", &normal_color.r, &normal_color.g, &normal_color.b, &normal_color.a);
+						int l=0;
+						tmp_buffer = strtok( const_cast<char*>( xml_child->Attribute("hover_color") ), korektor);
+						while( tmp_buffer != NULL )
+						{
+							tab_color[l] = static_cast<sf::Uint8>( strtoul(tmp_buffer, NULL, 10) );
+							//printf("%d ", tab_color[l]); // Debil poprostu DEBIL
+							tmp_buffer = strtok( NULL, korektor);
+							l++;
+						}
+						hover_color.r = tab_color[0];
+						hover_color.g = tab_color[1];
+						hover_color.b = tab_color[2];
+						hover_color.a = tab_color[3];
                     }
-                    if(xml_child->Attribute("normal_color"))
-                    {
-                        sscanf(xml_child->Attribute("normal_color"), "%hhu%hhu%hhu%hhu", &normal_color.r, &normal_color.g, &normal_color.b, &normal_color.a);
-                    }
-                    if(xml_child->Attribute("hidden")) hide=xml_child->IntAttribute("hidden");
+
+                    if(xml_child->Attribute("hidden"))
+					{
+						hide=xml_child->IntAttribute("hidden");
+					}
+
                     if(xml_child->Attribute("position"))
                     {
-                        sscanf(xml_child->Attribute("position"),"%f%f", &pos.x, &pos.y);
+                        //sscanf(xml_child->Attribute("position"),"%f%f", &pos.x, &pos.y);
+						tmp_buffer = strtok( const_cast<char*>( xml_child->Attribute("position") ), " ");
+						pos->x = static_cast<float>( atof(tmp_buffer) );
+
+						tmp_buffer = strtok( NULL, " ");
+						pos->y = static_cast<float>( atof(tmp_buffer) );
+						
+						//printf("%.2f|%.2f ", pos.x, pos.y);
                     }
                     if(xml_child->Attribute("size")) char_size=xml_child->UnsignedAttribute("size");
 
-                    printf("%d)BUTTON|%s|%s|%s\n", n, id_buffer, text_buffer, action_buffer);  //DEBUG
+                    //printf("%d)BUTTON|%s|%s|%s\n", n, id_buffer, text_buffer, action_buffer);  //DEBUG
 
                     //wrzuc do pierscien do mordoru
-                    this->m_guiElements.push_back((CGuiElement*)(new CButton(pos, char_size, text_buffer, action_buffer, id_buffer, (bool)(hide!=0), normal_color, hover_color)));
+                    this->m_guiElements.push_back((CGuiElement*)(new CButton(CGuiElement::GUI_BUTTON, sf::Vector2f(pos->x, pos->y), char_size, text_buffer, action_buffer, id_buffer, (bool)(hide!=0), normal_color, sf::Color::Yellow)));
 
                     //bierz nastepny element
                     xml_child=xml_child->NextSiblingElement("button");
@@ -167,4 +210,9 @@ void CResourceManager::clearResources()
         delete *(this->m_guiElements.begin());
         this->m_guiElements.pop_front();
     }
+}
+
+std::list<class CGuiElement*> *CResourceManager::getGuiList()
+{
+	return &m_guiElements;
 }

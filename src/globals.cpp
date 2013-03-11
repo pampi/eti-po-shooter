@@ -7,3 +7,4 @@ CLogger gLogger;
 CSettingsParser gSettings;
 CFpsCounter gFPS;
 CDebugDraw gDDraw;
+

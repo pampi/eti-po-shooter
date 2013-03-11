@@ -31,6 +31,8 @@ public:
 
     //lvl = 0 - Menu glowne
     void loadLevel(int lvl);
+
+	std::list<class CGuiElement*> *getGuiList();
 	
 private:
 	std::map<std::string , sf::Image > m_images;

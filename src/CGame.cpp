@@ -38,11 +38,15 @@ int CGame::Step(sf::RenderWindow & App)
 
 		// J¥DRO GRY \|/
 
+		drawGui(App);
+
+
+		// J¥DRO GRY /|\
 
 		// tak se mo¿esz tu wrzuciæ coœ co potrzebujesz zobaczyæ, albo ³aduj w loga
 #if (DRAWDEBUG)
 		gDDraw.add((int) gFPS.getFPS() ,"FPS: ");
-		gDDraw.add("To jest wlasciwa gra");
+		//gDDraw.add("To jest wlasciwa gra");
 		gDDraw.draw(App);
 #endif
 
@@ -64,4 +68,18 @@ void CGame::m_Init()
 	m_inited = true;
     // Laduj menu
     gResources.loadLevel(0);
+}
+
+void CGame::drawGui(sf::RenderTarget & App)
+{
+	for( std::list<class CGuiElement*>::iterator it = gResources.getGuiList()->begin(); it != gResources.getGuiList()->end(); it++ )
+	{
+		if(static_cast<class CButton*>(*it)->type == CGuiElement::GUI_BUTTON)
+		{
+			if( !static_cast<class CButton*>(*it)->isHidden() )
+			{
+				static_cast<class CButton*>(*it)->draw(App);
+			}
+		}
+	}
 }

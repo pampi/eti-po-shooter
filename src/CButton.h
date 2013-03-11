@@ -8,7 +8,7 @@ class CButton : public CGuiElement
 public:
 	CButton();
 
-	CButton(sf::Vector2f position, size_t charSize, sf::String text, std::string ActionToDo, std::string ID, bool hide = true, sf::Color normalColor = sf::Color::Red, sf::Color hoverColor = sf::Color::Green);
+	CButton(guiType typ, sf::Vector2f position, size_t charSize, sf::String text, std::string ActionToDo, std::string ID, bool hide = true, sf::Color normalColor = sf::Color::Red, sf::Color hoverColor = sf::Color::Green);
 
 	virtual void draw(sf::RenderTarget & target);
 
