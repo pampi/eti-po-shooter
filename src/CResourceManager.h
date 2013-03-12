@@ -32,6 +32,9 @@ public:
     //lvl = 0 - Menu glowne
     void loadLevel(int lvl);
 
+    // return button or null
+    class CButton *findButton(const char* id);
+
 	std::list<class CGuiElement*> *getGuiList();
 	
 private:

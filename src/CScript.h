@@ -30,11 +30,8 @@ struct SLuaArgument
 
 class CScript
 {
-private:
-    lua_State *machine;
-
 protected:
-    virtual void RegisterEngineFunctions(){};
+    lua_State *machine;
 
 public:
     CScript();

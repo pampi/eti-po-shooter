@@ -226,3 +226,25 @@ std::list<class CGuiElement*> *CResourceManager::getGuiList()
 {
 	return &m_guiElements;
 }
+
+CButton *CResourceManager::findButton(const char *id)
+{
+    CButton *ret_val=0;   //return value
+    if(id)
+    {
+        std::string str_id=id;
+        for(std::list<CGuiElement *>::iterator i=m_guiElements.begin(); i!=m_guiElements.end(); i++)    //kochany STL :*
+        {
+            if((*i)->type==CGuiElement::GUI_BUTTON)
+            {
+                CButton *btn=static_cast<CButton *>(*i);
+                if(btn->getID()->compare(str_id)==0)
+                {
+                    ret_val=btn;
+                    break;
+                }
+            }
+        }
+    }
+    return ret_val;
+}

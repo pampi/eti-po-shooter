@@ -18,5 +18,7 @@ private:
 
 	void drawGui(sf::RenderTarget & App);
 
+    void RegisterEngineFunctions();
+
 };
 #endif

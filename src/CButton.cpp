@@ -73,3 +73,19 @@ std::string *CButton::getID()
 {
 	return &m_id;
 }
+
+void CButton::setAction(const char *text)
+{
+    m_actionToDo=text;
+}
+
+void CButton::setPosition(sf::Vector2f position)
+{
+    m_position=position;
+}
+
+void CButton::setText(const char *text)
+{
+    sf::String sfText(text);
+    m_text.setString(sfText);
+}

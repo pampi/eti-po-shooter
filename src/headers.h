@@ -34,6 +34,7 @@
 #include "CGame.h"
 #include "CGuiElement.h"
 #include "CButton.h"
+#include "API4Lua.h"
 
 
 

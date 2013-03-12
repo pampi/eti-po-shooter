@@ -19,6 +19,7 @@ set( GAME_SRC
     CScript.cpp
     CSettingsParser.cpp
     CButton.cpp
+	API4Lua.cpp
 )
 
 if(SFML_FOUND)

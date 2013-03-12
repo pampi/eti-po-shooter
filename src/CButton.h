@@ -25,6 +25,10 @@ public:
 	void setNormalColor(const sf::Color color);
 	void setHoverColor(const sf::Color color);
 
+    void setText(const char* text);
+    void setAction(const char* text);
+    void setPosition(sf::Vector2f position);
+
 	const sf::Vector2f getPosition();
 
 	std::string *getID();
