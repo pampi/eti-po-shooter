@@ -1,4 +1,4 @@
-#include "API4Lua.h"
+#include "headers.h"
 
 //wartości bool dla Lua
 #define LFALSE 0
@@ -141,4 +141,5 @@ int API4Lua::loadAdditionalScript(lua_State *vm)
         else lua_pushboolean(vm, LFALSE);
     }
     else lua_pushboolean(vm, LFALSE);
+	return 1;
 }

@@ -49,6 +49,8 @@ extern CFpsCounter gFPS;
 // Globalny Debug Drawer
 extern CDebugDraw gDDraw;
 
+extern std::list<class CButton*> gButtonClicked;
+
 #endif
 
 // Dane do CLogger [Loggera]

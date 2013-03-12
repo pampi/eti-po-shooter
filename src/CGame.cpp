@@ -46,7 +46,7 @@ int CGame::Step(sf::RenderWindow & App)
 		// tak se mo¿esz tu wrzuciæ coœ co potrzebujesz zobaczyæ, albo ³aduj w loga
 #if (DRAWDEBUG)
 		gDDraw.add((int) gFPS.getFPS() ,"FPS: ");
-		//gDDraw.add("To jest wlasciwa gra");
+		gDDraw.add((int) gButtonClicked.size() ,"Buttony: ");
 		gDDraw.draw(App);
 #endif
 
@@ -74,18 +74,22 @@ void CGame::m_Init()
     gResources.loadLevel(0);
 }
 
-void CGame::drawGui(sf::RenderTarget & App)
+void CGame::drawGui(sf::RenderWindow & App)
 {
 	for( std::list<class CGuiElement*>::iterator it = gResources.getGuiList()->begin(); it != gResources.getGuiList()->end(); it++ )
 	{
-		if(static_cast<class CButton*>(*it)->type == CGuiElement::GUI_BUTTON)
+		CButton *btn=static_cast<CButton *>(*it);
+		if(btn->type == CGuiElement::GUI_BUTTON)
 		{
-			if( !static_cast<class CButton*>(*it)->isHidden() )
+			if( !btn->isHidden() )
 			{
-				static_cast<class CButton*>(*it)->draw(App);
+				btn->update(App);
+				btn->draw(App);
 			}
 		}
 	}
+
+	manageButtons();
 }
 
 void CGame::RegisterEngineFunctions()
@@ -109,4 +113,31 @@ void CGame::RegisterEngineFunctions()
     //mix
     //addScript(path_to_script)
     lua_register(machine, "addScript", API4Lua::loadAdditionalScript);
+}
+
+void CGame::manageButtons()
+{
+	for( std::list<class CButton*>::iterator it = gButtonClicked.begin(); it != gButtonClicked.end();  )
+	{
+		CButton *btn=static_cast<CButton *>(*it);
+		if(btn->type == CGuiElement::GUI_BUTTON)
+		{
+			if( !btn->isHidden() )
+			{
+				if( btn->wasClicked() )
+				{
+					// deal with ur button
+
+
+					// stop dealing
+					btn->resetState();
+					it = gButtonClicked.erase(it);
+				}
+				else
+				{
+					it++;
+				}
+			}
+		}
+	} 
 }

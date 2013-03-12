@@ -16,17 +16,40 @@ CButton::CButton(guiType typ, sf::Vector2f position, size_t charSize, sf::String
 	this->m_hidden = hide;
 	this->m_id = ID;
 	this->type = typ;
+	
+	this->m_clicked = false;
 
 	m_text.setPosition( position );
 	m_text.setFont( gResources.getFont() );
 	m_text.setString( m_buttonText );
 	m_text.setCharacterSize( charSize );
 	m_text.setColor( normalColor );
+
+	m_fRect = m_text.getGlobalBounds();
 }
 
 void CButton::draw(sf::RenderTarget & target)
 {
 	target.draw( m_text );
+}
+
+void CButton::update(sf::RenderWindow & App)
+{
+	if( m_fRect.contains(static_cast<sf::Vector2f>( sf::Mouse::getPosition(App)) ) )
+	{
+		this->m_text.setColor( m_hoverColor );
+
+		if( sf::Mouse::isButtonPressed(sf::Mouse::Left) && !m_clicked )
+		{
+			gButtonClicked.push_back( this );
+			m_clicked = true;
+			std::cout<<this->m_actionToDo<<std::endl;
+		}
+	}
+	else
+	{
+		this->m_text.setColor( m_normalColor );
+	}
 }
 
 sf::FloatRect CButton::getRect()
@@ -86,6 +109,15 @@ void CButton::setPosition(sf::Vector2f position)
 
 void CButton::setText(const char *text)
 {
-    sf::String sfText(text);
-    m_text.setString(sfText);
+    m_text.setString( sf::String(text) );
+}
+
+const bool  CButton::wasClicked()
+{
+	return m_clicked;
+}
+
+void CButton::resetState()
+{
+	m_clicked = false;
 }

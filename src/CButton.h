@@ -11,6 +11,7 @@ public:
 	CButton(guiType typ, sf::Vector2f position, size_t charSize, sf::String text, std::string ActionToDo, std::string ID, bool hide = true, sf::Color normalColor = sf::Color::Red, sf::Color hoverColor = sf::Color::Green);
 
 	virtual void draw(sf::RenderTarget & target);
+	void update(sf::RenderWindow & App);
 
 	sf::FloatRect getRect();
 
@@ -18,6 +19,7 @@ public:
 
 	const bool isHidden();
 
+	std::string *getID();
 	const std::string *getAction();
 
 	void setHide(bool trueORfalse);
@@ -31,7 +33,11 @@ public:
 
 	const sf::Vector2f getPosition();
 
-	std::string *getID();
+
+	// Czy przycisk zosta³ uznany za klikniêty
+	const bool wasClicked();
+	// Przywraca przycisk do stanu "Nie klikniêty"
+	void resetState();
 
 	~CButton();
 
@@ -46,7 +52,7 @@ protected:
 
 	sf::Color m_normalColor, m_hoverColor;
 
-	bool m_hidden;
+	bool m_hidden, m_clicked;
 
 	std::string m_id;
 };

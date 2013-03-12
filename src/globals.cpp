@@ -8,3 +8,4 @@ CSettingsParser gSettings;
 CFpsCounter gFPS;
 CDebugDraw gDDraw;
 
+std::list<class CButton*> gButtonClicked;

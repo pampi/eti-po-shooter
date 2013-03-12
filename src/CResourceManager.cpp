@@ -19,7 +19,7 @@ const sf::Image & CResourceManager::getImage(const std::string & filename)
 	//	//	if not found nothing, use default blank
 	sf::Image _image;
 	m_images[filename] = _image;
-	gLogger << gLogger.LOG_ERROR<< "getImage() - Image Not Found: " << filename.c_str();
+	gLogger << gLogger.LOG_ERROR<< (std::string("getImage() - Image Not Found: ")+filename).c_str();
 	return m_images[filename];
 }
 
@@ -29,7 +29,7 @@ bool CResourceManager::loadImage(const std::string & filename)
 	if( _image.loadFromFile(filename) )
 	{
 		m_images[filename] = _image;
-		gLogger << gLogger.LOG_INFO << "Image loaded. Name: " << filename.c_str();
+		gLogger << gLogger.LOG_INFO << (std::string("Image loaded. Name: ")+filename).c_str();
 		return true;
 	}
 	return false;
@@ -69,7 +69,6 @@ void CResourceManager::setDefaultFont(const char* path)
 CResourceManager::CResourceManager() 
 {
 	m_font = new sf::Font();
-	//setDefaultFont();
 }
 
 void CResourceManager::loadLevel(int lvl)
@@ -124,13 +123,11 @@ void CResourceManager::loadLevel(int lvl)
                     if(xml_child->Attribute("action")) action_buffer=xml_child->Attribute("action");
                     if(xml_child->Attribute("normal_color"))
                     { 
-						 //sscanf(xml_child->Attribute("hover_color"), "%hhu%hhu%hhu%hhu", &hover_color.r, &hover_color.g, &hover_color.b, &hover_color.a);
 						int l=0;
 						tmp_buffer = strtok( const_cast<char*>( xml_child->Attribute("normal_color") ), korektor);
 						while( tmp_buffer != NULL )
 						{
 							tab_color[l] = static_cast<sf::Uint8>( strtoul(tmp_buffer, NULL, 10) );
-							//printf("%d ", tab_color[l]); // Debil poprostu DEBIL
 							tmp_buffer = strtok( NULL, korektor);
 							l++;
 						}
@@ -148,7 +145,6 @@ void CResourceManager::loadLevel(int lvl)
 						while( tmp_buffer != NULL )
 						{
 							tab_color[l] = static_cast<sf::Uint8>( strtoul(tmp_buffer, NULL, 10) );
-							//printf("%d ", tab_color[l]); // Debil poprostu DEBIL
 							tmp_buffer = strtok( NULL, korektor);
 							l++;
 						}
@@ -160,19 +156,17 @@ void CResourceManager::loadLevel(int lvl)
 
                     if(xml_child->Attribute("hidden"))
 					{
-						hide=xml_child->IntAttribute("hidden");
+						xml_child->QueryIntAttribute("hidden", &hide);
 					}
 
                     if(xml_child->Attribute("position"))
                     {
-                        //sscanf(xml_child->Attribute("position"),"%f%f", &pos.x, &pos.y);
-						tmp_buffer = strtok( const_cast<char*>( xml_child->Attribute("position") ), " ");
+                        tmp_buffer = strtok( const_cast<char*>( xml_child->Attribute("position") ), " ");
 						pos->x = static_cast<float>( atof(tmp_buffer) );
 
 						tmp_buffer = strtok( NULL, " ");
 						pos->y = static_cast<float>( atof(tmp_buffer) );
 						
-						//printf("%.2f|%.2f ", pos.x, pos.y);
                     }
                     if(xml_child->Attribute("size")) char_size=xml_child->UnsignedAttribute("size");
 
