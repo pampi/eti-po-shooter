@@ -199,6 +199,16 @@ void CResourceManager::loadLevel(int lvl)
             }
         }
         else gLogger << gLogger.LOG_WARNING << file_path << "There's no resource root!";
+
+        char script_path[512];
+        sprintf(script_path, "res/level/%d/script.lua", lvl);
+
+        if(!CScreenManager::GetInstance()->GetGame()->loadScript(script_path))
+        {
+            gLogger << gLogger.LOG_INFO << "Script loaded successfully!";
+            CScreenManager::GetInstance()->GetGame()->callScriptFunction("greet_the_world");
+        }
+        else gLogger << gLogger.LOG_ERROR << "Failed to load script!";
     }
 }
 

@@ -14,7 +14,6 @@ set( GAME_SRC
     globals.cpp
     CDebugDraw.cpp
     CGame.cpp
-    CMainMenu.cpp
     CResourceManager.cpp
     CScreenManager.cpp
     CScript.cpp

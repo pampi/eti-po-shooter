@@ -10,6 +10,9 @@ public:
 
 	void run();
 
+    class CGame *GetGame();
+    static CScreenManager *GetInstance();
+
 private:
 	sf::RenderWindow window;
 
@@ -19,7 +22,8 @@ private:
 
 	class CGame *m_game;
 
-
+protected:
+    static CScreenManager* m_pInstance;
 	
 };
 #endif

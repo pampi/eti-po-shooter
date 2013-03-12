@@ -1,7 +1,11 @@
 #include "headers.h"
 
+CScreenManager *CScreenManager::m_pInstance=NULL;
+
 CScreenManager::CScreenManager()
 {
+    m_pInstance = this;
+
 	m_curScreen = 0;
 	gResources.setDefaultFont();
 
@@ -20,4 +24,15 @@ void CScreenManager::run()
 	{
 		m_curScreen = m_screens[m_curScreen]->Step(window);
 	}
+}
+
+CScreenManager *CScreenManager::GetInstance()
+{
+    if(!m_pInstance) m_pInstance = new CScreenManager();
+    return m_pInstance;
+}
+
+class CGame *CScreenManager::GetGame()
+{
+    return m_game;
 }
