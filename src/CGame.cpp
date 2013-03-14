@@ -46,7 +46,6 @@ int CGame::Step(sf::RenderWindow & App)
 		// tak se mo¿esz tu wrzuciæ coœ co potrzebujesz zobaczyæ, albo ³aduj w loga
 #if (DRAWDEBUG)
 		gDDraw.add((int) gFPS.getFPS() ,"FPS: ");
-		gDDraw.add((int) gButtonClicked.size() ,"Buttony: ");
 		gDDraw.draw(App);
 #endif
 

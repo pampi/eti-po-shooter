@@ -1,7 +1,7 @@
 
 function greet_the_world()
 	print ("Hello my beloved world!")
-	local is_changed = setButtonText("btnNewGame", "It's time to moon some planet!")
+	-- TU SIE BUGUJE JAK WUJ --local is_changed = setButtonText("btnNewGame", "It's time to moon some planet!")
 	if is_changed == true then
 		print ("Successfully changed text of button btnNewGame!")
 		setButtonColor("btnNewGame", "N", 255, 255, 255, 255)
@@ -24,4 +24,8 @@ end
 
 function nadpisanie()
 	print("script.lua")
+end
+
+function zegnajSwiecie()
+	print ("Papa swiecie")
 end
