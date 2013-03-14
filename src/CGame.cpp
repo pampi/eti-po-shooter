@@ -113,6 +113,8 @@ void CGame::RegisterEngineFunctions()
     //mix
     //addScript(path_to_script)
     lua_register(machine, "addScript", API4Lua::loadAdditionalScript);
+    //changeLevel(lvl_id)
+    lua_register(machine, "changeLevel", API4Lua::changeLevel);
 }
 
 void CGame::manageButtons()
@@ -127,7 +129,8 @@ void CGame::manageButtons()
 				if( btn->wasClicked() )
 				{
 					// deal with ur button
-
+                    // perform action
+                    callScriptFunction(btn->getAction()->c_str());
 
 					// stop dealing
 					btn->resetState();

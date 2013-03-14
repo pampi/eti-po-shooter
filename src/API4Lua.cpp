@@ -143,3 +143,15 @@ int API4Lua::loadAdditionalScript(lua_State *vm)
     else lua_pushboolean(vm, LFALSE);
 	return 1;
 }
+
+int API4Lua::changeLevel(lua_State *vm)
+{
+    if(lua_gettop(vm)==1)
+    {
+        int level_to_load = lua_tointeger(vm, 1);
+        gResources.loadLevel(level_to_load);
+        lua_pushboolean(vm, LTRUE);
+    }
+    else lua_pushboolean(vm, LFALSE);
+    return 1;
+}

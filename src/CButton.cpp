@@ -43,6 +43,7 @@ void CButton::update(sf::RenderWindow & App)
 		{
 			gButtonClicked.push_back( this );
 			m_clicked = true;
+            //DEBUG TO DEL
 			std::cout<<this->m_actionToDo<<std::endl;
 		}
 	}
@@ -110,6 +111,7 @@ void CButton::setPosition(sf::Vector2f position)
 void CButton::setText(const char *text)
 {
     m_text.setString( sf::String(text) );
+    m_fRect=m_text.getGlobalBounds();
 }
 
 const bool  CButton::wasClicked()

@@ -20,7 +20,10 @@ namespace API4Lua
 
 
 //MIX API
+    //path to script
     int loadAdditionalScript(lua_State *vm);
+    //level_id
+    int changeLevel(lua_State *vm);
 }
 
 #endif
