@@ -4,6 +4,9 @@ CDebugDraw::CDebugDraw()
 {
 	m_text.setFont( gResources.getFont() );
 	m_text.setCharacterSize(15U);
+	m_string="";
+	m_stringB="";
+	m_stream.clear();
 }
 
 void CDebugDraw::draw(sf::RenderTarget & target)

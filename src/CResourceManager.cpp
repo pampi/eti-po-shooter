@@ -7,6 +7,12 @@ const char *EMPTY="";
 
 const char korektor[] = " ,.-";
 
+CResourceManager::CResourceManager() 
+{
+	m_font = new sf::Font();
+	this->pTmxMap = NULL;
+}
+
 const sf::Image & CResourceManager::getImage(const std::string & filename)
 { 
 	//	//	checking is image exist in memory
@@ -64,11 +70,6 @@ void CResourceManager::setDefaultFont(const char* path)
 	{
 		gLogger << gLogger.LOG_INFO << (std::string("Font loaded. Path: ")+path).c_str();
 	}
-}
-
-CResourceManager::CResourceManager() 
-{
-	m_font = new sf::Font();
 }
 
 void CResourceManager::loadLevel(int lvl)
@@ -255,4 +256,120 @@ CButton *CResourceManager::findButton(const char *id)
         }
     }
     return ret_val;
+}
+
+
+void CResourceManager::loadMap(const std::string &pathToMapFile)
+{
+	boost::property_tree::ptree pt;
+	bool _load=true;
+
+	try
+	{
+		boost::property_tree::xml_parser::read_xml(pathToMapFile, pt);
+	}
+	catch(boost::exception const &)
+	{
+		_load = false;
+		gLogger << gLogger.LOG_ERROR << "Unable to load filemap TmX";
+		std::cout<<"File Tmx not found. Map not loaded"<<std::endl;
+	}
+
+	if(_load)
+	{
+		TmxMap* map = new TmxMap();
+
+		// wez atrybut width z elementu map<to bedzie int>, domyslnie daj mu wartosc 0
+		map->width = pt.get<int>( "map.<xmlattr>.width", 0);
+		map->height = pt.get<int>( "map.<xmlattr>.height", 0);
+		map->tileWidth = pt.get<int>( "map.<xmlattr>.tileWidth", 0);
+		map->tileHeight = pt.get<int>( "map.<xmlattr>.tileHeight", 0);
+	
+		BOOST_FOREACH( boost::property_tree::ptree::value_type &v, pt.get_child("map") )
+		{
+			if( v.first == "tileset" )
+			{
+				TmxMapTileset *tileset = new TmxMapTileset();
+
+				tileset->firstGid = v.second.get<int>("<xmlattr>.firstgid", 0);
+				tileset->name = v.second.get<std::string>("<xmlattr>.name", "0");
+				tileset->tileWidth = v.second.get<int>("<xmlattr>.tilewidth", 0);
+				tileset->tileHeight = v.second.get<int>("<xmlattr>.tileheight", 0);
+
+				tileset->filename = v.second.get<std::string>("image.<xmlattr>.source", "0");
+
+				std::cout << "Tileset " << tileset->name << " filename " << tileset->filename << std::endl;
+
+				map->tilesets.push_back( tileset );
+			}
+		}
+	
+		BOOST_FOREACH( boost::property_tree::ptree::value_type &v, pt.get_child("map") ) 
+		{
+			if( v.first == "layer" )
+			{
+				TmxMapLayer *layer = new TmxMapLayer();
+
+				layer->name = v.second.get<std::string>("<xmlattr>.name");
+				layer->width = v.second.get<int>("<xmlattr>.width");
+				layer->height = v.second.get<int>("<xmlattr>.height");
+
+				std::string csv = v.second.get<std::string>("data");
+
+				std::cout << "Layer " << layer->name << " width " << layer->width << " height " << layer->height << std::endl;
+
+				layer->data = new int[ layer->width * layer->height];
+
+				typedef boost::char_separator<char> sep;
+				typedef boost::tokenizer<sep> tk;
+
+				tk tokens(csv, sep(",\n\r"));
+				int index = 0;
+
+				for( tk::iterator i(tokens.begin()); i != tokens.end(); ++i)
+				{
+					layer->data[index] = boost::lexical_cast<int>( *i );
+					index++;
+				}
+
+				map->layers.push_back( layer );
+			}	
+		}
+
+		BOOST_FOREACH( boost::property_tree::ptree::value_type &v, pt.get_child("map") ) 
+		{
+			if ( v.first == "objectgroup" ) 
+			{
+				TmxMapObjectGroup* group = new TmxMapObjectGroup();
+            
+				group->name = v.second.get<std::string>("<xmlattr>.name");
+				group->width = v.second.get<int>("<xmlattr>.width");
+				group->height = v.second.get<int>("<xmlattr>.height");
+				group->visable =  v.second.get<bool>("<xmlattr>.visible", 0) ;
+            
+				//std::cout << "group " << group->name << std::endl;
+            
+				BOOST_FOREACH( boost::property_tree::ptree::value_type &o, v.second ) 
+				{
+					if ( o.first == "object" ) 
+					{
+						TmxMapObject* object = new TmxMapObject();
+                    
+						object->name = o.second.get<std::string>( "<xmlattr>.name" );
+						object->x = o.second.get<int>( "<xmlattr>.x" );
+						object->y = o.second.get<int>( "<xmlattr>.y" );
+						object->width = o.second.get<int>( "<xmlattr>.width" );
+						object->height = o.second.get<int>( "<xmlattr>.height" );
+                    
+						//std::cout << "object " << object->name << " at " << object->x << ", " << object->y << std::endl;
+                    
+						group->objects.push_back( object );
+					}
+				} // end boost_foreach
+            
+				map->objects.push_back( group );
+			} // end if objectgroup
+		} // end boost_foreach
+		this->pTmxMap = map;
+	}
 }

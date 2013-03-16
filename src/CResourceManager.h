@@ -27,6 +27,7 @@ public:
 	// return current default font
 	const sf::Font & getFont();
 
+	// load and set font to use as default
 	void setDefaultFont(const char *pathToFont = PATHTOFONT);
 
     //lvl = 0 - Menu glowne
@@ -36,6 +37,12 @@ public:
     class CButton *findButton(const char* id);
 
 	std::list<class CGuiElement*> *getGuiList();
+
+	// load map from *.tmx file (csv format)
+	void loadMap(const std::string &pathToMapFile);
+
+	// pointer to loaded map
+	class TmxMap* pTmxMap;
 	
 private:
 	std::map<std::string , sf::Image > m_images;

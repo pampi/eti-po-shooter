@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="15" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tmw_desert_spacing" tilewidth="32" tileheight="32">
+  <image source="Program Files (x86)/Tiled/examples/tmw_desert_spacing.png" width="265" height="199"/>
+ </tileset>
+ <tileset firstgid="49" name="VILINT" tilewidth="32" tileheight="32">
+  <image source="Users/Patryk/Desktop/2D Circle Graphic Archive/2D Circle Graphic/VILINT.bmp" trans="5d6bab" width="640" height="480"/>
+ </tileset>
+ <tileset firstgid="349" name="VILFLR" tilewidth="32" tileheight="32">
+  <image source="Users/Patryk/Desktop/2D Circle Graphic Archive/2D Circle Graphic/VILFLR.bmp" trans="5d6bab" width="640" height="480"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="15">
+  <data encoding="csv">
+1,2,2,2,2,2,2,2,3,0,70,71,74,79,79,79,80,81,0,0,
+9,10,10,10,10,10,10,10,11,0,90,91,94,99,99,99,100,101,0,0,
+9,10,10,10,10,10,10,10,11,0,110,111,114,119,119,119,120,121,0,0,
+9,10,10,10,10,10,10,10,11,0,130,131,134,139,139,139,140,141,0,0,
+9,10,10,10,10,10,10,10,11,0,230,231,53,53,53,53,240,241,0,0,
+9,10,10,10,10,10,10,10,11,0,230,231,53,53,53,53,240,241,0,0,
+9,10,10,10,10,10,10,10,11,0,230,231,53,53,53,53,240,241,0,0,
+9,10,10,10,10,10,10,10,11,0,230,231,53,53,53,53,240,241,0,0,
+9,10,10,10,10,10,10,10,11,0,230,231,53,53,53,53,240,241,0,0,
+9,10,10,10,10,10,10,10,11,0,230,231,53,53,53,53,240,241,0,0,
+9,10,10,10,10,10,10,10,11,0,290,291,294,294,294,299,300,301,0,0,
+17,18,18,18,18,18,18,18,19,0,310,311,314,314,314,319,320,321,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>

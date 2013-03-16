@@ -170,7 +170,7 @@ int API4Lua::logWarning(lua_State *vm)
 {
     if(lua_gettop(vm)==1)
     {
-        const char* msg;
+        const char* msg=lua_tostring(vm, 1);
         gLogger << gLogger.LOG_WARNING << msg;
     }
     return 0;
@@ -180,7 +180,8 @@ int API4Lua::logError(lua_State *vm)
 {
     if(lua_gettop(vm)==1)
     {
-        const char* msg;
+        const char* msg=lua_tostring(vm, 1);
         gLogger << gLogger.LOG_ERROR << msg;
     }
+	return 0;
 }

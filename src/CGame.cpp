@@ -68,6 +68,7 @@ void CGame::m_Init()
 
     // Laduj menu
     gResources.loadLevel(0);
+	gResources.loadMap("res/level/0/map1a.tmx");
 }
 
 void CGame::drawGui(sf::RenderWindow & App)
