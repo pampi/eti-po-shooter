@@ -69,7 +69,9 @@ public:
 
 
 	friend CLogger& operator<<(CLogger &logger, const char *text)
-	{
+    {
+        std::time(&logger.m_czas);
+        logger.m_czasTM = *localtime(&logger.m_czas);
 		std::strftime(logger.m_buffor, sizeof(logger.m_buffor), "%H:%M:%S", &logger.m_czasTM);
 		logger.m_File << "[" << logger.m_buffor << "] : " <<text << std::endl;
 		return logger;

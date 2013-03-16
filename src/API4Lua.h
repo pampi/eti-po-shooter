@@ -24,6 +24,12 @@ namespace API4Lua
     int loadAdditionalScript(lua_State *vm);
     //level_id
     int changeLevel(lua_State *vm);
+    //log_message
+    int logNormal(lua_State *vm);
+    //log_message
+    int logWarning(lua_State *vm);
+    //log_message
+    int logError(lua_State *vm);
 }
 
 #endif

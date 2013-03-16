@@ -19,7 +19,5 @@ private:
 	void manageButtons();
 	void drawGui(sf::RenderWindow & App);
 
-    void RegisterEngineFunctions();
-
 };
 #endif

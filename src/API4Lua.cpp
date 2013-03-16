@@ -155,3 +155,32 @@ int API4Lua::changeLevel(lua_State *vm)
     else lua_pushboolean(vm, LFALSE);
     return 1;
 }
+
+int API4Lua::logNormal(lua_State *vm)
+{
+    if(lua_gettop(vm)==1)
+    {
+        const char* msg=lua_tostring(vm, 1);
+        gLogger << gLogger.LOG_INFO << msg;
+    }
+    return 0;
+}
+
+int API4Lua::logWarning(lua_State *vm)
+{
+    if(lua_gettop(vm)==1)
+    {
+        const char* msg;
+        gLogger << gLogger.LOG_WARNING << msg;
+    }
+    return 0;
+}
+
+int API4Lua::logError(lua_State *vm)
+{
+    if(lua_gettop(vm)==1)
+    {
+        const char* msg;
+        gLogger << gLogger.LOG_ERROR << msg;
+    }
+}
