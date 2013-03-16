@@ -5,6 +5,11 @@ CButton::CButton()
 
 }
 
+CButton::~CButton()
+{
+
+}
+
 CButton::CButton(guiType typ, sf::Vector2f position, size_t charSize, sf::String text, std::string ActionToDo, std::string ID, bool hide, sf::Color normalColor, sf::Color hoverColor)
 {
 	this->m_position = position;

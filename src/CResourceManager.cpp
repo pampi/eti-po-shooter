@@ -211,7 +211,21 @@ void CResourceManager::clearResources()
     //oczyszczanie mordoru
     while(!this->m_guiElements.empty())
     {
-        delete *(this->m_guiElements.begin());
+        CGuiElement *pGuiElement= *this->m_guiElements.begin();
+        switch(pGuiElement->type)
+        {
+            case CGuiElement::GUI_BUTTON:
+                {
+                    CButton *btnToDel=static_cast<CButton *>(pGuiElement);
+                    delete btnToDel;
+                }
+                break;
+            default:
+                gLogger << gLogger.LOG_ERROR << "Unkown size of memory block, it's impossible to free memory! Be careful, you're leaking memory!";
+                break;
+        }
+
+        //delete *(this->m_guiElements.begin());
         this->m_guiElements.pop_front();
     }
 }
