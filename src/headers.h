@@ -38,6 +38,7 @@
 #include "CScreen.h"
 #include "CScreenManager.h"
 #include "CResourceManager.h"
+#include "CSoundManager.h"
 #include "CScript.h"
 #include "CGame.h"
 #include "CGuiElement.h"

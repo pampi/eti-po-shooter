@@ -3,7 +3,7 @@
 
 #include "headers.h"
 
-class CGame : public CScreen, public CScript
+class CGame : public CScreen, public CScript, public CSoundManager
 {
 public:
 	CGame();

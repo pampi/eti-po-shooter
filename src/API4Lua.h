@@ -17,6 +17,12 @@ namespace API4Lua
     int setButtonColor(lua_State *vm);
 
 //ADUIO API
+    //file, loop
+    int playSound(lua_State *vm);
+    //file, all
+    int stopSound(lua_State *vm);
+    //nic
+    int stopAllSound(lua_State *vm);
 
 
 //MIX API

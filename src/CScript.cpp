@@ -76,6 +76,12 @@ void CScript::RegisterEngineFunctions()
     lua_register(machine, "setButtonColor", API4Lua::setButtonColor);
 
     //audio
+    //playSound(file, [loop])
+    lua_register(machine, "playSound", API4Lua::playSound);
+    //stopSound(file, [all]);
+    lua_register(machine, "stopSound", API4Lua::stopSound);
+    //stopAllSound()
+    lua_register(machine, "stopSoundAll", API4Lua::stopAllSound);
 
 
     //mix

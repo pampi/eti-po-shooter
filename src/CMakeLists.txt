@@ -20,6 +20,8 @@ set( GAME_SRC
     CSettingsParser.cpp
     CButton.cpp
 	API4Lua.cpp
+    CTmxMap.cpp
+    CSoundManager.cpp
 )
 
 if(SFML_FOUND)
@@ -31,7 +33,8 @@ if(SFML_FOUND)
         target_link_libraries(ETI_SHOOTER sfml-main sfml-window sfml-graphics sfml-system)
 #inne
     else(WIN32)
-        target_link_libraries(ETI_SHOOTER sfml-window sfml-graphics sfml-system lua tinyxml2)
+        SET (CMAKE_CXX_FLAGS    "-Wall")
+        target_link_libraries(ETI_SHOOTER sfml-window sfml-graphics sfml-system lua tinyxml2 sfml-audio)
     endif(WIN32)
 else(SFML_FOUND)
     message(Nie znaleziono SFML!)

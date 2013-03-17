@@ -185,3 +185,54 @@ int API4Lua::logError(lua_State *vm)
     }
 	return 0;
 }
+
+int API4Lua::playSound(lua_State *vm)
+{
+    const char* file;
+    int loop=LFALSE;
+    bool ret_val=false;
+    switch(lua_gettop(vm))
+    {
+        case 2:
+            loop=lua_toboolean(vm, 2);
+        case 1:
+            file=lua_tostring(vm, 1);
+            if(CScreenManager::GetInstance()->GetGame()->play(file, (bool)(loop!=LFALSE))) ret_val = true;
+            break;
+        default:
+            break;
+    }
+
+    lua_pushboolean(vm, (ret_val==true)?LTRUE:LFALSE);
+
+    return 1;
+}
+
+int API4Lua::stopSound(lua_State *vm)
+{
+    const char* file;
+    int all=LFALSE;
+    bool ret_val=false;
+    switch(lua_gettop(vm))
+    {
+        case 2:
+            all=lua_toboolean(vm, 2);
+        case 1:
+            file=lua_tostring(vm, 1);
+            if(CScreenManager::GetInstance()->GetGame()->stop(file, (bool)(all!=LFALSE))) ret_val = true;
+            break;
+        default:
+            break;
+    }
+
+    lua_pushboolean(vm, (ret_val==true)?LTRUE:LFALSE);
+
+    return 1;
+}
+
+int API4Lua::stopAllSound(lua_State *vm)
+{
+    CScreenManager::GetInstance()->GetGame()->stopAll();
+
+    return 0;
+}

@@ -1,3 +1,4 @@
+intro_sound = false
 
 function greet_the_world()
 	print ("Hello my beloved world!")
@@ -10,6 +11,11 @@ function greet_the_world()
 		print ("Somehow I can't do that!")
 	end
 	
+	--playSound(music_file, loop)
+	if intro_sound == false then
+		intro_sound = true
+		playSound("res/audio/temporary_intro_theme.ogg", true)
+	end
 --	nadpisanie()
 --	addScript("res/level/0/dodatkowy.lua")
 --	nadpisanie()
@@ -19,6 +25,7 @@ end
 
 function startNewGame()
         print ("Czas zaczac nowa gre!")
+	stopSoundAll()
         changeLevel(1)
 end
 
@@ -27,5 +34,6 @@ function nadpisanie()
 end
 
 function zegnajSwiecie()
+	stopSound("res/audio/temporary_intro_theme.ogg")
 	print ("Papa swiecie")
 end

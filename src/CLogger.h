@@ -2,7 +2,9 @@
 #define CLOGGER_H
 #include "headers.h"
 
+#ifdef WIN32
 #pragma warning(disable: 4996)
+#endif
 
 /*
 ################### README #####################
