@@ -79,15 +79,21 @@ void CGame::drawGui(sf::RenderWindow & App)
 {
 	for( std::list<class CGuiElement*>::iterator it = gResources.getGuiList()->begin(); it != gResources.getGuiList()->end(); it++ )
 	{
-		CButton *btn=static_cast<CButton *>(*it);
-		if(btn->type == CGuiElement::GUI_BUTTON)
-		{
-			if( !btn->isHidden() )
-			{
-				btn->update(App);
-				btn->draw(App);
-			}
-		}
+        switch((*it)->type)
+        {
+            case CGuiElement::GUI_BUTTON:
+                {
+                    CButton *btn=static_cast<CButton *>(*it);
+                    if( !btn->isHidden() )
+                    {
+                        btn->update(App);
+                        btn->draw(App);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
 	}
 
 	manageButtons();

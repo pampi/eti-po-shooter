@@ -21,7 +21,7 @@ set( GAME_SRC
     CButton.cpp
 	API4Lua.cpp
     CSoundManager.cpp
-    CLabel.cpp
+    CTextBox.cpp
     CInputHandler.cpp
 )
 
