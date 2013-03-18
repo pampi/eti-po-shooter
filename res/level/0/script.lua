@@ -14,7 +14,7 @@ function greet_the_world()
 	--playSound(music_file, loop)
 	if intro_sound == false then
 		intro_sound = true
-		playSound("res/audio/temporary_intro_theme.ogg", true)
+		--playSound("res/audio/temporary_intro_theme.ogg", true)
 	end
 --	nadpisanie()
 --	addScript("res/level/0/dodatkowy.lua")

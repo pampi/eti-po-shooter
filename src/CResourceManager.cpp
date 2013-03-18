@@ -72,6 +72,57 @@ void CResourceManager::setDefaultFont(const char* path)
 	}
 }
 
+void CResourceManager::clearResources()
+{
+    //oczyszczanie mordoru
+    while(!this->m_guiElements.empty())
+    {
+        CGuiElement *pGuiElement= *this->m_guiElements.begin();
+        switch(pGuiElement->type)
+        {
+            case CGuiElement::GUI_BUTTON:
+                {
+                    CButton *btnToDel=static_cast<CButton *>(pGuiElement);
+                    delete btnToDel;
+                }
+                break;
+            default:
+                gLogger << gLogger.LOG_ERROR << "Unkown size of memory block, it's impossible to free memory! Be careful, you're leaking memory!";
+                break;
+        }
+
+        //delete *(this->m_guiElements.begin());
+        this->m_guiElements.pop_front();
+    }
+}
+
+std::list<class CGuiElement*> *CResourceManager::getGuiList()
+{
+	return &m_guiElements;
+}
+
+CButton *CResourceManager::findButton(const char *id)
+{
+    CButton *ret_val=0;   //return value
+    if(id)
+    {
+        std::string str_id=id;
+        for(std::list<CGuiElement *>::iterator i=m_guiElements.begin(); i!=m_guiElements.end(); i++)    //kochany STL :*
+        {
+            if((*i)->type==CGuiElement::GUI_BUTTON)
+            {
+                CButton *btn=static_cast<CButton *>(*i);
+                if(btn->getID()->compare(str_id)==0)
+                {
+                    ret_val=btn;
+                    break;
+                }
+            }
+        }
+    }
+    return ret_val;
+}
+
 void CResourceManager::loadLevel(int lvl)
 {
     char file_path[512];
@@ -207,58 +258,6 @@ void CResourceManager::loadLevel(int lvl)
     }
 }
 
-void CResourceManager::clearResources()
-{
-    //oczyszczanie mordoru
-    while(!this->m_guiElements.empty())
-    {
-        CGuiElement *pGuiElement= *this->m_guiElements.begin();
-        switch(pGuiElement->type)
-        {
-            case CGuiElement::GUI_BUTTON:
-                {
-                    CButton *btnToDel=static_cast<CButton *>(pGuiElement);
-                    delete btnToDel;
-                }
-                break;
-            default:
-                gLogger << gLogger.LOG_ERROR << "Unkown size of memory block, it's impossible to free memory! Be careful, you're leaking memory!";
-                break;
-        }
-
-        //delete *(this->m_guiElements.begin());
-        this->m_guiElements.pop_front();
-    }
-}
-
-std::list<class CGuiElement*> *CResourceManager::getGuiList()
-{
-	return &m_guiElements;
-}
-
-CButton *CResourceManager::findButton(const char *id)
-{
-    CButton *ret_val=0;   //return value
-    if(id)
-    {
-        std::string str_id=id;
-        for(std::list<CGuiElement *>::iterator i=m_guiElements.begin(); i!=m_guiElements.end(); i++)    //kochany STL :*
-        {
-            if((*i)->type==CGuiElement::GUI_BUTTON)
-            {
-                CButton *btn=static_cast<CButton *>(*i);
-                if(btn->getID()->compare(str_id)==0)
-                {
-                    ret_val=btn;
-                    break;
-                }
-            }
-        }
-    }
-    return ret_val;
-}
-
-
 void CResourceManager::loadMap(const std::string &pathToMapFile)
 {
 	boost::property_tree::ptree pt;
@@ -266,6 +265,7 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
 
 	try
 	{
+		// jak plik nie istnieje to tylko rzuca wyjatkiem bo to void
 		boost::property_tree::xml_parser::read_xml(pathToMapFile, pt);
 	}
 	catch(boost::exception const &)
@@ -285,8 +285,10 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
 		map->tileWidth = pt.get<int>( "map.<xmlattr>.tileWidth", 0);
 		map->tileHeight = pt.get<int>( "map.<xmlattr>.tileHeight", 0);
 	
+		// przejedz sie po wszystkich dzieciach <map> w drzewie/xml
 		BOOST_FOREACH( boost::property_tree::ptree::value_type &v, pt.get_child("map") )
 		{
+			// jak trafilismy na <tileset> w rodzicu <map>
 			if( v.first == "tileset" )
 			{
 				TmxMapTileset *tileset = new TmxMapTileset();
@@ -296,6 +298,7 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
 				tileset->tileWidth = v.second.get<int>("<xmlattr>.tilewidth", 0);
 				tileset->tileHeight = v.second.get<int>("<xmlattr>.tileheight", 0);
 
+				// jak czytasz stringa, do domyœlny argument te¿ musi byc jako string
 				tileset->filename = v.second.get<std::string>("image.<xmlattr>.source", "0");
 
 				std::cout << "Tileset " << tileset->name << " filename " << tileset->filename << std::endl;
@@ -323,11 +326,13 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
 				typedef boost::char_separator<char> sep;
 				typedef boost::tokenizer<sep> tk;
 
+				// dzieli string "csv" na wyrazy gdzie separatory masz nizej i zapisuje w tk
 				tk tokens(csv, sep(",\n\r"));
 				int index = 0;
 
 				for( tk::iterator i(tokens.begin()); i != tokens.end(); ++i)
 				{
+					// rzutuje zmienne TAK JAK SA, jak int=16 to w stringu tez bedzie 16 a nie ascii art i odwrotnie
 					layer->data[index] = boost::lexical_cast<int>( *i );
 					index++;
 				}
@@ -349,6 +354,7 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
             
 				//std::cout << "group " << group->name << std::endl;
             
+				// przejedzi sie po wszystkich elementach w <objectgroup>
 				BOOST_FOREACH( boost::property_tree::ptree::value_type &o, v.second ) 
 				{
 					if ( o.first == "object" ) 
