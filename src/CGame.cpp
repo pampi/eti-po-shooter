@@ -91,6 +91,15 @@ void CGame::drawGui(sf::RenderWindow & App)
                     }
                 }
                 break;
+            case CGuiElement::GUI_TEXTBOX:
+                {
+                    CTextBox *textbox=static_cast<CTextBox *>(*it);
+                    if( !textbox->isHidden() )
+                    {
+                        textbox->draw(App);
+                    }
+                }
+                break;
             default:
                 break;
         }
