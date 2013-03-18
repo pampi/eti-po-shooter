@@ -35,6 +35,7 @@
 #include "CSettingsParser.h"
 #include "CFpsCounter.h"
 #include "CDebugDraw.h"
+#include "CInputHandler.h"
 #include "CScreen.h"
 #include "CScreenManager.h"
 #include "CResourceManager.h"
@@ -43,6 +44,7 @@
 #include "CGame.h"
 #include "CGuiElement.h"
 #include "CButton.h"
+#include "CLabel.h"
 #include "API4Lua.h"
 #include "CTmxMap.h"
 

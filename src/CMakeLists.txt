@@ -20,8 +20,9 @@ set( GAME_SRC
     CSettingsParser.cpp
     CButton.cpp
 	API4Lua.cpp
-    CTmxMap.cpp
     CSoundManager.cpp
+    CLabel.cpp
+    CInputHandler.cpp
 )
 
 if(SFML_FOUND)

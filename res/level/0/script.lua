@@ -2,7 +2,7 @@ intro_sound = false
 
 function greet_the_world()
 	print ("Hello my beloved world!")
-	--local is_changed = setButtonText("btnNewGame", "It's time to moon some planet!")
+	local is_changed = setButtonText("btnNewGame", "Dawno dawno temu...\nw krainie calek...\nzyl sobie lord calka...\na stworzyl go wielki latajacy potwor spaghetti...\nT\tBC...")
 	if is_changed == true then
 		print ("Successfully changed text of button btnNewGame!")
 		setButtonColor("btnNewGame", "N", 255, 255, 255, 255)

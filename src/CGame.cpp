@@ -21,17 +21,21 @@ int CGame::Step(sf::RenderWindow & App)
 			if( m_event.type == sf::Event::Closed )
 			{
 				return -1; // wyjdz z gry(-1)
-			}
+            }
 
-			if( m_event.type == sf::Event::KeyPressed )
-			{
+            /*if( m_event.type == sf::Event::KeyPressed )
+            {
 				if( m_event.key.code == sf::Keyboard::Escape )
 				{
 					return -1; // wyjdz z gry(-1)
 				}
 
 			
-			}
+            }*/
+            if(CInputHandler::GetInstance()->isKeyPressed(CInputHandler::Escape))
+            {
+                return -1;  //wyjdz z kodem bledu
+            }
 		} // events loop
 
 		App.clear();

@@ -44,7 +44,7 @@ void CButton::update(sf::RenderWindow & App)
 	{
 		this->m_text.setColor( m_hoverColor );
 
-		if( sf::Mouse::isButtonPressed(sf::Mouse::Left) && !m_clicked )
+        if( CInputHandler::GetInstance()->isToggled(sf::Mouse::Left) && !m_clicked )
 		{
 			gButtonClicked.push_back( this );
 			m_clicked = true;
