@@ -1,4 +1,4 @@
-#ifndef CBUTT_H
+ï»¿#ifndef CBUTT_H
 #define CBUTT_H
 
 #include "headers.h"
@@ -34,9 +34,9 @@ public:
 	const sf::Vector2f getPosition();
 
 
-	// Czy przycisk zosta³ uznany za klikniêty
+	// Czy przycisk zostaÅ‚ uznany za klikniÄ™ty
 	const bool wasClicked();
-	// Przywraca przycisk do stanu "Nie klikniêty"
+	// Przywraca przycisk do stanu "Nie klikniÄ™ty"
 	void resetState();
 
 	~CButton();

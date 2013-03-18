@@ -1,4 +1,4 @@
-#ifndef CGUIELE_H
+﻿#ifndef CGUIELE_H
 #define CGUIELE_H
 
 #include "headers.h"

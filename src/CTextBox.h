@@ -1,4 +1,4 @@
-#ifndef CLABEL_H
+﻿#ifndef CLABEL_H
 #define CLABEL_H
 #include "headers.h"
 

@@ -1,4 +1,4 @@
-#ifndef CGAME_H
+﻿#ifndef CGAME_H
 #define CGAME_H
 
 #include "headers.h"

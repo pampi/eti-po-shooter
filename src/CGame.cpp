@@ -1,4 +1,4 @@
-#include "headers.h"
+ï»¿#include "headers.h"
 
 CGame::CGame()
 {
@@ -40,24 +40,24 @@ int CGame::Step(sf::RenderWindow & App)
 
 		App.clear();
 
-		// J¥DRO GRY \|/
+		// JÄ„DRO GRY \|/
 
 		drawGui(App);
 
 
-		// J¥DRO GRY /|\
+		// JÄ„DRO GRY /|\
 
-		// tak se mo¿esz tu wrzuciæ coœ co potrzebujesz zobaczyæ, albo ³aduj w loga
+		// tak se moÅ¼esz tu wrzuciÄ‡ coÅ› co potrzebujesz zobaczyÄ‡, albo Å‚aduj w loga
 #if (DRAWDEBUG)
 		gDDraw.add((int) gFPS.getFPS() ,"FPS: ");
 		gDDraw.draw(App);
 #endif
 
 
-		// ¯eby siê licznik fps aktualizowa³
+		// Å»eby siÄ™ licznik fps aktualizowaÅ‚
 		gFPS.update();
 
-		// Sleep ¿eby proca nie katowa³o
+		// Sleep Å¼eby proca nie katowaÅ‚o
 		sf::sleep(sf::milliseconds(10));
 
 		App.display();

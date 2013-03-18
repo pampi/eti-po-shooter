@@ -1,4 +1,4 @@
-#include "headers.h"
+﻿#include "headers.h"
 
 // Globalne uchwyty, externy w headers.h
 

@@ -1,14 +1,14 @@
-#ifndef SETPARSER_H
+ï»¿#ifndef SETPARSER_H
 #define SETPARSER_H
 #include "headers.h"
 
 /*
 ################### README #####################
-Jak u¿ywaæ:
+Jak uÅ¼ywaÄ‡:
 
-	// Stwórz obiekt
+	// StwÃ³rz obiekt
     CSettingsParser settings("settings.dat");
-	CSettingsParser settings("settings.dat"); <- albo tak z wartoœciami z headers.h
+	CSettingsParser settings("settings.dat"); <- albo tak z wartoÅ›ciami z headers.h
 
     // Czytanie danych 
     int width, height;
@@ -29,11 +29,11 @@ Jak u¿ywaæ:
 
 	// Zapis danych
 	settings.Set("title", "sfml tutorial");
-	settings.Write(); <- wo³aæ na samym koñcu
+	settings.Write(); <- woÅ‚aÄ‡ na samym koÅ„cu
 
-	// Przyk³adowy plik wynikowy
+	// PrzykÅ‚adowy plik wynikowy
 	# linie z hashem[#] beda ignorowane
-	# spacje te¿ bêd¹ ignorowane
+	# spacje teÅ¼ bÄ™dÄ… ignorowane
 
 	# screen size
 	width = 1024

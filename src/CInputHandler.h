@@ -1,4 +1,4 @@
-#ifndef CINPUTHANDLER_H
+﻿#ifndef CINPUTHANDLER_H
 #define CINPUTHANDLER_H
 
 #include "headers.h"

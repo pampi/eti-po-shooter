@@ -1,4 +1,4 @@
-#include "headers.h"
+﻿#include "headers.h"
 
 const char *BUTTON_SECTION="buttons";
 const char *TEXT_SECTION="texts";
@@ -265,7 +265,7 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
 
 	try
 	{
-		// jak plik nie istnieje to tylko rzuca wyjatkiem bo to void
+		// jak plik nie istnieje to tylko rzuca wyjątkiem bo to void
 		boost::property_tree::xml_parser::read_xml(pathToMapFile, pt);
 	}
 	catch(boost::exception const &)
@@ -279,16 +279,16 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
 	{
 		TmxMap* map = new TmxMap();
 
-		// wez atrybut width z elementu map<to bedzie int>, domyslnie daj mu wartosc 0
+		// weź atrybut width z elementu map<to bedzie int>, domyślnie daj mu wartość 0
 		map->width = pt.get<int>( "map.<xmlattr>.width", 0);
 		map->height = pt.get<int>( "map.<xmlattr>.height", 0);
 		map->tileWidth = pt.get<int>( "map.<xmlattr>.tileWidth", 0);
 		map->tileHeight = pt.get<int>( "map.<xmlattr>.tileHeight", 0);
 	
-		// przejedz sie po wszystkich dzieciach <map> w drzewie/xml
+		// przejedź sie po wszystkich dzieciach <map> w drzewie/xml
 		BOOST_FOREACH( boost::property_tree::ptree::value_type &v, pt.get_child("map") )
 		{
-			// jak trafilismy na <tileset> w rodzicu <map>
+			// jak trafiliśmy na <tileset> w rodzicu <map>
 			if( v.first == "tileset" )
 			{
 				TmxMapTileset *tileset = new TmxMapTileset();
@@ -298,7 +298,7 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
 				tileset->tileWidth = v.second.get<int>("<xmlattr>.tilewidth", 0);
 				tileset->tileHeight = v.second.get<int>("<xmlattr>.tileheight", 0);
 
-				// jak czytasz stringa, do domy�lny argument te� musi byc jako string
+				// jak czytasz stringa, do domyślny argument też musi byc jako string
 				tileset->filename = v.second.get<std::string>("image.<xmlattr>.source", "0");
 
 				std::cout << "Tileset " << tileset->name << " filename " << tileset->filename << std::endl;
@@ -326,13 +326,13 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
 				typedef boost::char_separator<char> sep;
 				typedef boost::tokenizer<sep> tk;
 
-				// dzieli string "csv" na wyrazy gdzie separatory masz nizej i zapisuje w tk
+				// dzieli string "csv" na wyrazy gdzie separatory masz niżej i zapisuje w tk
 				tk tokens(csv, sep(",\n\r"));
 				int index = 0;
 
 				for( tk::iterator i(tokens.begin()); i != tokens.end(); ++i)
 				{
-					// rzutuje zmienne TAK JAK SA, jak int=16 to w stringu tez bedzie 16 a nie ascii art i odwrotnie
+					// rzutuje zmienne TAK JAK SĄ, jak int=16 to w stringu też będzie 16 a nie ascii art i odwrotnie
 					layer->data[index] = boost::lexical_cast<int>( *i );
 					index++;
 				}
@@ -354,14 +354,14 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
             
 				//std::cout << "group " << group->name << std::endl;
             
-				// przejedzi sie po wszystkich elementach w <objectgroup>
+				// przejedź się po wszystkich elementach w <objectgroup>
 				BOOST_FOREACH( boost::property_tree::ptree::value_type &o, v.second ) 
 				{
 					if ( o.first == "object" ) 
 					{
 						TmxMapObject* object = new TmxMapObject();
                     
-						object->name = o.second.get<std::string>( "<xmlattr>.name" );
+						//object->name = o.second.get<std::string>( "<xmlattr>.name" ); // się poprawi jeszcze
 						object->x = o.second.get<int>( "<xmlattr>.x" );
 						object->y = o.second.get<int>( "<xmlattr>.y" );
 						object->width = o.second.get<int>( "<xmlattr>.width" );
@@ -376,6 +376,7 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
 				map->objects.push_back( group );
 			} // end if objectgroup
 		} // end boost_foreach
+
 		this->pTmxMap = map;
 	}
 }

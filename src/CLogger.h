@@ -1,4 +1,4 @@
-#ifndef CLOGGER_H
+ï»¿#ifndef CLOGGER_H
 #define CLOGGER_H
 #include "headers.h"
 
@@ -8,18 +8,18 @@
 
 /*
 ################### README #####################
-Jak u¿ywaæ:
+Jak uÅ¼ywaÄ‡:
 
-	// Stwórz obiekt
+	// StwÃ³rz obiekt
     CLogger myLog ("1.0.4.2", "testfile.txt");
-	CLogger myLog (); <- albo tak z wartoœciami z headers.h
+	CLogger myLog (); <- albo tak z wartoÅ›ciami z headers.h
 
     // Strumieniowe zapisywanie danych
     myLog << myLog::LOG_WARNING << "Hey! ... This is a warning message!";
     myLog << myLog::e_logType::LOG_ERROR << "WOW! Something really wrong is happening here!";
     myLog << "This is just a simple text";
 
-	//Tak bêdzie wygl¹da³ plik wynikowy
+	//Tak bÄ™dzie wyglÄ…daÅ‚ plik wynikowy
 	Engine Version: 0.0.1
 	File log created
 

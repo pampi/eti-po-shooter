@@ -1,4 +1,4 @@
-#ifndef CSCRIPT_H
+﻿#ifndef CSCRIPT_H
 #define CSCRIPT_H
 
 #include "headers.h"

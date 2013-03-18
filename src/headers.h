@@ -1,4 +1,4 @@
-#ifndef HEADERS_H
+ï»¿#ifndef HEADERS_H
 #define HEADERS_H
 
 // Biblioteki STL
@@ -26,7 +26,7 @@
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
 
-// Zewnêtrzne
+// ZewnÄ™trzne
 #include "lua5.2/lua.hpp"
 #include "tinyxml2/tinyxml2.h"
 
@@ -76,5 +76,5 @@ extern std::list<class CButton*> gButtonClicked;
 // Dane do czcionki
 #define PATHTOFONT "res/misc/HelveticaWorld.ttf"
 
-// Czy wyœwietlaæ debug dane
+// Czy wyÅ›wietlaÄ‡ debug dane
 #define DRAWDEBUG 1

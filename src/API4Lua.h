@@ -1,4 +1,4 @@
-#ifndef API4LUA_H
+﻿#ifndef API4LUA_H
 #define API4LUA_H
 #include "headers.h"
 

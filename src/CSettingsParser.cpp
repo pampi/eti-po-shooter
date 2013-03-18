@@ -1,4 +1,4 @@
-#include "headers.h"
+Ôªø#include "headers.h"
 
 CSettingsParser::CSettingsParser(std::string file)
 {
@@ -47,7 +47,7 @@ void CSettingsParser::Read()
 	while( std::getline(in, tmp2) )
 	{
 		/* 
-		NIE POWINNO DZIA£A∆, ALE DZIA£A. 
+		NIE POWINNO DZIA≈ÅAƒÜ, ALE DZIA≈ÅA. 
 		DEAL WITH IT
 		*/
 		param = ""; 

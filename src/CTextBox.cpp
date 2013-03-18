@@ -1,4 +1,4 @@
-#include "headers.h"
+﻿#include "headers.h"
 
 CTextBox::CTextBox(sf::Vector2f position, size_t charSize, sf::String text, std::string ID, bool hide, sf::Color color)
 {

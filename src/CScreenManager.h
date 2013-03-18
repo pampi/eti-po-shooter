@@ -1,4 +1,4 @@
-#ifndef CSCREENMGR_H
+﻿#ifndef CSCREENMGR_H
 #define CSCREENMGR_H
 
 #include "headers.h"

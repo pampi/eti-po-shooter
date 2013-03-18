@@ -1,4 +1,4 @@
-#ifndef FPS_HPP
+ï»¿#ifndef FPS_HPP
 #define FPS_HPP
 
 #include "headers.h"
@@ -8,7 +8,7 @@ class CFpsCounter
 public:
 	CFpsCounter() : m_Frame(0), m_Fps(0) {}
 
-	/// Wywyo³ywane na koñcu ka¿dej klatki
+	/// WywyoÅ‚ywane na koÅ„cu kaÅ¼dej klatki
 	void update()
 	{
 		if(m_Clock.getElapsedTime().asSeconds() >= 1.f)
@@ -21,7 +21,7 @@ public:
 		++m_Frame;
 	}
 
-	/// Zwraca aktualn¹ iloœæ FPS
+	/// Zwraca aktualnÄ… iloÅ›Ä‡ FPS
 	const unsigned int getFPS() const 
 	{ 
 		return m_Fps; 

@@ -1,4 +1,4 @@
-#include "headers.h"
+﻿#include "headers.h"
 
 //wartości bool dla Lua
 #define LFALSE 0

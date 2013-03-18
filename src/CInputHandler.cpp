@@ -1,4 +1,4 @@
-#include "headers.h"
+﻿#include "headers.h"
 
 CInputHandler *CInputHandler::m_pInstance = 0;
 

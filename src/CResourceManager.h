@@ -1,4 +1,4 @@
-#ifndef CRESNAGER_H
+﻿#ifndef CRESNAGER_H
 #define CRESNAGER_H
 
 #include "headers.h"
