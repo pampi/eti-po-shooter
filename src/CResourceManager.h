@@ -36,20 +36,28 @@ public:
     // return button or null
     class CButton *findButton(const char* id);
 
+	// zwraca wskaźnik na liste, tylko po co ?
 	std::list<class CGuiElement*> *getGuiList();
 
-	// load map from *.tmx file (csv format)
-	void loadMap(const std::string &pathToMapFile);
+	// load map from *.tmx file (csv encoding)
+	void loadTmxMap(const std::string &pathToMapFile);
+
+	// na podstawie załadowanego Tmx tworzy mape i zapisuje do sprita
+	void generateTextureMap();
 
 	// pointer to loaded map
 	class TmxMap* pTmxMap;
+
+	// wskaźnik na gotowego sprita z mapą
+	sf::Sprite *mapSprite;
 	
 private:
 	std::map<std::string , sf::Image > m_images;
 
-	// tu trzymasz wszystkie elementy z gui
+	// lista ze wszystkimi elementami GUI
 	std::list<class CGuiElement*> m_guiElements;
 
+	// wskaźnik na domyślną czcionke
 	sf::Font *m_font;
 
 

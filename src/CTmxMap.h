@@ -11,7 +11,12 @@ public:
 	std::string name;
 	int tileWidth;
 	int tileHeight;
+	int spacing;
+	int margin;
+	int imageWidth;
+	int imageHeight;
 	std::string filename;
+	std::string trans;
 };
 
 class TmxMapLayer
@@ -20,11 +25,16 @@ public:
 	std::string name;
 	int width;
 	int height;
-	int *data;
+	std::vector< std::vector< int > >data;
 
+	// możesz ogarnąć czy destuktory dobrze działają
 	~TmxMapLayer()
 	{
-		delete []data;
+		for(size_t i=0; i<data.size(); i++)
+		{
+			data[i].clear();
+		}
+		data.clear();
 	}
 };
 
@@ -48,11 +58,12 @@ public:
 
 	std::list<class TmxMapObject*> objects;
 
+	// możesz ogarnąć czy destuktory dobrze działają
 	~TmxMapObjectGroup()
 	{
 		while( !objects.empty() )
 		{
-			this->objects.pop_front();
+			objects.pop_front();
 		}
 	}
 };
@@ -73,6 +84,23 @@ public:
 	std::list<class TmxMapLayer*> layers;
 	std::list<class TmxMapObjectGroup*> objects;
 
+	TmxMapTileset* findTileset(int gid)
+	{
+		TmxMapTileset *tileset = 0;
+		std::list<TmxMapTileset*>::iterator it = tilesets.begin();
+
+		do
+		{
+			it++;
+		} while( it!=tilesets.end() && ((*it)->firstGid < gid) );
+
+		if(it!=tilesets.begin()) it--;
+		tileset = (*it);
+
+		return tileset;
+	}
+
+	// możesz ogarnąć czy destuktory dobrze działają
 	~TmxMap()
 	{
 		while( !tilesets.empty() )

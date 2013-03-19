@@ -2,7 +2,7 @@ intro_sound = false
 
 function greet_the_world()
 	print ("Hello my beloved world!")
-	local is_changed = setButtonText("btnNewGame", "Dawno dawno temu...\nw krainie calek...\nzyl sobie lord calka...\na stworzyl go wielki latajacy potwor spaghetti...\nT\tBC...")
+	--local is_changed = setButtonText("btnNewGame", "It's time to moon some planet!")
 	if is_changed == true then
 		print ("Successfully changed text of button btnNewGame!")
 		setButtonColor("btnNewGame", "N", 255, 255, 255, 255)
@@ -14,7 +14,7 @@ function greet_the_world()
 	--playSound(music_file, loop)
 	if intro_sound == false then
 		intro_sound = true
-		--playSound("res/audio/temporary_intro_theme.ogg", true)
+		playSound("res/audio/Romeointro.ogg", true)
 	end
 --	nadpisanie()
 --	addScript("res/level/0/dodatkowy.lua")

@@ -258,7 +258,7 @@ void CResourceManager::loadLevel(int lvl)
     }
 }
 
-void CResourceManager::loadMap(const std::string &pathToMapFile)
+void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
 {
 	boost::property_tree::ptree pt;
 	bool _load=true;
@@ -282,8 +282,8 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
 		// weź atrybut width z elementu map<to bedzie int>, domyślnie daj mu wartość 0
 		map->width = pt.get<int>( "map.<xmlattr>.width", 0);
 		map->height = pt.get<int>( "map.<xmlattr>.height", 0);
-		map->tileWidth = pt.get<int>( "map.<xmlattr>.tileWidth", 0);
-		map->tileHeight = pt.get<int>( "map.<xmlattr>.tileHeight", 0);
+		map->tileWidth = pt.get<int>( "map.<xmlattr>.tilewidth", 0);
+		map->tileHeight = pt.get<int>( "map.<xmlattr>.tileheight", 0);
 	
 		// przejedź sie po wszystkich dzieciach <map> w drzewie/xml
 		BOOST_FOREACH( boost::property_tree::ptree::value_type &v, pt.get_child("map") )
@@ -294,12 +294,18 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
 				TmxMapTileset *tileset = new TmxMapTileset();
 
 				tileset->firstGid = v.second.get<int>("<xmlattr>.firstgid", 0);
-				tileset->name = v.second.get<std::string>("<xmlattr>.name", "0");
+				tileset->name = v.second.get<std::string>("<xmlattr>.name", "");
 				tileset->tileWidth = v.second.get<int>("<xmlattr>.tilewidth", 0);
 				tileset->tileHeight = v.second.get<int>("<xmlattr>.tileheight", 0);
+				tileset->spacing = v.second.get<int>("<xmlattr>.spacing",0);
+				tileset->margin = v.second.get<int>("<xmlattr>.margin",0);
 
 				// jak czytasz stringa, do domyślny argument też musi byc jako string
-				tileset->filename = v.second.get<std::string>("image.<xmlattr>.source", "0");
+				tileset->filename = v.second.get<std::string>("image.<xmlattr>.source", " ");
+
+				tileset->imageHeight = v.second.get<int>("image.<xmlattr>.height", 0);
+				tileset->imageWidth = v.second.get<int>("image.<xmlattr>.width", 0);
+				tileset->trans = v.second.get<std::string>("image.<xmlattr>.trans", "");
 
 				std::cout << "Tileset " << tileset->name << " filename " << tileset->filename << std::endl;
 
@@ -321,22 +327,44 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
 
 				std::cout << "Layer " << layer->name << " width " << layer->width << " height " << layer->height << std::endl;
 
-				layer->data = new int[ layer->width * layer->height];
+				//layer->data = new int[ layer->width * layer->height];
 
-				typedef boost::char_separator<char> sep;
+				typedef boost::char_separator <char> sep;
 				typedef boost::tokenizer<sep> tk;
 
 				// dzieli string "csv" na wyrazy gdzie separatory masz niżej i zapisuje w tk
-				tk tokens(csv, sep(",\n\r"));
-				int index = 0;
+				tk tokens(csv, sep("\n,"));
 
-				for( tk::iterator i(tokens.begin()); i != tokens.end(); ++i)
+				int index = 0;
+				int _row = 0;
+				int _col = 1;
+				std::vector<int> _tmp;
+
+				// @mam wyjebane na cały doł. Pierdoliłem się z głupim wypisaniem prawie 3h
+				// zasraj vektor vektorami
+				for(int i=0; i<layer->height; i++)
 				{
-					// rzutuje zmienne TAK JAK SĄ, jak int=16 to w stringu też będzie 16 a nie ascii art i odwrotnie
-					layer->data[index] = boost::lexical_cast<int>( *i );
-					index++;
+					layer->data.push_back( std::vector<int>(layer->width) );
 				}
 
+				for( tk::iterator i = tokens.begin(); i != tokens.end(); ++i)
+				{
+					//std::cout<<*i<<" ";
+					_col++;
+					_tmp.push_back( boost::lexical_cast<int>(*i) );
+
+					if(_col > layer->width)
+					{
+						//std::cout<<"\n";
+						_col=1;
+						layer->data[_row] = _tmp;
+						_row++;
+						_tmp.clear();
+					}
+					
+				}
+				
+				
 				map->layers.push_back( layer );
 			}	
 		}
@@ -379,4 +407,72 @@ void CResourceManager::loadMap(const std::string &pathToMapFile)
 
 		this->pTmxMap = map;
 	}
+}
+
+void CResourceManager::generateTextureMap()
+{
+	sf::RenderTexture *rendtex = new sf::RenderTexture();
+	rendtex->create( pTmxMap->width * pTmxMap->tileWidth, pTmxMap->height * pTmxMap->tileHeight );
+	
+	sf::IntRect rect,rect2;
+
+	int _gid=0;
+	bool loaded=false;
+	TmxMapTileset *tilset=0, *ptilset = 0;
+	int NUM_COL=0;
+	sf::Texture _tex;
+
+	for(int row = 0; row < pTmxMap->height; row++)
+	{
+		for(int col = 0; col <pTmxMap->width; col++)
+		{
+			_gid = pTmxMap->layers.front()->data[row][col];
+
+			// jeżeli jest to nieokreślony gid to leć dalej
+			if(_gid == 0)
+				continue;
+			
+			// szuka którego tilesetu użyć do aktualnego gida
+			tilset = pTmxMap->findTileset(_gid);
+
+			// normalizuje jego pozycje
+			_gid-= tilset->firstGid;
+
+			// jeżeli tileset się zmienił podczas ładowania kafelków to go załaduj, a jak nie to nie ładuj w koło tego samego
+			if( ptilset != tilset )
+				_tex.loadFromImage(getImage( tilset->filename ));
+
+			ptilset = tilset;
+			
+			// określa ile kafelków mieści się w poziomie na tilsecie
+			NUM_COL = tilset->imageWidth / tilset->tileWidth;
+
+			// wybiera pozycje odpowiedniego kafla w tilesecie
+			int tileset_col = _gid%NUM_COL;
+			int tileset_row = _gid/NUM_COL;
+
+			rect.left =tilset->margin + (tilset->spacing + tilset->tileWidth) * tileset_col;
+			rect.top = tilset->margin + (tilset->spacing + tilset->tileHeight) * tileset_row;
+			rect.width = tilset->tileWidth;
+			rect.height = tilset->tileHeight;
+			
+			rect2.left = col * tilset->tileWidth;
+			rect2.top = row * tilset->tileHeight;
+			rect2.width = tilset->tileWidth;
+			rect2.height = tilset->tileHeight;
+
+
+			sf::Sprite sprite(_tex, rect);
+			sprite.setPosition((float)rect2.left, (float)rect2.top);
+
+			// narysuj nasz kafelek na texturce mapy
+			rendtex->draw(sprite);
+
+		}
+
+	}
+	rendtex->display();
+	mapSprite = new sf::Sprite( rendtex->getTexture() );
+	// tymczasowo przesunięta | JUST 4 DBUG
+	mapSprite->move(100.f,50.f);
 }
