@@ -2,7 +2,7 @@
 <!--reprezentatywny przyklad na 3 przyciskach-->
 <gui>
   <buttons>
-    <button id="btnNewGame" text="Nowa Gra" action="startNewGame" hidden="0" position="100.0 0.0" size="20" hover_color="0 255 0 255" normal_color="255 0 0 255"/>
+    <button id="btnNewGame" text="Nowa Gra" action="startNewGame" hidden="0" position="100.0 0.0" size="40" hover_color="0 255 0 255" normal_color="255 255 0 255"/>
     <button id="btnExit" text="Ja chce do mamy!" action="zegnajSwiecie" hidden="0" position="100.0 50.0" size="15" hover_color="0 255 0 255" normal_color="255 0 0 255"/>
   </buttons>
 

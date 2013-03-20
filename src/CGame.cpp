@@ -23,16 +23,7 @@ int CGame::Step(sf::RenderWindow & App)
 				return -1; // wyjdz z gry(-1)
             }
 
-            /*if( m_event.type == sf::Event::KeyPressed )
-            {
-				if( m_event.key.code == sf::Keyboard::Escape )
-				{
-					return -1; // wyjdz z gry(-1)
-				}
-
-			
-            }*/
-            if(CInputHandler::GetInstance()->isKeyPressed(CInputHandler::Escape))
+            if(CInputHandler::GetInstance()->isToggled(CInputHandler::Escape))
             {
                 return -1;  //wyjdz z kodem bledu
             }
@@ -74,7 +65,7 @@ void CGame::m_Init()
     gResources.loadLevel(0);
 	// tymczasowo ładujemy brutem
 	gResources.loadTmxMap("res/level/0/map1a.tmx");
-	gResources.loadImage("res/img/0/desert.png");
+    gResources.loadImage("res/img/desert.png");
 	gResources.generateTextureMap();
 }
 
@@ -128,9 +119,16 @@ void CGame::manageButtons()
                     // perform action
                     callScriptFunction(btn->getAction()->c_str());
 
-					// stop dealing
-					btn->resetState();
-					it = gButtonClicked.erase(it);
+                    if( !gButtonClicked.empty() )
+                    {
+                        // stop dealing
+                        btn->resetState();
+                        it = gButtonClicked.erase(it);
+                    }
+                    else
+                    {
+                        break;
+                    }
 				}
 				else
 				{

@@ -93,6 +93,8 @@ void CResourceManager::clearResources()
 
         //delete *(this->m_guiElements.begin());
         this->m_guiElements.pop_front();
+
+        if( !gButtonClicked.empty() ) gButtonClicked.clear();
     }
 }
 
@@ -126,136 +128,106 @@ CButton *CResourceManager::findButton(const char *id)
 void CResourceManager::loadLevel(int lvl)
 {
     char file_path[512];
-    ::tinyxml2::XMLDocument xml_level;
+    boost::property_tree::ptree drzewko;
 
     sprintf(file_path, "res/level/%d/resource.xml", lvl);
 
     clearResources();
 
-    if(xml_level.LoadFile(file_path) == ::tinyxml2::XML_NO_ERROR)
-    {
-        ::tinyxml2::XMLElement *xml_root=xml_level.FirstChildElement("gui");
-        if(xml_root)
+    try
         {
-            gLogger << gLogger.LOG_INFO << (std::string(file_path)+" Resource root exist!").c_str();
+            boost::property_tree::xml_parser::read_xml(file_path, drzewko);
 
-            ::tinyxml2::XMLElement *xml_child=NULL;
-            ::tinyxml2::XMLElement *xml_buttons=xml_root->FirstChildElement(BUTTON_SECTION);
-            ::tinyxml2::XMLElement *xml_texts=xml_root->FirstChildElement(TEXT_SECTION);
-            ::tinyxml2::XMLElement *xml_images=xml_root->FirstChildElement(IMAGE_SECTION);
-            if(xml_buttons)
+            //after catch
+            BOOST_FOREACH( boost::property_tree::ptree::value_type &root, drzewko.get_child("gui") )
             {
-                const char* text_buffer;
-                const char* action_buffer;
-                const char* id_buffer;
-				char *tmp_buffer;
-				sf::Uint8 tab_color[4];
-                sf::Color normal_color;
-                sf::Color hover_color;
-                int hide;
-                sf::Vector2f *pos = new sf::Vector2f;
-                unsigned char_size;
-                int n=0;
-
-                xml_child=xml_buttons->FirstChildElement("button");
-
-                while(xml_child)
+                if(root.first == "buttons")
                 {
-                    //wartosci domyslne
-                    text_buffer=action_buffer=id_buffer=EMPTY;
-                    hide=1;
-                    char_size=12;
-                    pos->x=pos->y=0.0f;
-                    normal_color=sf::Color::Red;
-                    normal_color=sf::Color::Green;
-
-                    //ladowanie danych
-                    if(xml_child->Attribute("id")) id_buffer=xml_child->Attribute("id");
-                    if(xml_child->Attribute("text")) text_buffer=xml_child->Attribute("text");
-                    if(xml_child->Attribute("action")) action_buffer=xml_child->Attribute("action");
-                    if(xml_child->Attribute("normal_color"))
-                    { 
-						int l=0;
-						tmp_buffer = strtok( const_cast<char*>( xml_child->Attribute("normal_color") ), korektor);
-						while( tmp_buffer != NULL )
-						{
-							tab_color[l] = static_cast<sf::Uint8>( strtoul(tmp_buffer, NULL, 10) );
-							tmp_buffer = strtok( NULL, korektor);
-							l++;
-						}
-						normal_color.r = tab_color[0];
-						normal_color.g = tab_color[1];
-						normal_color.b = tab_color[2];
-						normal_color.a = tab_color[3];
-                    }
-
-                    if(xml_child->Attribute("hover_color"))
+                    int n=0;
+                    BOOST_FOREACH( boost::property_tree::ptree::value_type &button, root.second)
                     {
-                        //sscanf(xml_child->Attribute("hover_color"), "%hhu%hhu%hhu%huh", &normal_color.r, &normal_color.g, &normal_color.b, &normal_color.a);
-						int l=0;
-						tmp_buffer = strtok( const_cast<char*>( xml_child->Attribute("hover_color") ), korektor);
-						while( tmp_buffer != NULL )
-						{
-							tab_color[l] = static_cast<sf::Uint8>( strtoul(tmp_buffer, NULL, 10) );
-							tmp_buffer = strtok( NULL, korektor);
-							l++;
-						}
-						hover_color.r = tab_color[0];
-						hover_color.g = tab_color[1];
-						hover_color.b = tab_color[2];
-						hover_color.a = tab_color[3];
+                        if(button.first == "button")
+                        {
+                        n++;
+                        char *tmp_buffer;
+                        int l = 0;
+                        std::string text_buffer = button.second.get<std::string>("<xmlattr>.text","");
+                        std::string action_buffer = button.second.get<std::string>("<xmlattr>.action", "");
+                        std::string id_buffer = button.second.get<std::string>("<xmlattr>.id","");
+                        sf::Color hover_color;
+                        sf::Uint8 tab_color[4];
+                        sf::Color normal_color;
+                        sf::Vector2f pos;
+
+                        //Normal Color
+                        tmp_buffer = strtok( const_cast<char*>( button.second.get<std::string>("<xmlattr>.normal_color","255 0 0 255").c_str() ), korektor);
+                        while( tmp_buffer != NULL )
+                        {
+                            tab_color[l] = static_cast<sf::Uint8>( strtoul(tmp_buffer, NULL, 10) );
+                            tmp_buffer = strtok( NULL, korektor);
+                            l++;
+                        }
+                        normal_color.r = tab_color[0];
+                        normal_color.g = tab_color[1];
+                        normal_color.b = tab_color[2];
+                        normal_color.a = tab_color[3];
+
+                        //Hover Color
+                        l=0;
+                        tmp_buffer = strtok( const_cast<char*>( button.second.get<std::string>("<xmlattr>.hover_color","255 255 0 255").c_str() ), korektor);
+                        while( tmp_buffer != NULL )
+                        {
+                            tab_color[l] = static_cast<sf::Uint8>( strtoul(tmp_buffer, NULL, 10) );
+                            tmp_buffer = strtok( NULL, korektor);
+                            l++;
+                        }
+                        hover_color.r = tab_color[0];
+                        hover_color.g = tab_color[1];
+                        hover_color.b = tab_color[2];
+                        hover_color.a = tab_color[3];
+
+                        //hidden?
+                        int hide = button.second.get<int>("<xmlattr>.hidden", 0);
+
+                        //font size
+                        unsigned char_size = button.second.get<unsigned>("<xmlattr>.size", 12);
+
+                        //Position
+                        tmp_buffer = strtok( const_cast<char*>( button.second.get<std::string>("<xmlattr>.position","0.0 0.0").c_str() ), " ");
+                        pos.x = static_cast<float>( atof(tmp_buffer) );
+
+                        tmp_buffer = strtok( NULL, " ");
+                        pos.y = static_cast<float>( atof(tmp_buffer) );
+
+                        this->m_guiElements.push_back((CGuiElement*)(new CButton(CGuiElement::GUI_BUTTON, pos, char_size, text_buffer, action_buffer, id_buffer, (bool)(hide!=0), normal_color, hover_color)));
+                        }
                     }
-
-                    if(xml_child->Attribute("hidden"))
-					{
-						xml_child->QueryIntAttribute("hidden", &hide);
-					}
-
-                    if(xml_child->Attribute("position"))
-                    {
-                        tmp_buffer = strtok( const_cast<char*>( xml_child->Attribute("position") ), " ");
-						pos->x = static_cast<float>( atof(tmp_buffer) );
-
-						tmp_buffer = strtok( NULL, " ");
-						pos->y = static_cast<float>( atof(tmp_buffer) );
-						
-                    }
-                    if(xml_child->Attribute("size")) char_size=xml_child->UnsignedAttribute("size");
-
-                    //printf("%d)BUTTON|%s|%s|%s\n", n, id_buffer, text_buffer, action_buffer);  //DEBUG
-
-                    //wrzuc do pierscien do mordoru
-                    this->m_guiElements.push_back((CGuiElement*)(new CButton(CGuiElement::GUI_BUTTON, sf::Vector2f(pos->x, pos->y), char_size, text_buffer, action_buffer, id_buffer, (bool)(hide!=0), normal_color, sf::Color::Yellow)));
-
-                    //bierz nastepny element
-                    xml_child=xml_child->NextSiblingElement("button");
-                    n++;
+                    printf("%d buttons parsed!\n", n);
                 }
-                printf("%d buttons parsed!\n", n);  //DEBUG
+                else if(root.first == "texts")
+                {
+                    //
+                }
+                else if(root.first == "images")
+                {
+                    //
+                }
             }
-            if(xml_texts)
+
+            char script_path[512];
+            sprintf(script_path, "res/level/%d/script.lua", lvl);
+
+            if(!CScreenManager::GetInstance()->GetGame()->loadScript(script_path))
             {
-                //STATYCZNY TEXT
-                //TO DO
+                gLogger << gLogger.LOG_INFO << "Script loaded successfully!";
+                CScreenManager::GetInstance()->GetGame()->callScriptFunction("greet_the_world");
             }
-            if(xml_images)
-            {
-                //TEKSTURKI WYKORZYSTANE W POZIOMIE
-                //TO DO
-            }
+            else gLogger << gLogger.LOG_ERROR << "Failed to load script!";
         }
-        else gLogger << gLogger.LOG_WARNING << file_path << "There's no resource root!";
-
-        char script_path[512];
-        sprintf(script_path, "res/level/%d/script.lua", lvl);
-
-        if(!CScreenManager::GetInstance()->GetGame()->loadScript(script_path))
+        catch(boost::exception const & fail)
         {
-            gLogger << gLogger.LOG_INFO << "Script loaded successfully!";
-            CScreenManager::GetInstance()->GetGame()->callScriptFunction("greet_the_world");
+            gLogger << gLogger.LOG_ERROR << "Can not load resource.xml file.";
         }
-        else gLogger << gLogger.LOG_ERROR << "Failed to load script!";
-    }
 }
 
 void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
