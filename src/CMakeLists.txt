@@ -35,7 +35,7 @@ if(SFML_FOUND)
 #inne
     else(WIN32)
         SET (CMAKE_CXX_FLAGS    "-Wall")
-        target_link_libraries(ETI_SHOOTER sfml-window sfml-graphics sfml-system lua tinyxml2 sfml-audio)
+        target_link_libraries(ETI_SHOOTER sfml-window sfml-graphics sfml-system lua sfml-audio)
     endif(WIN32)
 else(SFML_FOUND)
     message(Nie znaleziono SFML!)

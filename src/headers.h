@@ -28,7 +28,6 @@
 
 // Zewnętrzne
 #include "lua5.2/lua.hpp"
-#include "tinyxml2/tinyxml2.h"
 
 // Nasze:
 #include "CLogger.h"
