@@ -21,6 +21,7 @@
 // Biblioteki BOOST
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
+#include <boost/property_tree/ini_parser.hpp>
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <boost/tokenizer.hpp>
@@ -66,7 +67,7 @@ extern std::list<class CButton*> gButtonClicked;
 
 // Dane do CLogger [Loggera]
 #define LOGPATH "log.txt"
-#define ENGINEVERSION "0.1.0"
+#define ENGINEVERSION "0.4.0"
 
 // Dane do CSettingsParser
 #define MAXBUFFERWIDTH 100

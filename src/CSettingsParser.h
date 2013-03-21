@@ -10,7 +10,7 @@ Jak używać:
     CSettingsParser settings("settings.dat");
 	CSettingsParser settings("settings.dat"); <- albo tak z wartościami z headers.h
 
-    // Czytanie danych 
+    // Czytanie danych [stara wersja]
     int width, height;
 	settings.Get("width", &width);
 	settings.Get("height", &height);
@@ -27,7 +27,10 @@ Jak używać:
 	bool isLow;
 	settings.Get("use30hz", &isLow);
 
-	// Zapis danych
+	// Czytanie danych [nowa wersja]
+	typ zwracany var = settings.GetBoosted<typ zwracany>("Sekcja.Klucz"),domyślna wartość)
+
+	// Zapis danych <- jeszcze nie zboostowane
 	settings.Set("title", "sfml tutorial");
 	settings.Write(); <- wołać na samym końcu
 
@@ -35,21 +38,19 @@ Jak używać:
 	# linie z hashem[#] beda ignorowane
 	# spacje też będą ignorowane
 
-	# screen size
-	width = 1024
-	height = 768
+	[WindowSize]
+	width = 1280
+	height = 720
 
-	# windows title
-	title = sfml tutorial
+	[WindowTitle]
+	title = Nobody expected...
 
-	# phycics constants
-	g = 9.81
-
-	# player initials
-	player = x
-
-	# video mode
-	use30hz = TRUE
+	[WindowSettings]
+	style=1
+	depthBuffer = 0
+	stencilBuffer = 0
+	antialiasing = 2
+	framerateLimit = 60
 
 ################################################
 */
@@ -58,6 +59,7 @@ Jak używać:
 class CSettingsParser
 {
 protected:
+	boost::property_tree::ptree pt;
 	bool m_IsChanged;
 	std::string m_Filename;
 	std::vector< std::pair< std::string, std::string> > m_data;
@@ -69,7 +71,24 @@ public:
 	~CSettingsParser();
 		
 	void Read();
+	void ReadByBoost();
 	void Write();
+
+	template <typename T>
+	T GetBoosted(const std::string param, const T defaultValue)
+	{
+		T ret_val;
+		try
+		{
+			ret_val = pt.get<T>(param);
+			return ret_val;
+		}
+		catch(boost::exception const &)
+		{
+			gLogger<< gLogger.LOG_ERROR << (std::string("Reading wrong section from config file. You typed: ")+param).c_str();
+			return ret_val = defaultValue;
+		}
+	}
 
 	bool IsChanged();
 

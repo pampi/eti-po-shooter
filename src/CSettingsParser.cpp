@@ -5,7 +5,7 @@ CSettingsParser::CSettingsParser(std::string file)
 	m_Filename = file;
 	m_Max_width = MAXBUFFERWIDTH;
 	m_Size = 0;
-	Read();
+	ReadByBoost();
 	m_IsChanged = false;
 }
 
@@ -14,7 +14,7 @@ CSettingsParser::CSettingsParser(std::string file, unsigned int width)
 	m_Filename = file;
 	m_Max_width = width;
 	m_Size = 0;
-	Read();
+	ReadByBoost();
 }
 
 CSettingsParser::~CSettingsParser()
@@ -25,6 +25,7 @@ CSettingsParser::~CSettingsParser()
 	}
 	m_Filename.clear();
 	m_data.clear();
+	pt.clear();
 }
 
 bool CSettingsParser::IsChanged()
@@ -34,6 +35,8 @@ bool CSettingsParser::IsChanged()
 
 void CSettingsParser::Read()
 {
+	gLogger << gLogger.LOG_INFO << "Config reading started...";
+
 	std::ifstream in(m_Filename.c_str());
 	if(!in.is_open())
 	{
@@ -104,10 +107,26 @@ void CSettingsParser::Read()
 	}
 	in.close();
 	m_IsChanged = true;
+	gLogger << gLogger.LOG_INFO << "Config reading finished...";
+}
+
+void CSettingsParser::ReadByBoost()
+{
+	try
+	{
+		boost::property_tree::ini_parser::read_ini(m_Filename, pt);
+		gLogger << gLogger.LOG_INFO << "Boosted reading ini file COMPLETED";
+
+	}
+	catch(boost::exception const &)
+	{
+		gLogger << gLogger.LOG_ERROR << "Boosted reading ini file FAILED";
+	}
 }
 
 void CSettingsParser::Write()
 {
+	gLogger << gLogger.LOG_INFO << "Config writing started...";
 	std::ofstream out(m_Filename.c_str());
 	if(!out.is_open())
 	{
@@ -127,6 +146,7 @@ void CSettingsParser::Write()
 		}
 	}
 	out.close();
+	gLogger << gLogger.LOG_INFO << "Config writing finished...";
 }
 
 void CSettingsParser::Get(std :: string param, std :: string* value)

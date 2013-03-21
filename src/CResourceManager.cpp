@@ -224,7 +224,7 @@ void CResourceManager::loadLevel(int lvl)
             }
             else gLogger << gLogger.LOG_ERROR << "Failed to load script!";
         }
-        catch(boost::exception const & fail)
+        catch(boost::exception const &)
         {
             gLogger << gLogger.LOG_ERROR << "Can not load resource.xml file.";
         }
@@ -307,7 +307,6 @@ void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
 				// dzieli string "csv" na wyrazy gdzie separatory masz niżej i zapisuje w tk
 				tk tokens(csv, sep("\n,"));
 
-				int index = 0;
 				int _row = 0;
 				int _col = 1;
 				std::vector<int> _tmp;
@@ -389,7 +388,6 @@ void CResourceManager::generateTextureMap()
 	sf::IntRect rect,rect2;
 
 	int _gid=0;
-	bool loaded=false;
 	TmxMapTileset *tilset=0, *ptilset = 0;
 	int NUM_COL=0;
 	sf::Texture _tex;

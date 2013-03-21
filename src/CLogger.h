@@ -62,7 +62,7 @@ public:
 
 		if(m_File.is_open())
 		{
-			m_File << "Engine Version: " << ENGINEVERSION << std::endl;
+			m_File << "Engine Version: " << engine_version << std::endl;
 			m_File << "File log created" << std::endl;
 			m_File << "Created: " << m_buffor <<std::endl << std::endl << std::endl;
 		}
@@ -76,6 +76,15 @@ public:
         logger.m_czasTM = *localtime(&logger.m_czas);
 		std::strftime(logger.m_buffor, sizeof(logger.m_buffor), "%H:%M:%S", &logger.m_czasTM);
 		logger.m_File << "[" << logger.m_buffor << "] : " <<text << std::endl;
+		return logger;
+	}
+
+	friend CLogger& operator<<(CLogger &logger, const std::string text)
+    {
+        std::time(&logger.m_czas);
+        logger.m_czasTM = *localtime(&logger.m_czas);
+		std::strftime(logger.m_buffor, sizeof(logger.m_buffor), "%H:%M:%S", &logger.m_czasTM);
+		logger.m_File << "[" << logger.m_buffor << "] : " << text << std::endl;
 		return logger;
 	}
 
