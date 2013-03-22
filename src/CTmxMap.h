@@ -63,6 +63,8 @@ public:
 	{
 		while( !objects.empty() )
 		{
+            TmxMapObject *pMapObject = (*objects.begin());
+            delete pMapObject;
 			objects.pop_front();
 		}
 	}
@@ -103,14 +105,30 @@ public:
 	// możesz ogarnąć czy destuktory dobrze działają
 	~TmxMap()
 	{
+        TmxMapTileset *pTileset;
+        TmxMapLayer *pLayer;
+        TmxMapObjectGroup *pObjectGroup;
+
 		while( !tilesets.empty() )
+        {
+            pTileset = (*tilesets.begin());
+            delete pTileset;
 			tilesets.pop_front();
+        }
 
 		while( !layers.empty() )
-			tilesets.pop_front();
+        {
+            pLayer = (*layers.begin());
+            delete pLayer;
+            layers.pop_front();
+        }
 
 		while( !objects.empty() )
-			tilesets.pop_front();
+        {
+            pObjectGroup = (*objects.begin());
+            delete pObjectGroup;
+            objects.pop_front();
+        }
 	}
 };
 

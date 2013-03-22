@@ -2,6 +2,10 @@
 #define SETPARSER_H
 #include "headers.h"
 
+#ifndef WIN32
+extern CLogger gLogger;
+#endif
+
 /*
 ################### README #####################
 Jak używać:

@@ -60,7 +60,7 @@ void CScreenManager::m_Init()
 
 	framerateLimit = gSettings.GetBoosted<int>("WindowSettings.framerateLimit", 60);
 
-	window.create(sf::VideoMode(windowWidth, windowHeight), windowTitle, sf::Uint32(style), sf::ContextSettings::ContextSettings(depthBuffer, stencilBuffer, antyaliasing) );
+    window.create(sf::VideoMode(windowWidth, windowHeight), windowTitle, sf::Uint32(style), sf::ContextSettings(depthBuffer, stencilBuffer, antyaliasing) );
 	window.setFramerateLimit(framerateLimit);
 
 	m_inited = true;
