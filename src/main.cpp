@@ -1,6 +1,6 @@
 ﻿#include "headers.h"
 
-
+Globals pGlobal;
 
 int main()
 {
@@ -9,7 +9,6 @@ int main()
 	mng->run();
 	
 	delete mng;
-
-
+	
 	return 0;
 }

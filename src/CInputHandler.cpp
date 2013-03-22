@@ -20,6 +20,8 @@ CInputHandler::CInputHandler()
         }
         else m_mouseState[i]=KEY_UP;
     }
+
+	pGlobal.gLogger << pGlobal.gLogger.LOG_INFO << "CInputHandler konstruktor";
 }
 
 void CInputHandler::refreshStates()

@@ -1,4 +1,4 @@
-#All rights reserved to pastafarians from ETI
+﻿#All rights reserved to pastafarians from ETI
 message("\n\nThe fantasy program given by God")
 message("Come now, one, two, three! Overlap")
 message("Come now, one, two, three! Escape death\n")
@@ -11,7 +11,6 @@ project( ETI_SHOOTER )
 
 set( GAME_SRC
     main.cpp
-    globals.cpp
     CDebugDraw.cpp
     CGame.cpp
     CResourceManager.cpp

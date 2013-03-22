@@ -50,27 +50,28 @@
 
 
 
-// Globalny logger
-extern CLogger gLogger;
-// Globalny parser
-extern CSettingsParser gSettings;
-// Globalny ResourceManager
-extern CResourceManager gResources;
-// Globalny licznik FPS
-extern CFpsCounter gFPS;
-// Globalny Debug Drawer
-extern CDebugDraw gDDraw;
-// Globalna lista przyciskow do obsluzenia
-extern std::list<class CButton*> gButtonClicked;
+// Puszka pandory
+class Globals
+{
+public:
+	class CResourceManager gResources;
+	class CLogger gLogger;
+	class CSettingsParser gSettings;
+	class CFpsCounter gFPS;
+	class CDebugDraw gDDraw;
+
+	std::list<class CButton*> gButtonClicked;
+};
+
+extern Globals pGlobal;
 
 #endif
 
 // Dane do CLogger [Loggera]
 #define LOGPATH "log.txt"
-#define ENGINEVERSION "0.4.0"
+#define ENGINEVERSION "0.4.5"
 
 // Dane do CSettingsParser
-#define MAXBUFFERWIDTH 100
 #define SETTINGSPATH "res/misc/config.ini"
 
 // Dane do czcionki

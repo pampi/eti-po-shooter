@@ -3,8 +3,8 @@
 CGame::CGame()
 {
 	m_inited = false;
-	gDDraw << "Dupa";
-	gLogger << gLogger.LOG_WARNING <<  "konstuktor game";
+	pGlobal.gDDraw << "Dupa";
+	pGlobal.gLogger << pGlobal.gLogger.LOG_INFO << "CGame konstruktor";
 }
 
 int CGame::Step(sf::RenderWindow & App)
@@ -25,7 +25,7 @@ int CGame::Step(sf::RenderWindow & App)
 
             if(CInputHandler::GetInstance()->isToggled(CInputHandler::Escape))
             {
-                return -1;  //wyjdz z kodem bledu
+                return -1; // wyjdz z gry(-1)
             }
 		} // events loop
 
@@ -34,19 +34,19 @@ int CGame::Step(sf::RenderWindow & App)
 		// JĄDRO GRY \|/
 
 		drawGui(App);
-		App.draw( *gResources.mapSprite );
+		App.draw( *pGlobal.gResources.mapSprite );
 
 		// JĄDRO GRY /|\
 
-		// tak se możesz tu wrzucić coś co potrzebujesz zobaczyć, albo ładuj w loga
+
 #if (DRAWDEBUG)
-		gDDraw.add((int) gFPS.getFPS() ,"FPS: ");
-		gDDraw.draw(App);
+		pGlobal.gDDraw.add((int) pGlobal.gFPS.getFPS() ,"FPS: ");
+		pGlobal.gDDraw.draw(App);
 #endif
 
 
 		// Żeby się licznik fps aktualizował
-		gFPS.update();
+		pGlobal.gFPS.update();
 
 		// Sleep żeby proca nie katowało
 		sf::sleep(sf::milliseconds(10));
@@ -57,21 +57,19 @@ int CGame::Step(sf::RenderWindow & App)
 
 void CGame::m_Init()
 {
-	gLogger << gLogger.LOG_WARNING <<  "initer game";
-
 	m_inited = true;
 
     // Laduj menu
-    gResources.loadLevel(0);
+    pGlobal.gResources.loadLevel(0);
 	// tymczasowo ładujemy brutem
-	gResources.loadTmxMap("res/level/0/map1a.tmx");
-    gResources.loadImage("res/img/desert.png");
-	gResources.generateTextureMap();
+	pGlobal.gResources.loadTmxMap("res/level/0/map1a.tmx");
+    pGlobal.gResources.loadImage("res/img/desert.png");
+	pGlobal.gResources.generateTextureMap();
 }
 
 void CGame::drawGui(sf::RenderWindow & App)
 {
-	for( std::list<class CGuiElement*>::iterator it = gResources.getGuiList()->begin(); it != gResources.getGuiList()->end(); it++ )
+	for( std::list<class CGuiElement*>::iterator it = pGlobal.gResources.getGuiList()->begin(); it != pGlobal.gResources.getGuiList()->end(); it++ )
 	{
         switch((*it)->type)
         {
@@ -106,7 +104,7 @@ void CGame::drawGui(sf::RenderWindow & App)
 
 void CGame::manageButtons()
 {
-	for( std::list<class CButton*>::iterator it = gButtonClicked.begin(); it != gButtonClicked.end();  )
+	for( std::list<class CButton*>::iterator it = pGlobal.gButtonClicked.begin(); it != pGlobal.gButtonClicked.end();  )
 	{
 		CButton *btn=static_cast<CButton *>(*it);
 		if(btn->type == CGuiElement::GUI_BUTTON)
@@ -119,11 +117,11 @@ void CGame::manageButtons()
                     // perform action
                     callScriptFunction(btn->getAction()->c_str());
 
-                    if( !gButtonClicked.empty() )
+                    if( !pGlobal.gButtonClicked.empty() )
                     {
                         // stop dealing
                         btn->resetState();
-                        it = gButtonClicked.erase(it);
+                        it = pGlobal.gButtonClicked.erase(it);
                     }
                     else
                     {
