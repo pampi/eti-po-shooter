@@ -14,7 +14,7 @@ CScript::CScript()
     //powiaz funkcje silnika z interfejsem Lua
     RegisterEngineFunctions();
 
-	pGlobal.gLogger << pGlobal.gLogger.LOG_INFO << "CScript konstruktor";
+    gLogger << CLogger::LOG_INFO << "CScript konstruktor";
 }
 
 CScript::~CScript()
@@ -54,13 +54,13 @@ void CScript::callScriptFunction(const char *function_name, int argc, SLuaArgume
                 break;
             default:
                 failsafe++;
-                pGlobal.gLogger << pGlobal.gLogger.LOG_WARNING << "Dear dairy, Today's OP is a faggot!\n";
+                gLogger << CLogger::LOG_WARNING << "Dear dairy, Today's OP is a faggot!\n";
                 break;
         }
     }
     //wywolaj f-cje, jesli sie nie wykona to zanotuj o tym w dzienniku KGB/NKWD/SB
     if(lua_pcall(machine, argc-failsafe, 0, 0)!=0) 
-		pGlobal.gLogger << pGlobal.gLogger.LOG_WARNING << std::string("Failed to call:" )+function_name;
+        gLogger << CLogger::LOG_WARNING << std::string("Failed to call:" )+function_name;
 }
 
 void CScript::RegisterEngineFunctions()

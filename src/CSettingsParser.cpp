@@ -5,7 +5,7 @@ CSettingsParser::CSettingsParser(std::string file)
 	m_Filename = file;
 	ReadByBoost();
 	m_IsChanged = false;
-	pGlobal.gLogger << pGlobal.gLogger.LOG_INFO << "CSettingsParser konstruktor";
+    gLogger << CLogger::LOG_INFO << "CSettingsParser konstruktor";
 }
 
 CSettingsParser::~CSettingsParser()
@@ -27,12 +27,12 @@ void CSettingsParser::ReadByBoost()
 	try
 	{
 		boost::property_tree::ini_parser::read_ini(m_Filename, pt);
-		pGlobal.gLogger << pGlobal.gLogger.LOG_INFO << "Boosted reading ini file COMPLETED";
+        gLogger << CLogger::LOG_INFO << "Boosted reading ini file COMPLETED";
 
 	}
 	catch(boost::property_tree::ptree_error const &e)
 	{
-		pGlobal.gLogger << pGlobal.gLogger.LOG_ERROR << e.what();
+        gLogger << CLogger::LOG_ERROR << e.what();
 	}
 }
 
@@ -44,7 +44,7 @@ void CSettingsParser::WriteByBoost()
 	}
 	catch(boost::property_tree::ptree_error const &e)
 	{
-		pGlobal.gLogger << pGlobal.gLogger.LOG_ERROR << e.what();
+        gLogger << CLogger::LOG_ERROR << e.what();
 	}
 	
 }

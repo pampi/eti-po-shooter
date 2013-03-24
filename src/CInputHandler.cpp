@@ -1,7 +1,5 @@
 ﻿#include "headers.h"
 
-CInputHandler *CInputHandler::m_pInstance = 0;
-
 CInputHandler::CInputHandler()
 {
     for(int i=0; i<sf::Keyboard::KeyCount; i++)
@@ -21,7 +19,7 @@ CInputHandler::CInputHandler()
         else m_mouseState[i]=KEY_UP;
     }
 
-	pGlobal.gLogger << pGlobal.gLogger.LOG_INFO << "CInputHandler konstruktor";
+    gLogger << CLogger::LOG_INFO << "CInputHandler konstruktor";
 }
 
 void CInputHandler::refreshStates()
@@ -105,10 +103,4 @@ bool CInputHandler::isReleased(Key key)
         m_keyboardState[key]=KEY_UP;
     }
     return ret_val;
-}
-
-CInputHandler *CInputHandler::GetInstance()
-{
-    if(!CInputHandler::m_pInstance) CInputHandler::m_pInstance = new CInputHandler();
-    return CInputHandler::m_pInstance;
 }

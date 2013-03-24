@@ -31,6 +31,7 @@
 #include "lua5.2/lua.hpp"
 
 // Nasze:
+#include "TSingleton.hpp"
 #include "CLogger.h"
 #include "CSettingsParser.h"
 #include "CFpsCounter.h"
@@ -50,20 +51,8 @@
 
 
 
-// Puszka pandory
-class Globals
-{
-public:
-	class CResourceManager gResources;
-	class CLogger gLogger;
-	class CSettingsParser gSettings;
-	class CFpsCounter gFPS;
-	class CDebugDraw gDDraw;
-
-	std::list<class CButton*> gButtonClicked;
-};
-
-extern Globals pGlobal;
+//Tu był item "Puszka pandory"
+extern std::list<class CButton*> gButtonClicked;
 
 #endif
 

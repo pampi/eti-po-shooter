@@ -2,10 +2,6 @@
 #define SETPARSER_H
 #include "headers.h"
 
-#ifndef WIN32
-extern CLogger gLogger;
-#endif
-
 /*
 ################### README #####################
 Jak używać:
@@ -41,8 +37,12 @@ Jak używać:
 ################################################
 */
 
+#ifndef gSettings
+#define gSettings CSettingsParser::GetReference()
+#endif
 
-class CSettingsParser
+
+class CSettingsParser: public TSingleton<CSettingsParser>
 {
 protected:
 	boost::property_tree::ptree pt;
@@ -67,8 +67,8 @@ public:
 			return ret_val;
 		}
 		catch(boost::property_tree::ptree_error const &e)
-		{
-			pGlobal.gLogger<< pGlobal.gLogger.LOG_ERROR << e.what();
+        {
+            gLogger<< CLogger::LOG_ERROR << e.what();
 			return ret_val = defaultValue;
 		}
 	}
@@ -84,7 +84,7 @@ public:
 		}
 		catch(boost::property_tree::ptree_error const &e)
 		{
-			pGlobal.gLogger<< pGlobal.gLogger.LOG_ERROR << e.what();
+            gLogger << CLogger::LOG_ERROR << e.what();
 		}
 	}
 

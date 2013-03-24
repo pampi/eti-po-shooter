@@ -3,7 +3,11 @@
 
 #include "headers.h"
 
-class CFpsCounter
+#ifndef gFPS
+#define gFPS CFpsCounter::GetReference()
+#endif
+
+class CFpsCounter: public TSingleton<CFpsCounter>
 { 
 public:
 	CFpsCounter() : m_Frame(0), m_Fps(0) {}

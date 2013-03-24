@@ -3,7 +3,7 @@
 
 #include "headers.h"
 
-class CInputHandler: public sf::Mouse, public sf::Keyboard
+class CInputHandler: public sf::Mouse, public sf::Keyboard, public TSingleton<CInputHandler>
 {
 public:
     enum KeyState{
@@ -19,11 +19,6 @@ public:
     bool isToggled(Button button);
     bool isReleased(Key key);
     bool isReleased(Button button);
-
-    static CInputHandler *GetInstance();
-
-protected:
-    static CInputHandler *m_pInstance;
 
 private:
     KeyState m_keyboardState[sf::Keyboard::KeyCount];

@@ -3,8 +3,11 @@
 
 #include "headers.h"
 
+#ifndef gResources
+#define gResources CResourceManager::GetReference()
+#endif
 
-class CResourceManager
+class CResourceManager: public TSingleton<CResourceManager>
 {
 private:
     void clearResources();

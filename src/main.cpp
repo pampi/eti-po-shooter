@@ -1,14 +1,10 @@
 ﻿#include "headers.h"
 
-Globals pGlobal;
-
 int main()
 {
-	CScreenManager *mng = new CScreenManager();
+    CScreenManager::GetInstance()->run();
 
-	mng->run();
-	
-	delete mng;
+    CScreenManager::DestroyInstance();
 	
 	return 0;
 }

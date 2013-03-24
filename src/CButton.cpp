@@ -1,8 +1,10 @@
 ﻿#include "headers.h"
 
+std::list<CButton*> gButtonClicked;
+
 CButton::CButton()
 {
-	pGlobal.gLogger << pGlobal.gLogger.LOG_INFO << "CButton konstruktor";
+    gLogger << CLogger::LOG_INFO << "CButton konstruktor";
 }
 
 CButton::~CButton()
@@ -25,7 +27,7 @@ CButton::CButton(guiType typ, sf::Vector2f position, size_t charSize, sf::String
 	this->m_clicked = false;
 
 	m_text.setPosition( position );
-	m_text.setFont( pGlobal.gResources.getFont() );
+    m_text.setFont( gResources.getFont() );
 	m_text.setString( m_buttonText );
 	m_text.setCharacterSize( charSize );
 	m_text.setColor( normalColor );
@@ -46,7 +48,7 @@ void CButton::update(sf::RenderWindow & App)
 
         if( CInputHandler::GetInstance()->isToggled(sf::Mouse::Left) && !m_clicked )
 		{
-			pGlobal.gButtonClicked.push_back( this );
+            gButtonClicked.push_back( this );
 			m_clicked = true;
             //DEBUG TO DEL
 			//std::cout<<this->m_actionToDo<<std::endl;

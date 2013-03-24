@@ -2,7 +2,7 @@
 
 CSoundManager::CSoundManager()
 {
-	pGlobal.gLogger << pGlobal.gLogger.LOG_INFO << "CSoundManager konstruktor";
+    gLogger << CLogger::LOG_INFO << "CSoundManager konstruktor";
 }
 
 bool CSoundManager::play(const char *file, bool loop)

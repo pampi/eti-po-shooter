@@ -3,7 +3,7 @@
 
 #include "headers.h"
 
-class CScreenManager
+class CScreenManager: public TSingleton<CScreenManager>
 {
 public:
 	CScreenManager();
@@ -11,7 +11,6 @@ public:
 	void run();
 
     class CGame *GetGame();
-    static CScreenManager *GetInstance();
 
 private:
 	bool m_inited;
@@ -27,11 +26,7 @@ private:
 	// window settings
 	int windowWidth, windowHeight;
 	std::string windowTitle;
-	int style, depthBuffer, stencilBuffer, antyaliasing, framerateLimit;
+    int style, depthBuffer, stencilBuffer, antyaliasing, framerateLimit;
 
-
-protected:
-    static CScreenManager* m_pInstance;
-	
 };
 #endif

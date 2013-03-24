@@ -3,7 +3,11 @@
 
 #include "headers.h"
 
-class CDebugDraw
+#ifndef gDDraw
+#define gDDraw CDebugDraw::GetReference()
+#endif
+
+class CDebugDraw: public TSingleton<CDebugDraw>
 {
 private:
 	std::ostringstream m_stream;

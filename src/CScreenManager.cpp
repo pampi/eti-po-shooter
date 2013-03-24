@@ -1,13 +1,9 @@
 ﻿#include "headers.h"
 
-CScreenManager *CScreenManager::m_pInstance=NULL;
-
 CScreenManager::CScreenManager()
 {
-    m_pInstance = this;
-
 	m_curScreen = 0;
-	pGlobal.gResources.setDefaultFont();
+    gResources.setDefaultFont();
 
 	windowWidth=800;
 	windowHeight=600;
@@ -22,7 +18,7 @@ CScreenManager::CScreenManager()
 	m_screens.push_back(m_game);
 
 	m_inited = false;
-	pGlobal.gLogger << pGlobal.gLogger.LOG_INFO << "CScreenManager konstruktor";
+    gLogger << CLogger::LOG_INFO << "CScreenManager konstruktor";
 }
 
 void CScreenManager::run()
@@ -36,12 +32,6 @@ void CScreenManager::run()
 	}
 }
 
-CScreenManager *CScreenManager::GetInstance()
-{
-    if(!m_pInstance) m_pInstance = new CScreenManager();
-    return m_pInstance;
-}
-
 class CGame *CScreenManager::GetGame()
 {
     return m_game;
@@ -49,17 +39,17 @@ class CGame *CScreenManager::GetGame()
 
 void CScreenManager::m_Init()
 {
-	windowHeight = pGlobal.gSettings.Get<int>("WindowSize.height", 800);
-	windowWidth = pGlobal.gSettings.Get<int>("WindowSize.width", 600);
+    windowHeight = gSettings.Get<int>("WindowSize.height", 800);
+    windowWidth = gSettings.Get<int>("WindowSize.width", 600);
 
-	windowTitle = pGlobal.gSettings.Get<std::string>("WindowTitle.title", "LE BUGGED");
+    windowTitle = gSettings.Get<std::string>("WindowTitle.title", "LE BUGGED");
 	
-	style = pGlobal.gSettings.Get<int>("WindowSettings.style", 7);
-	depthBuffer = pGlobal.gSettings.Get<int>("WindowSettings.depthBuffer", 0);
-	stencilBuffer = pGlobal.gSettings.Get<int>("WindowSettings.stencilBuffer", 0);
-	antyaliasing = pGlobal.gSettings.Get<int>("WindowSettings.antialiasing", 0);
+    style = gSettings.Get<int>("WindowSettings.style", 7);
+    depthBuffer = gSettings.Get<int>("WindowSettings.depthBuffer", 0);
+    stencilBuffer = gSettings.Get<int>("WindowSettings.stencilBuffer", 0);
+    antyaliasing = gSettings.Get<int>("WindowSettings.antialiasing", 0);
 
-	framerateLimit = pGlobal.gSettings.Get<int>("WindowSettings.framerateLimit", 60);
+    framerateLimit = gSettings.Get<int>("WindowSettings.framerateLimit", 60);
 
     window.create(sf::VideoMode(windowWidth, windowHeight), windowTitle, sf::Uint32(style), sf::ContextSettings(depthBuffer, stencilBuffer, antyaliasing) );
 	window.setFramerateLimit(framerateLimit);

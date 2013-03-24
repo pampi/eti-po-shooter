@@ -34,7 +34,21 @@ Jak używać:
 ################################################
 */
 
-class CLogger
+/*
+ *  Panie Boże.
+ *  Proszę spraw aby ten kod zginął, przepadnął i nie był potrzebny do prawidłowego działania.
+ *
+ *  Amen
+ */
+#ifndef gLogger
+#define gLogger CLogger::GetReference()
+#endif
+
+#ifndef LOG
+#define LOG(log_type,message) CLogger::GetReference() << log_type << message
+#endif
+
+class CLogger: public TSingleton<CLogger>
 {
 private:
 	std::ofstream m_File;

@@ -12,7 +12,7 @@ int API4Lua::setButtonText(lua_State *vm)
         const char* id=lua_tostring(vm, 1);
         const char* text=lua_tostring(vm, 2);
 
-        CButton *btn=pGlobal.gResources.findButton(id);
+        CButton *btn=gResources.findButton(id);
 
         if(btn)
         {
@@ -33,7 +33,7 @@ int API4Lua::setButtonAction(lua_State *vm)
         const char* id=lua_tostring(vm, 1);
         const char* action=lua_tostring(vm, 2);
 
-        CButton *btn=pGlobal.gResources.findButton(id);
+        CButton *btn=gResources.findButton(id);
 
         if(btn)
         {
@@ -54,7 +54,7 @@ int API4Lua::setButtonHide(lua_State *vm)
         const char* id=lua_tostring(vm, 1);
         int hide=lua_toboolean(vm, 2);
 
-        CButton *btn=pGlobal.gResources.findButton(id);
+        CButton *btn=gResources.findButton(id);
 
         if(btn)
         {
@@ -76,7 +76,7 @@ int API4Lua::setButtonPosition(lua_State *vm)
         lua_Number x=lua_tonumber(vm, 2);
         lua_Number y=lua_tonumber(vm, 3);
 
-        CButton *btn=pGlobal.gResources.findButton(id);
+        CButton *btn=gResources.findButton(id);
 
         if(btn)
         {
@@ -102,7 +102,7 @@ int API4Lua::setButtonColor(lua_State *vm)
         unsigned int b=lua_tounsigned(vm, 5);
         unsigned int a=lua_tounsigned(vm, 6);
 
-        CButton *btn=pGlobal.gResources.findButton(id);
+        CButton *btn=gResources.findButton(id);
 
         if(btn)
         {
@@ -149,7 +149,7 @@ int API4Lua::changeLevel(lua_State *vm)
     if(lua_gettop(vm)==1)
     {
         int level_to_load = lua_tointeger(vm, 1);
-        pGlobal.gResources.loadLevel(level_to_load);
+        gResources.loadLevel(level_to_load);
         lua_pushboolean(vm, LTRUE);
     }
     else lua_pushboolean(vm, LFALSE);
@@ -161,7 +161,7 @@ int API4Lua::logNormal(lua_State *vm)
     if(lua_gettop(vm)==1)
     {
         const char* msg=lua_tostring(vm, 1);
-        pGlobal.gLogger << pGlobal.gLogger.LOG_INFO << msg;
+        gLogger << CLogger::LOG_INFO << msg;
     }
     return 0;
 }
@@ -171,7 +171,7 @@ int API4Lua::logWarning(lua_State *vm)
     if(lua_gettop(vm)==1)
     {
         const char* msg=lua_tostring(vm, 1);
-        pGlobal.gLogger << pGlobal.gLogger.LOG_WARNING << msg;
+        gLogger << CLogger::LOG_WARNING << msg;
     }
     return 0;
 }
@@ -181,7 +181,7 @@ int API4Lua::logError(lua_State *vm)
     if(lua_gettop(vm)==1)
     {
         const char* msg=lua_tostring(vm, 1);
-        pGlobal.gLogger << pGlobal.gLogger.LOG_ERROR << msg;
+        gLogger << CLogger::LOG_ERROR << msg;
     }
 	return 0;
 }

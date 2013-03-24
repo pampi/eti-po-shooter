@@ -3,8 +3,8 @@
 CGame::CGame()
 {
 	m_inited = false;
-	pGlobal.gDDraw << "Dupa";
-	pGlobal.gLogger << pGlobal.gLogger.LOG_INFO << "CGame konstruktor";
+    gDDraw << "Dupa";
+    gLogger << CLogger::LOG_INFO << "CGame konstruktor";
 }
 
 int CGame::Step(sf::RenderWindow & App)
@@ -34,19 +34,19 @@ int CGame::Step(sf::RenderWindow & App)
 		// JĄDRO GRY \|/
 
 		drawGui(App);
-		App.draw( *pGlobal.gResources.mapSprite );
+        App.draw( *gResources.mapSprite );
 
 		// JĄDRO GRY /|\
 
 
 #if (DRAWDEBUG)
-		pGlobal.gDDraw.add((int) pGlobal.gFPS.getFPS() ,"FPS: ");
-		pGlobal.gDDraw.draw(App);
+        gDDraw.add((int) gFPS.getFPS() ,"FPS: ");
+        gDDraw.draw(App);
 #endif
 
 
 		// Żeby się licznik fps aktualizował
-		pGlobal.gFPS.update();
+        gFPS.update();
 
 		// Sleep żeby proca nie katowało
 		sf::sleep(sf::milliseconds(10));
@@ -60,16 +60,16 @@ void CGame::m_Init()
 	m_inited = true;
 
     // Laduj menu
-    pGlobal.gResources.loadLevel(0);
+    gResources.loadLevel(0);
 	// tymczasowo ładujemy brutem
-	pGlobal.gResources.loadTmxMap("res/level/0/map1a.tmx");
-    pGlobal.gResources.loadImage("res/img/desert.png");
-	pGlobal.gResources.generateTextureMap();
+    gResources.loadTmxMap("res/level/0/map1a.tmx");
+    gResources.loadImage("res/img/desert.png");
+    gResources.generateTextureMap();
 }
 
 void CGame::drawGui(sf::RenderWindow & App)
 {
-	for( std::list<class CGuiElement*>::iterator it = pGlobal.gResources.getGuiList()->begin(); it != pGlobal.gResources.getGuiList()->end(); it++ )
+    for( std::list<class CGuiElement*>::iterator it = gResources.getGuiList()->begin(); it != gResources.getGuiList()->end(); it++ )
 	{
         switch((*it)->type)
         {
@@ -104,7 +104,7 @@ void CGame::drawGui(sf::RenderWindow & App)
 
 void CGame::manageButtons()
 {
-	for( std::list<class CButton*>::iterator it = pGlobal.gButtonClicked.begin(); it != pGlobal.gButtonClicked.end();  )
+    for( std::list<class CButton*>::iterator it = gButtonClicked.begin(); it != gButtonClicked.end();  )
 	{
 		CButton *btn=static_cast<CButton *>(*it);
 		if(btn->type == CGuiElement::GUI_BUTTON)
@@ -117,11 +117,11 @@ void CGame::manageButtons()
                     // perform action
                     callScriptFunction(btn->getAction()->c_str());
 
-                    if( !pGlobal.gButtonClicked.empty() )
+                    if( !gButtonClicked.empty() )
                     {
                         // stop dealing
                         btn->resetState();
-                        it = pGlobal.gButtonClicked.erase(it);
+                        it = gButtonClicked.erase(it);
                     }
                     else
                     {

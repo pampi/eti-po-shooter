@@ -25,7 +25,7 @@ const sf::Image & CResourceManager::getImage(const std::string & filename)
 	//	//	if not found nothing, use default blank
 	sf::Image _image;
 	m_images[filename] = _image;
-	pGlobal.gLogger << pGlobal.gLogger.LOG_ERROR<< std::string("getImage() - Image Not Found: ")+filename;
+    gLogger << CLogger::LOG_ERROR<< std::string("getImage() - Image Not Found: ")+filename;
 	return m_images[filename];
 }
 
@@ -35,7 +35,7 @@ bool CResourceManager::loadImage(const std::string & filename)
 	if( _image.loadFromFile(filename) )
 	{
 		m_images[filename] = _image;
-		pGlobal.gLogger << pGlobal.gLogger.LOG_INFO << std::string("Image loaded. Name: ")+filename;
+        gLogger << CLogger::LOG_INFO << std::string("Image loaded. Name: ")+filename;
 		return true;
 	}
 	return false;
@@ -64,11 +64,11 @@ void CResourceManager::setDefaultFont(const char* path)
 {
 	if( !m_font->loadFromFile(path) )
 	{
-		pGlobal.gLogger << pGlobal.gLogger.LOG_ERROR << std::string("Unable to load font. Path: ")+path;
+        gLogger << CLogger::LOG_ERROR << std::string("Unable to load font. Path: ")+path;
 	}
 	else
 	{
-		pGlobal.gLogger << pGlobal.gLogger.LOG_INFO << std::string("Font loaded. Path: ")+path;
+        gLogger << CLogger::LOG_INFO << std::string("Font loaded. Path: ")+path;
 	}
 }
 
@@ -87,14 +87,14 @@ void CResourceManager::clearResources()
                 }
                 break;
             default:
-                pGlobal.gLogger << pGlobal.gLogger.LOG_ERROR << "Unkown size of memory block, it's impossible to free memory! Be careful, you're leaking memory!";
+                gLogger << CLogger::LOG_ERROR << "Unkown size of memory block, it's impossible to free memory! Be careful, you're leaking memory!";
                 break;
         }
 
         //delete *(this->m_guiElements.begin());
         this->m_guiElements.pop_front();
 
-        if( !pGlobal.gButtonClicked.empty() ) pGlobal.gButtonClicked.clear();
+        if( !gButtonClicked.empty() ) gButtonClicked.clear();
     }
 }
 
@@ -219,14 +219,14 @@ void CResourceManager::loadLevel(int lvl)
 
             if(!CScreenManager::GetInstance()->GetGame()->loadScript(script_path))
             {
-                pGlobal.gLogger << pGlobal.gLogger.LOG_INFO << std::string("Script ")+script_path+" loaded successfully!";
+                gLogger << CLogger::LOG_INFO << std::string("Script ")+script_path+" loaded successfully!";
                 CScreenManager::GetInstance()->GetGame()->callScriptFunction("greet_the_world");
             }
-            else pGlobal.gLogger << pGlobal.gLogger.LOG_ERROR << std::string("Failed to load ")+script_path+" script!";
+            else gLogger << CLogger::LOG_ERROR << std::string("Failed to load ")+script_path+" script!";
         }
         catch(boost::property_tree::xml_parser_error const &e)
         {
-            pGlobal.gLogger << pGlobal.gLogger.LOG_ERROR << e.what();
+            gLogger << CLogger::LOG_ERROR << e.what();
         }
 }
 
@@ -372,7 +372,7 @@ void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
 	}
 	catch(boost::property_tree::xml_parser_error const &e)
 	{
-		pGlobal.gLogger << pGlobal.gLogger.LOG_ERROR << e.what();
+        gLogger << CLogger::LOG_ERROR << e.what();
 		std::cout<<"File Tmx not found. Map not loaded"<<std::endl;
 	}
 }

@@ -39,7 +39,7 @@ public:
 	// Przywraca przycisk do stanu "Nie kliknięty"
 	void resetState();
 
-	~CButton();
+    virtual ~CButton();
 
 protected:
 	size_t m_charSize;
