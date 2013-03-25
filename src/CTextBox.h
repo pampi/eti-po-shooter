@@ -13,32 +13,13 @@ public:
 
     sf::Text *getText();
 
-    const bool isHidden();
-
-    std::string *getID();
-
-    void setHide(bool trueORfalse);
-
-    void setColor(const sf::Color color);
-
     void setText(const char* text);
-    void setPosition(sf::Vector2f position);
-
-    const sf::Vector2f getPosition();
 
 protected:
     size_t m_charSize;
     sf::String m_Text;
 
     sf::Text m_text;
-    sf::FloatRect m_fRect;
-    sf::Vector2f m_position;
-
-    sf::Color m_color;
-
-    bool m_hidden;
-
-    std::string m_id;
 };
 
 #endif // CLABEL_H

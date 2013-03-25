@@ -2,26 +2,18 @@
 
 std::list<CButton*> gButtonClicked;
 
-CButton::CButton()
-{
-    gLogger << CLogger::LOG_INFO << "CButton konstruktor";
-}
 
 CButton::~CButton()
 {
 
 }
 
-CButton::CButton(guiType typ, sf::Vector2f position, size_t charSize, sf::String text, std::string ActionToDo, std::string ID, bool hide, sf::Color normalColor, sf::Color hoverColor)
+CButton::CButton(guiType typ, sf::Vector2f position, size_t charSize, sf::String text, std::string ActionToDo, std::string ID, bool hide, sf::Color normalColor, sf::Color hoverColor) : CGuiElement(position, ID, hide, normalColor)
 {
-	this->m_position = position;
 	this->m_charSize = charSize;
 	this->m_buttonText = text;
-	this->m_actionToDo = ActionToDo;
-	this->m_normalColor = normalColor;
+    this->m_actionToDo = ActionToDo;
 	this->m_hoverColor = hoverColor;
-	this->m_hidden = hide;
-	this->m_id = ID;
 	this->type = typ;
 	
 	this->m_clicked = false;
@@ -70,24 +62,9 @@ sf::Text *CButton::getText()
 	return &m_text;
 }
 
-const bool CButton::isHidden()
-{
-	return m_hidden;
-}
-
 const std::string *CButton::getAction()
 {
 	return &m_actionToDo;
-}
-
-void CButton::setHide(bool trueORfalse)
-{
-	m_hidden = trueORfalse;
-}
-
-void CButton::setNormalColor(const sf::Color color)
-{
-	m_normalColor = color;
 }
 
 void CButton::setHoverColor(const sf::Color color)
@@ -95,24 +72,9 @@ void CButton::setHoverColor(const sf::Color color)
 	m_hoverColor = color;
 }
 
-const sf::Vector2f CButton::getPosition()
-{
-	return m_position;
-}
-
-std::string *CButton::getID()
-{
-	return &m_id;
-}
-
 void CButton::setAction(const char *text)
 {
     m_actionToDo=text;
-}
-
-void CButton::setPosition(sf::Vector2f position)
-{
-    m_position=position;
 }
 
 void CButton::setText(const char *text)
