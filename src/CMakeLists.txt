@@ -5,6 +5,8 @@ message("Come now, one, two, three! Escape death\n")
 
 cmake_minimum_required(VERSION 2.8)
 
+#SET (CMAKE_CXX_COMPILER             "/usr/bin/clang++")
+
 Find_Package(SFML REQUIRED)
 
 project( ETI_SHOOTER )

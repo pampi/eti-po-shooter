@@ -5,8 +5,6 @@ const char *TEXT_SECTION="texts";
 const char *IMAGE_SECTION="images";
 const char *EMPTY="";
 
-const char korektor[] = " ,.-";
-
 CResourceManager::CResourceManager() 
 {
 	m_font = new sf::Font();
@@ -149,42 +147,31 @@ void CResourceManager::loadLevel(int lvl)
                         if(button.first == "button")
                         {
                         n++;
-                        char *tmp_buffer;
-                        int l = 0;
                         std::string text_buffer = button.second.get<std::string>("<xmlattr>.text","");
                         std::string action_buffer = button.second.get<std::string>("<xmlattr>.action", "");
                         std::string id_buffer = button.second.get<std::string>("<xmlattr>.id","");
                         sf::Color hover_color;
-                        sf::Uint8 tab_color[4];
+                        unsigned int tab_color[4];
                         sf::Color normal_color;
                         sf::Vector2f pos;
 
                         //Normal Color
-                        tmp_buffer = strtok( const_cast<char*>( button.second.get<std::string>("<xmlattr>.normal_color","255 0 0 255").c_str() ), korektor);
-                        while( tmp_buffer != NULL )
-                        {
-                            tab_color[l] = static_cast<sf::Uint8>( strtoul(tmp_buffer, NULL, 10) );
-                            tmp_buffer = strtok( NULL, korektor);
-                            l++;
-                        }
-                        normal_color.r = tab_color[0];
-                        normal_color.g = tab_color[1];
-                        normal_color.b = tab_color[2];
-                        normal_color.a = tab_color[3];
+                        std::istringstream iss_color(button.second.get<std::string>("<xmlattr>.normal_color","255 0 0 255"));
+                        iss_color >> tab_color[0] >> tab_color[1] >> tab_color[2] >> tab_color[3];
+
+                        normal_color.r = tab_color[0]&0xFF;
+                        normal_color.g = tab_color[1]&0xFF;
+                        normal_color.b = tab_color[2]&0xFF;
+                        normal_color.a = tab_color[3]&0xFF;
 
                         //Hover Color
-                        l=0;
-                        tmp_buffer = strtok( const_cast<char*>( button.second.get<std::string>("<xmlattr>.hover_color","255 255 0 255").c_str() ), korektor);
-                        while( tmp_buffer != NULL )
-                        {
-                            tab_color[l] = static_cast<sf::Uint8>( strtoul(tmp_buffer, NULL, 10) );
-                            tmp_buffer = strtok( NULL, korektor);
-                            l++;
-                        }
-                        hover_color.r = tab_color[0];
-                        hover_color.g = tab_color[1];
-                        hover_color.b = tab_color[2];
-                        hover_color.a = tab_color[3];
+                        std::istringstream iss_hoverColor(button.second.get<std::string>("<xmlattr>.hover_color","255 255 0 255"));
+                        iss_hoverColor >> tab_color[0] >> tab_color[1] >> tab_color[2] >> tab_color[3];
+
+                        hover_color.r = tab_color[0]&0xFF;
+                        hover_color.g = tab_color[1]&0xFF;
+                        hover_color.b = tab_color[2]&0xFF;
+                        hover_color.a = tab_color[3]&0xFF;
 
                         //hidden?
                         int hide = button.second.get<int>("<xmlattr>.hidden", 0);
@@ -193,11 +180,8 @@ void CResourceManager::loadLevel(int lvl)
                         unsigned char_size = button.second.get<unsigned>("<xmlattr>.size", 12);
 
                         //Position
-                        tmp_buffer = strtok( const_cast<char*>( button.second.get<std::string>("<xmlattr>.position","0.0 0.0").c_str() ), " ");
-                        pos.x = static_cast<float>( atof(tmp_buffer) );
-
-                        tmp_buffer = strtok( NULL, " ");
-                        pos.y = static_cast<float>( atof(tmp_buffer) );
+                        std::istringstream iss_position(button.second.get<std::string>("<xmlattr>.position","0.0 0.0"));
+                        iss_position >> pos.x >> pos.y;
 
                         this->m_guiElements.push_back((CGuiElement*)(new CButton(CGuiElement::GUI_BUTTON, pos, char_size, text_buffer, action_buffer, id_buffer, (bool)(hide!=0), normal_color, hover_color)));
                         }
