@@ -5,16 +5,22 @@
 namespace API4Lua
 {
 //GUI API
-    //id, text
-    int setButtonText(lua_State *vm);
+    //id, text, action, font_size, x, y
+    int addButton(lua_State *vm);
+    //id, text, font_size, x, y
+    int addTextBox(lua_State *vm);
+
     //id, action
     int setButtonAction(lua_State *vm);
+
+    //id, text
+    int setGUIText(lua_State *vm);
     //id, want to hide?
-    int setButtonHide(lua_State *vm);
+    int setGUIHide(lua_State *vm);
     //id, position
-    int setButtonPosition(lua_State *vm);
+    int setGUIPosition(lua_State *vm);
     //id, "N"/"H", r, g, b, a | NormalColor
-    int setButtonColor(lua_State *vm);
+    int setGUIColor(lua_State *vm);
 
 //ADUIO API
     //file, loop

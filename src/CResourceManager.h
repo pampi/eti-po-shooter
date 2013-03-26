@@ -18,6 +18,12 @@ public:
 	// return const sf::Image
 	const sf::Image & getImage(const std::string & filename);
 
+    // add button
+    void addButton(sf::Vector2f position, size_t charSize, sf::String text, std::string ActionToDo, std::string ID, bool hide, sf::Color normalColor = sf::Color::Red, sf::Color hoverColor = sf::Color::Green);
+
+    // add textbox
+    void addTextBox(sf::Vector2f position, size_t charSize, sf::String text, std::string ID, bool hide = true, sf::Color color = sf::Color::Red);
+
 	//	load images to memory via filename
 	bool loadImage(const std::string & filename);
 
@@ -37,7 +43,7 @@ public:
     void loadLevel(int lvl);
 
     // return button or null
-    class CButton *findButton(const char* id);
+    class CGuiElement *findGUIElement(const char* id);
 
 	// zwraca wskaźnik na liste, tylko po co ?
 	std::list<class CGuiElement*> *getGuiList();

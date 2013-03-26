@@ -17,7 +17,6 @@ public:
 
 protected:
     size_t m_charSize;
-    sf::String m_Text;
 
     sf::Text m_text;
 };

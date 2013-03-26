@@ -33,8 +33,8 @@ int CGame::Step(sf::RenderWindow & App)
 
 		// JĄDRO GRY \|/
 
-		drawGui(App);
         App.draw( *gResources.mapSprite );
+        drawGui(App);
 
 		// JĄDRO GRY /|\
 

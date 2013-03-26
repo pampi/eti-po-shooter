@@ -84,6 +84,12 @@ void CResourceManager::clearResources()
                     delete btnToDel;
                 }
                 break;
+            case CGuiElement::GUI_TEXTBOX:
+                {
+                    CTextBox *txtToDel=static_cast<CTextBox *>(pGuiElement);
+                    delete txtToDel;
+                }
+                break;
             default:
                 gLogger << CLogger::LOG_ERROR << "Unkown size of memory block, it's impossible to free memory! Be careful, you're leaking memory!";
                 break;
@@ -101,22 +107,20 @@ std::list<class CGuiElement*> *CResourceManager::getGuiList()
 	return &m_guiElements;
 }
 
-CButton *CResourceManager::findButton(const char *id)
+CGuiElement *CResourceManager::findGUIElement(const char *id)
 {
-    CButton *ret_val=0;   //return value
+    CGuiElement *ret_val=0;   //return value
     if(id)
     {
         std::string str_id=id;
+        CGuiElement *gui;
         for(std::list<CGuiElement *>::iterator i=m_guiElements.begin(); i!=m_guiElements.end(); i++)    //kochany STL :*
         {
-            if((*i)->type==CGuiElement::GUI_BUTTON)
+            gui=(*i);
+            if(gui->getID()->compare(str_id)==0)
             {
-                CButton *btn=static_cast<CButton *>(*i);
-                if(btn->getID()->compare(str_id)==0)
-                {
-                    ret_val=btn;
-                    break;
-                }
+                ret_val=gui;
+                break;
             }
         }
     }
@@ -133,19 +137,20 @@ void CResourceManager::loadLevel(int lvl)
     clearResources();
 
     try
-        {
-            boost::property_tree::xml_parser::read_xml(file_path, drzewko);
+    {
+        int n;
+        boost::property_tree::xml_parser::read_xml(file_path, drzewko);
 
-            //after catch
-            BOOST_FOREACH( boost::property_tree::ptree::value_type &root, drzewko.get_child("gui") )
+        //after catch
+        BOOST_FOREACH( boost::property_tree::ptree::value_type &root, drzewko.get_child("gui") )
+        {
+            if(root.first == "buttons")
             {
-                if(root.first == "buttons")
+                n=0;
+                BOOST_FOREACH( boost::property_tree::ptree::value_type &button, root.second)
                 {
-                    int n=0;
-                    BOOST_FOREACH( boost::property_tree::ptree::value_type &button, root.second)
+                    if(button.first == "button")
                     {
-                        if(button.first == "button")
-                        {
                         n++;
                         std::string text_buffer = button.second.get<std::string>("<xmlattr>.text","");
                         std::string action_buffer = button.second.get<std::string>("<xmlattr>.action", "");
@@ -184,34 +189,68 @@ void CResourceManager::loadLevel(int lvl)
                         iss_position >> pos.x >> pos.y;
 
                         this->m_guiElements.push_back((CGuiElement*)(new CButton(CGuiElement::GUI_BUTTON, pos, char_size, text_buffer, action_buffer, id_buffer, (bool)(hide!=0), normal_color, hover_color)));
-                        }
                     }
-                    printf("%d buttons parsed!\n", n);
                 }
-                else if(root.first == "texts")
-                {
-                    //
-                }
-                else if(root.first == "images")
-                {
-                    //
-                }
+                printf("%d buttons parsed!\n", n);
             }
-
-            char script_path[512];
-            sprintf(script_path, "res/level/%d/script.lua", lvl);
-
-            if(!CScreenManager::GetInstance()->GetGame()->loadScript(script_path))
+            else if(root.first == "texts")
             {
-                gLogger << CLogger::LOG_INFO << std::string("Script ")+script_path+" loaded successfully!";
-                CScreenManager::GetInstance()->GetGame()->callScriptFunction("greet_the_world");
+                n=0;
+                BOOST_FOREACH( boost::property_tree::ptree::value_type &button, root.second)
+                {
+                    if(button.first == "static")
+                    {
+                        n++;
+                        std::string text_buffer = button.second.get<std::string>("<xmlattr>.text","");
+                        std::string id_buffer = button.second.get<std::string>("<xmlattr>.id","");
+                        unsigned int tab_color[4];
+                        sf::Color normal_color;
+                        sf::Vector2f pos;
+
+                        //Normal Color
+                        std::istringstream iss_color(button.second.get<std::string>("<xmlattr>.normal_color","255 0 0 255"));
+                        iss_color >> tab_color[0] >> tab_color[1] >> tab_color[2] >> tab_color[3];
+
+                        normal_color.r = tab_color[0]&0xFF;
+                        normal_color.g = tab_color[1]&0xFF;
+                        normal_color.b = tab_color[2]&0xFF;
+                        normal_color.a = tab_color[3]&0xFF;
+
+                        //hidden?
+                        int hide = button.second.get<int>("<xmlattr>.hidden", 0);
+
+                        //font size
+                        unsigned char_size = button.second.get<unsigned>("<xmlattr>.size", 12);
+
+                        //Position
+                        std::istringstream iss_position(button.second.get<std::string>("<xmlattr>.position","0.0 0.0"));
+                        iss_position >> pos.x >> pos.y;
+
+                        this->m_guiElements.push_back((CGuiElement*)(new CTextBox(pos, char_size, text_buffer,  id_buffer, (bool)(hide!=0), normal_color)));
+                    }
+                }
+                printf("%d CTextBox parsed!\n", n);
             }
-            else gLogger << CLogger::LOG_ERROR << std::string("Failed to load ")+script_path+" script!";
+            else if(root.first == "images")
+            {
+                //
+            }
         }
-        catch(boost::property_tree::xml_parser_error const &e)
+
+        char script_path[512];
+        sprintf(script_path, "res/level/%d/script.lua", lvl);
+
+        if(!CScreenManager::GetInstance()->GetGame()->loadScript(script_path))
         {
-            gLogger << CLogger::LOG_ERROR << e.what();
+            gLogger << CLogger::LOG_INFO << std::string("Script ")+script_path+" loaded successfully!";
+            CScreenManager::GetInstance()->GetGame()->callScriptFunction("greet_the_world");
         }
+        else gLogger << CLogger::LOG_ERROR << std::string("Failed to load ")+script_path+" script!";
+    }
+    catch(boost::property_tree::xml_parser_error const &e)
+    {
+        gLogger << CLogger::LOG_ERROR << e.what();
+    }
 }
 
 void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
@@ -426,4 +465,14 @@ void CResourceManager::generateTextureMap()
 	mapSprite = new sf::Sprite( rendtex->getTexture() );
 	// tymczasowo przesunięta | JUST 4 DBUG
 	mapSprite->move(100.f,50.f);
+}
+
+void CResourceManager::addButton(sf::Vector2f position, size_t charSize, sf::String text, std::string ActionToDo, std::string ID, bool hide, sf::Color normalColor, sf::Color hoverColor)
+{
+    m_guiElements.push_back(new CButton(CGuiElement::GUI_BUTTON, position, charSize, text, ActionToDo, ID, hide, normalColor, hoverColor));
+}
+
+void CResourceManager::addTextBox(sf::Vector2f position, size_t charSize, sf::String text, std::string ID, bool hide, sf::Color color)
+{
+    m_guiElements.push_back(new CTextBox(position, charSize, text, ID, hide, color));
 }

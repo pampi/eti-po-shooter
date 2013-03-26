@@ -3,7 +3,7 @@
 
 #include "headers.h"
 
-class CButton : public CGuiElement
+class CButton : public CTextBox
 {
 public:
     CButton(guiType typ, sf::Vector2f position, size_t charSize, sf::String text, std::string ActionToDo, std::string ID, bool hide = true, sf::Color normalColor = sf::Color::Red, sf::Color hoverColor = sf::Color::Green);
@@ -11,15 +11,10 @@ public:
 	virtual void draw(sf::RenderTarget & target);
 	void update(sf::RenderWindow & App);
 
-	sf::FloatRect getRect();
-
-	sf::Text *getText();
-
 	const std::string *getAction();
 
 	void setHoverColor(const sf::Color color);
 
-    void setText(const char* text);
     void setAction(const char* text);
 
 
@@ -31,11 +26,7 @@ public:
     virtual ~CButton();
 
 protected:
-	size_t m_charSize;
-	sf::String m_buttonText;
-	std::string m_actionToDo;
-
-    sf::Text m_text;
+    std::string m_actionToDo;
 
     sf::Color m_hoverColor;
 

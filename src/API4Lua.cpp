@@ -4,7 +4,7 @@
 #define LFALSE 0
 #define LTRUE 1
 
-int API4Lua::setButtonText(lua_State *vm)
+int API4Lua::setGUIText(lua_State *vm)
 {
     //upewnic sie trzeba ze funkcja zostala wywolana z 2 parametrami
     if(lua_gettop(vm)==2)
@@ -12,12 +12,25 @@ int API4Lua::setButtonText(lua_State *vm)
         const char* id=lua_tostring(vm, 1);
         const char* text=lua_tostring(vm, 2);
 
-        CButton *btn=gResources.findButton(id);
+        CGuiElement *gui=gResources.findGUIElement(id);
 
-        if(btn)
+        if(gui)
         {
-            btn->setText(text);
-            lua_pushboolean(vm, LTRUE);
+            switch(gui->type)
+            {
+                case CGuiElement::GUI_BUTTON:
+                case CGuiElement::GUI_TEXTBOX:
+                case CGuiElement::GUI_TIMED_TEXTBOX:
+                    {
+                        CTextBox *text_container=static_cast<CTextBox *>(gui);
+                        text_container->setText(text);
+                    }
+                    lua_pushboolean(vm, LTRUE);
+                    break;
+                default:
+                    lua_pushboolean(vm, LFALSE);
+                    break;
+            }
         }
         else lua_pushboolean(vm, LFALSE);
     }
@@ -33,12 +46,17 @@ int API4Lua::setButtonAction(lua_State *vm)
         const char* id=lua_tostring(vm, 1);
         const char* action=lua_tostring(vm, 2);
 
-        CButton *btn=gResources.findButton(id);
+        CGuiElement *gui=gResources.findGUIElement(id);
 
-        if(btn)
+        if(gui)
         {
-            btn->setAction(action);
-            lua_pushboolean(vm, LTRUE);
+            if(gui->type==CGuiElement::GUI_BUTTON)
+            {
+                CButton *btn=static_cast<CButton *>(gui);
+                btn->setAction(action);
+                lua_pushboolean(vm, LTRUE);
+            }
+            else lua_pushboolean(vm, LFALSE);
         }
         else lua_pushboolean(vm, LFALSE);
     }
@@ -47,19 +65,18 @@ int API4Lua::setButtonAction(lua_State *vm)
     return 1;
 }
 
-int API4Lua::setButtonHide(lua_State *vm)
+int API4Lua::setGUIHide(lua_State *vm)
 {
     if(lua_gettop(vm)==2)
     {
         const char* id=lua_tostring(vm, 1);
         int hide=lua_toboolean(vm, 2);
 
-        CButton *btn=gResources.findButton(id);
+        CGuiElement *gui=gResources.findGUIElement(id);
 
-        if(btn)
+        if(gui)
         {
-            btn->setHide((bool)(hide!=LFALSE));
-            lua_pushboolean(vm, LTRUE);
+            gui->setHide((bool)(hide!=LFALSE));
         }
         else lua_pushboolean(vm, LFALSE);
     }
@@ -68,7 +85,7 @@ int API4Lua::setButtonHide(lua_State *vm)
     return 1;
 }
 
-int API4Lua::setButtonPosition(lua_State *vm)
+int API4Lua::setGUIPosition(lua_State *vm)
 {
     if(lua_gettop(vm)==3)
     {
@@ -76,12 +93,12 @@ int API4Lua::setButtonPosition(lua_State *vm)
         lua_Number x=lua_tonumber(vm, 2);
         lua_Number y=lua_tonumber(vm, 3);
 
-        CButton *btn=gResources.findButton(id);
+        CGuiElement *gui=gResources.findGUIElement(id);
 
-        if(btn)
+        if(gui)
         {
             sf::Vector2f pos(static_cast<float>(x), static_cast<float>(y));
-            btn->setPosition(pos);
+            gui->setPosition(pos);
             lua_pushboolean(vm, LTRUE);
         }
         else lua_pushboolean(vm, LFALSE);
@@ -91,7 +108,7 @@ int API4Lua::setButtonPosition(lua_State *vm)
     return 1;
 }
 
-int API4Lua::setButtonColor(lua_State *vm)
+int API4Lua::setGUIColor(lua_State *vm)
 {
     if(lua_gettop(vm)==6)
     {
@@ -102,25 +119,42 @@ int API4Lua::setButtonColor(lua_State *vm)
         unsigned int b=lua_tounsigned(vm, 5);
         unsigned int a=lua_tounsigned(vm, 6);
 
-        CButton *btn=gResources.findButton(id);
+        CGuiElement *gui=gResources.findGUIElement(id);
 
-        if(btn)
+        if(gui)
         {
             sf::Color color(static_cast<sf::Uint8>(r), static_cast<sf::Uint8>(g), static_cast<sf::Uint8>(b), static_cast<sf::Uint8>(a));
 
-            switch(type[0])
+            switch(gui->type)
             {
-                case 'N':
-                    btn->setNormalColor(color);
-                    break;
-                case 'H':
-                    btn->setHoverColor(color);
-                    break;
-                default: break;
-            }
+                case CGuiElement::GUI_BUTTON:
+                    {
+                        CButton *btn=static_cast<CButton *>(gui);
 
-            if((type[0]=='N') || (type[0]=='H'))lua_pushboolean(vm, LTRUE);
-            else lua_pushboolean(vm, LFALSE);
+                        switch(type[0])
+                        {
+                            case 'N':
+                                btn->setNormalColor(color);
+                                break;
+                            case 'H':
+                                btn->setHoverColor(color);
+                                break;
+                            default: break;
+                        }
+                    }
+
+                    if((type[0]=='N') || (type[0]=='H'))lua_pushboolean(vm, LTRUE);
+                    else lua_pushboolean(vm, LFALSE);
+                    break;
+                case CGuiElement::GUI_TEXTBOX:
+                case CGuiElement::GUI_TIMED_TEXTBOX:
+                    gui->setNormalColor(color);
+                    lua_pushboolean(vm, LTRUE);
+                    break;
+                default:
+                    lua_pushboolean(vm, LFALSE);
+                    break;
+            }
         }
         else lua_pushboolean(vm, LFALSE);
     }
@@ -238,4 +272,47 @@ int API4Lua::stopAllSound(lua_State *vm)
     CScreenManager::GetInstance()->GetGame()->stopAll();
 
     return 0;
+}
+
+int API4Lua::addButton(lua_State *vm)
+{
+    const char* id, *action, *text;
+    unsigned int font_size;
+    sf::Vector2f pos;
+    if(lua_gettop(vm)==6)
+    {
+        id=lua_tostring(vm, 1);
+        text=lua_tostring(vm, 2);
+        action=lua_tostring(vm, 3);
+        font_size=lua_tounsigned(vm, 4);
+        pos.x=lua_tonumber(vm, 5);
+        pos.y=lua_tonumber(vm, 6);
+
+        gResources.addButton(pos, font_size, text, action, id, false);
+
+        lua_pushboolean(vm, LTRUE);
+    }
+    else lua_pushboolean(vm, LFALSE);
+    return 1;
+}
+
+int API4Lua::addTextBox(lua_State *vm)
+{
+    const char* id, *text;
+    unsigned int font_size;
+    sf::Vector2f pos;
+    if(lua_gettop(vm)==5)
+    {
+        id=lua_tostring(vm, 1);
+        text=lua_tostring(vm, 2);
+        font_size=lua_tounsigned(vm, 3);
+        pos.x=lua_tonumber(vm, 4);
+        pos.y=lua_tonumber(vm, 5);
+
+        gResources.addTextBox(pos, font_size, text, id, false);
+
+        lua_pushboolean(vm, LTRUE);
+    }
+    else lua_pushboolean(vm, LFALSE);
+    return 1;
 }

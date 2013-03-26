@@ -66,17 +66,21 @@ void CScript::callScriptFunction(const char *function_name, int argc, SLuaArgume
 void CScript::RegisterEngineFunctions()
 {
     //GUI
+    //addButton(id, text, action, font_size, x, y)
+    lua_register(machine, "addButton", API4Lua::addButton);
+    //addTextBox(id, text, font_size, x, y)
+    lua_register(machine, "addTextBox", API4Lua::addTextBox);
 
-    //setButtonText(id, text)
-    lua_register(machine, "setButtonText", API4Lua::setButtonText);
+    //setGUIText(id, text)
+    lua_register(machine, "setGUIText", API4Lua::setGUIText);
     //setButtonAction(id, action)
     lua_register(machine, "setButtonAction", API4Lua::setButtonAction);
-    //setButtonHide(id, boolean true/false)
-    lua_register(machine, "setButtonHide", API4Lua::setButtonHide);
-    //setButtonPosition(id, double x, double y)
-    lua_register(machine, "setButtonPosition", API4Lua::setButtonPosition);
-    //setButtonColor(id, "N"/"H", r, g, b, a)
-    lua_register(machine, "setButtonColor", API4Lua::setButtonColor);
+    //setGUIHide(id, boolean true/false)
+    lua_register(machine, "setButtonHide", API4Lua::setGUIHide);
+    //setGUIPosition(id, double x, double y)
+    lua_register(machine, "setButtonPosition", API4Lua::setGUIPosition);
+    //setGUIColor(id, "N"/"H", r, g, b, a)
+    lua_register(machine, "setButtonColor", API4Lua::setGUIColor);
 
     //audio
     //playSound(file, [loop])

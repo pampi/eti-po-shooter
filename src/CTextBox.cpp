@@ -5,7 +5,14 @@ CTextBox::CTextBox(sf::Vector2f position, size_t charSize, sf::String text, std:
     type = GUI_TEXTBOX;
     m_position = position;
     m_charSize = charSize;
-    m_Text=text;
+
+    m_text.setFont( gResources.getFont() );
+    m_text.setString( text );
+    m_text.setCharacterSize( charSize );
+    m_text.setColor( color );
+    m_text.setPosition( position );
+
+    m_fRect=m_text.getGlobalBounds();
 }
 
 void CTextBox::draw(sf::RenderTarget & target)
@@ -25,6 +32,6 @@ sf::Text *CTextBox::getText()
 
 void CTextBox::setText(const char *text)
 {
-    m_text.setString( sf::String(text) );
+    m_text.setString( text );
     m_fRect=m_text.getGlobalBounds();
 }

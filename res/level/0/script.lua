@@ -1,12 +1,18 @@
 intro_sound = false
 
+if addTextBox("cosTam", "Example", 24, 500.0, 0.0) == true then
+	print ("Dodany przycisk!")
+else
+	print ("Somehow fail!")
+end
+
 function greet_the_world()
 	print ("Hello my beloved world!")
 	--local is_changed = setButtonText("btnNewGame", "It's time to moon some planet!")
 	if is_changed == true then
 		print ("Successfully changed text of button btnNewGame!")
-		setButtonColor("btnNewGame", "N", 255, 255, 255, 255)
-		setButtonColor("btnNewGame", "H", 0, 0, 255, 255)
+		setGUIColor("btnNewGame", "N", 255, 255, 255, 255)
+		setGUIColor("btnNewGame", "H", 0, 0, 255, 255)
 	else
 		print ("Somehow I can't do that!")
 	end
