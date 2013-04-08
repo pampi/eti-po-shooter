@@ -70,6 +70,8 @@ void CScript::RegisterEngineFunctions()
     lua_register(machine, "addButton", API4Lua::addButton);
     //addTextBox(id, text, font_size, x, y)
     lua_register(machine, "addTextBox", API4Lua::addTextBox);
+    //addTimedTextBox(id, text, font_size, x, y)
+    lua_register(machine, "addTimedTextBox", API4Lua::addTimedTextBox);
 
     //setGUIText(id, text)
     lua_register(machine, "setGUIText", API4Lua::setGUIText);
@@ -81,6 +83,8 @@ void CScript::RegisterEngineFunctions()
     lua_register(machine, "setButtonPosition", API4Lua::setGUIPosition);
     //setGUIColor(id, "N"/"H", r, g, b, a)
     lua_register(machine, "setButtonColor", API4Lua::setGUIColor);
+    //setTimedVisibility(id, miliseconds)
+    lua_register(machine, "setTimedVisibility", API4Lua::setTimedVisibility);
 
     //audio
     //playSound(file, [loop])

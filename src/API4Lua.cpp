@@ -316,3 +316,51 @@ int API4Lua::addTextBox(lua_State *vm)
     else lua_pushboolean(vm, LFALSE);
     return 1;
 }
+
+int API4Lua::setTimedVisibility(lua_State *vm)
+{
+    const char* id;
+    int i_miliseconds;
+
+    if(lua_gettop(vm)==2)
+    {
+        CGuiElement *gui_element;
+        id=lua_tostring(vm, 1);
+        i_miliseconds=lua_tointeger(vm, 2);
+
+        gui_element = gResources.findGUIElement(id);
+        if(gui_element)
+        {
+            if(gui_element->type==CGuiElement::GUI_TIMED_TEXTBOX)
+            {
+                CTimedTextBox *ptr = (CTimedTextBox *)gui_element;
+                ptr->SetTimedVisible(i_miliseconds);
+            }
+            else lua_pushboolean(vm, LFALSE);
+        }
+        else lua_pushboolean(vm, LFALSE);
+    }
+    else lua_pushboolean(vm, LFALSE);
+    return 1;
+}
+
+int API4Lua::addTimedTextBox(lua_State *vm)
+{
+    const char* id, *text;
+    unsigned int font_size;
+    sf::Vector2f pos;
+    if(lua_gettop(vm)==5)
+    {
+        id=lua_tostring(vm, 1);
+        text=lua_tostring(vm, 2);
+        font_size=lua_tounsigned(vm, 3);
+        pos.x=lua_tonumber(vm, 4);
+        pos.y=lua_tonumber(vm, 5);
+
+        gResources.addTimedTextBox(pos, font_size, text, id);
+
+        lua_pushboolean(vm, LTRUE);
+    }
+    else lua_pushboolean(vm, LFALSE);
+    return 1;
+}

@@ -35,3 +35,31 @@ void CTextBox::setText(const char *text)
     m_text.setString( text );
     m_fRect=m_text.getGlobalBounds();
 }
+
+CTimedTextBox::CTimedTextBox(sf::Vector2f position, size_t char_size, sf::String text, std::string ID, sf::Int32 visible_time, sf::Color color) : CTextBox(position, char_size, text, ID, true, color)
+{
+    type = GUI_TIMED_TEXTBOX;
+
+    if(visible_time>0)
+    {
+        m_clock.restart();
+        m_timeOfVisible = visible_time;
+    }
+}
+
+void CTimedTextBox::SetTimedVisible(sf::Int32 sec)
+{
+    if(sec>0)
+    {
+        m_timeOfVisible = sec;
+        m_clock.restart();
+    }
+}
+
+void CTimedTextBox::draw(sf::RenderTarget & target)
+{
+    if(m_clock.getElapsedTime().asMilliseconds() < m_timeOfVisible)
+    {
+        target.draw( m_text );
+    }
+}

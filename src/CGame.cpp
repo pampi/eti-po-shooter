@@ -84,13 +84,20 @@ void CGame::drawGui(sf::RenderWindow & App)
                 }
                 break;
 
-				case CGuiElement::GUI_TEXTBOX:
+            case CGuiElement::GUI_TEXTBOX:
                 {
                     CTextBox *textbox=static_cast<CTextBox *>(*it);
                     if( !textbox->isHidden() )
                     {
                         textbox->draw(App);
                     }
+                }
+                break;
+
+            case CGuiElement::GUI_TIMED_TEXTBOX:
+                {
+                    CTimedTextBox *timedTextBox = static_cast<CTimedTextBox *>(*it);
+                    timedTextBox->draw(App);
                 }
                 break;
 

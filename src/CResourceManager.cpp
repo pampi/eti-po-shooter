@@ -476,3 +476,9 @@ void CResourceManager::addTextBox(sf::Vector2f position, size_t charSize, sf::St
 {
     m_guiElements.push_back(new CTextBox(position, charSize, text, ID, hide, color));
 }
+
+void CResourceManager::addTimedTextBox(sf::Vector2f position, size_t charSize, sf::String text, std::string ID, int milisec, sf::Color color)
+{
+    m_guiElements.push_back(new CTimedTextBox(position, charSize, text, ID, milisec, color));
+}
+

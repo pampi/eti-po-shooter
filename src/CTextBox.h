@@ -21,4 +21,19 @@ protected:
     sf::Text m_text;
 };
 
+class CTimedTextBox: public CTextBox
+{
+public:
+    CTimedTextBox(sf::Vector2f position, size_t char_size, sf::String text, std::string ID, sf::Int32 visible_time = 0, sf::Color color = sf::Color::Red);
+
+    virtual void draw(sf::RenderTarget &target);
+    //
+    void SetTimedVisible(sf::Int32 sec);
+
+protected:
+    sf::Int32 m_timeOfVisible;
+
+    sf::Clock m_clock;
+};
+
 #endif // CLABEL_H

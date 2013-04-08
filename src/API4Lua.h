@@ -9,9 +9,14 @@ namespace API4Lua
     int addButton(lua_State *vm);
     //id, text, font_size, x, y
     int addTextBox(lua_State *vm);
+    //id, text, font_size, x, y
+    int addTimedTextBox(lua_State *vm);
 
     //id, action
     int setButtonAction(lua_State *vm);
+
+    //id, miliseconds
+    int setTimedVisibility(lua_State *vm);
 
     //id, text
     int setGUIText(lua_State *vm);

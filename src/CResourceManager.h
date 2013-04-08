@@ -24,6 +24,9 @@ public:
     // add textbox
     void addTextBox(sf::Vector2f position, size_t charSize, sf::String text, std::string ID, bool hide = true, sf::Color color = sf::Color::Red);
 
+    // add timed text box
+    void addTimedTextBox(sf::Vector2f position, size_t charSize, sf::String text, std::string ID, int milisec = 0, sf::Color color = sf::Color::Red);
+
 	//	load images to memory via filename
 	bool loadImage(const std::string & filename);
 
