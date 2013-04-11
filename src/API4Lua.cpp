@@ -77,6 +77,7 @@ int API4Lua::setGUIHide(lua_State *vm)
         if(gui)
         {
             gui->setHide((bool)(hide!=LFALSE));
+            lua_pushboolean(vm, LTRUE);
         }
         else lua_pushboolean(vm, LFALSE);
     }

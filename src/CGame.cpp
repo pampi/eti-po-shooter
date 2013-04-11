@@ -1,8 +1,12 @@
 ﻿#include "headers.h"
 
+#define TIME_TO_IDLE 5
+
 CGame::CGame()
 {
 	m_inited = false;
+    m_idle = false;
+    m_lastEventTime = time(NULL);
     gDDraw << "Dupa";
     gLogger << CLogger::LOG_INFO << "CGame konstruktor";
 }
@@ -18,6 +22,14 @@ int CGame::Step(sf::RenderWindow & App)
 
 		while( App.pollEvent(m_event) )
 		{
+            if(m_idle)
+            {
+                m_idle = false;
+                callScriptFunction("stopIdleAction");
+            }
+
+            m_lastEventTime = time(NULL);
+
 			if( m_event.type == sf::Event::Closed )
 			{
 				return -1; // wyjdz z gry(-1)
@@ -28,6 +40,20 @@ int CGame::Step(sf::RenderWindow & App)
                 return -1; // wyjdz z gry(-1)
             }
 		} // events loop
+
+        //jeśli IDLE
+        if(time(NULL)>m_lastEventTime+TIME_TO_IDLE)
+        {
+            if(m_idle)
+            {
+                callScriptFunction("performIdleAction");
+            }
+            else
+            {
+                m_idle = true;
+                callScriptFunction("startIdleAction");
+            }
+        }
 
 		App.clear();
 

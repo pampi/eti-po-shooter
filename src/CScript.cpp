@@ -78,11 +78,11 @@ void CScript::RegisterEngineFunctions()
     //setButtonAction(id, action)
     lua_register(machine, "setButtonAction", API4Lua::setButtonAction);
     //setGUIHide(id, boolean true/false)
-    lua_register(machine, "setButtonHide", API4Lua::setGUIHide);
+    lua_register(machine, "setGUIHide", API4Lua::setGUIHide);
     //setGUIPosition(id, double x, double y)
-    lua_register(machine, "setButtonPosition", API4Lua::setGUIPosition);
+    lua_register(machine, "setGUIPosition", API4Lua::setGUIPosition);
     //setGUIColor(id, "N"/"H", r, g, b, a)
-    lua_register(machine, "setButtonColor", API4Lua::setGUIColor);
+    lua_register(machine, "setGUIColor", API4Lua::setGUIColor);
     //setTimedVisibility(id, miliseconds)
     lua_register(machine, "setTimedVisibility", API4Lua::setTimedVisibility);
 

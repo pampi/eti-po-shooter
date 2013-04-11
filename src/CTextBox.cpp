@@ -17,6 +17,7 @@ CTextBox::CTextBox(sf::Vector2f position, size_t charSize, sf::String text, std:
 
 void CTextBox::draw(sf::RenderTarget & target)
 {
+    if(!(m_text.getPosition()==m_position)) m_text.setPosition(m_position);
     target.draw( m_text );
 }
 
@@ -60,6 +61,7 @@ void CTimedTextBox::draw(sf::RenderTarget & target)
 {
     if(m_clock.getElapsedTime().asMilliseconds() < m_timeOfVisible)
     {
+        if(!(m_text.getPosition()==m_position)) m_text.setPosition(m_position);
         target.draw( m_text );
     }
 }

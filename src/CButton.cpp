@@ -19,6 +19,7 @@ CButton::CButton(guiType typ, sf::Vector2f position, size_t charSize, sf::String
 
 void CButton::draw(sf::RenderTarget & target)
 {
+    if(!(m_text.getPosition()==m_position)) m_text.setPosition(m_position);
 	target.draw( m_text );
 }
 

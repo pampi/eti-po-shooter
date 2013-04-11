@@ -13,6 +13,9 @@ public:
 private:
 	sf::Event m_event;
 
+    time_t m_lastEventTime;
+    bool m_idle;
+
 	bool m_inited;
 	void m_Init();
 
