@@ -233,9 +233,21 @@ void CResourceManager::loadLevel(int lvl)
             }
             else if(root.first == "images")
             {
-                //
+                BOOST_FOREACH( boost::property_tree::ptree::value_type &img, root.second)
+                {
+                    if(img.first == "img")
+                    {
+                        this->loadImage(img.second.get<std::string>("<xmlattr>.file_path", ""));
+                    }
+                }
             }
         }
+
+        //ładowanie mapy i generowanie jej tekstury
+        char path[512];
+        sprintf(path, "res/level/%d/map1a.tmx", lvl);
+        loadTmxMap(path);
+        if(pTmxMap) generateTextureMap();
 
         char script_path[512];
         sprintf(script_path, "res/level/%d/script.lua", lvl);
@@ -256,7 +268,10 @@ void CResourceManager::loadLevel(int lvl)
 void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
 {
 	if(pTmxMap)
+    {
 		delete pTmxMap;
+        pTmxMap=0;
+    }
 
 	try
 	{
@@ -403,7 +418,7 @@ void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
 void CResourceManager::generateTextureMap()
 {
 	sf::RenderTexture *rendtex = new sf::RenderTexture();
-	rendtex->create( pTmxMap->width * pTmxMap->tileWidth, pTmxMap->height * pTmxMap->tileHeight );
+    rendtex->create( pTmxMap->width * pTmxMap->tileWidth, pTmxMap->height * pTmxMap->tileHeight );
 	
 	sf::IntRect rect,rect2;
 

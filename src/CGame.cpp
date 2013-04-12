@@ -59,7 +59,7 @@ int CGame::Step(sf::RenderWindow & App)
 
 		// JĄDRO GRY \|/
 
-        App.draw( *gResources.mapSprite );
+        if(gResources.pTmxMap) App.draw( *gResources.mapSprite );
         drawGui(App);
 
 		// JĄDRO GRY /|\
@@ -87,10 +87,6 @@ void CGame::m_Init()
 
     // Laduj menu
     gResources.loadLevel(0);
-	// tymczasowo ładujemy brutem
-    gResources.loadTmxMap("res/level/0/map1a.tmx");
-    gResources.loadImage("res/img/desert.png");
-    gResources.generateTextureMap();
 }
 
 void CGame::drawGui(sf::RenderWindow & App)
