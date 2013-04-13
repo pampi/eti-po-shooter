@@ -286,8 +286,8 @@ int API4Lua::addButton(lua_State *vm)
         text=lua_tostring(vm, 2);
         action=lua_tostring(vm, 3);
         font_size=lua_tounsigned(vm, 4);
-        pos.x=lua_tonumber(vm, 5);
-        pos.y=lua_tonumber(vm, 6);
+        pos.x=static_cast<float>( lua_tonumber(vm, 5) );
+        pos.y=static_cast<float>( lua_tonumber(vm, 6) );
 
         gResources.addButton(pos, font_size, text, action, id, false);
 
@@ -307,8 +307,8 @@ int API4Lua::addTextBox(lua_State *vm)
         id=lua_tostring(vm, 1);
         text=lua_tostring(vm, 2);
         font_size=lua_tounsigned(vm, 3);
-        pos.x=lua_tonumber(vm, 4);
-        pos.y=lua_tonumber(vm, 5);
+        pos.x=static_cast<float>( lua_tonumber(vm, 4) );
+        pos.y=static_cast<float>( lua_tonumber(vm, 5) );
 
         gResources.addTextBox(pos, font_size, text, id, false);
 
@@ -355,8 +355,8 @@ int API4Lua::addTimedTextBox(lua_State *vm)
         id=lua_tostring(vm, 1);
         text=lua_tostring(vm, 2);
         font_size=lua_tounsigned(vm, 3);
-        pos.x=lua_tonumber(vm, 4);
-        pos.y=lua_tonumber(vm, 5);
+        pos.x=static_cast<float>( lua_tonumber(vm, 4) );
+        pos.y=static_cast<float>( lua_tonumber(vm, 5) );
 
         gResources.addTimedTextBox(pos, font_size, text, id);
 

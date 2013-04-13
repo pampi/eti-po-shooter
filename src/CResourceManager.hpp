@@ -33,8 +33,8 @@ public:
 	// remove image from memory via filename
 	void deleteImage(const std::string & filename);
 
-	// return size of resource container
-	int getMapSize();
+	// return size of images container
+	size_t getImgContainerSize();
 
 	// return current default font
 	const sf::Font & getFont();

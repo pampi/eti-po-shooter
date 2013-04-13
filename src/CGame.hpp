@@ -22,6 +22,12 @@ private:
 	void manageButtons();
 	void drawGui(sf::RenderWindow & App);
 
-	
+	sf::Time m_deltaTime;
+	sf::Clock m_deltaClock;
+
+	// demo systemu animacji
+	sf::Texture anitexture;
+	class CAnimation *walking;
+	class CAnimatedSprite *animatedSprite;
 };
 #endif

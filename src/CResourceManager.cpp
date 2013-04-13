@@ -29,19 +29,27 @@ const sf::Image & CResourceManager::getImage(const std::string & filename)
 
 bool CResourceManager::loadImage(const std::string & filename)
 {
-	sf::Image _image;
-	if( _image.loadFromFile(filename) )
+	std::map<std::string, sf::Image>::iterator it = m_images.find(filename);
+	if( it != m_images.end() )
 	{
-		m_images[filename] = _image;
-        gLogger << CLogger::LOG_INFO << std::string("Image loaded. Name: ")+filename;
 		return true;
 	}
-	return false;
+	else
+	{
+		sf::Image _image;
+		if( _image.loadFromFile(filename) )
+		{
+			m_images[filename] = _image;
+			gLogger << CLogger::LOG_INFO << std::string("Image loaded. Name: ")+filename;
+			return true;
+		}
+		return false;
+	}
 }
 
-int CResourceManager::getMapSize()
+size_t CResourceManager::getImgContainerSize()
 {
-	return (int)m_images.size();
+	return m_images.size();
 }
 
 void CResourceManager::deleteImage(const std::string & filename)

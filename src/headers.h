@@ -32,22 +32,24 @@
 
 // Nasze:
 #include "TSingleton.hpp"
-#include "CLogger.h"
-#include "CSettingsParser.h"
-#include "CFpsCounter.h"
-#include "CDebugDraw.h"
-#include "CInputHandler.h"
-#include "CScreen.h"
-#include "CScreenManager.h"
-#include "CResourceManager.h"
-#include "CSoundManager.h"
-#include "CScript.h"
-#include "CGame.h"
-#include "CGuiElement.h"
-#include "CTextBox.h"
-#include "CButton.h"
-#include "API4Lua.h"
-#include "CTmxMap.h"
+#include "CLogger.hpp"
+#include "CSettingsParser.hpp"
+#include "CFpsCounter.hpp"
+#include "CDebugDraw.hpp"
+#include "CInputHandler.hpp"
+#include "CScreen.hpp"
+#include "CScreenManager.hpp"
+#include "CResourceManager.hpp"
+#include "CSoundManager.hpp"
+#include "CScript.hpp"
+#include "CGame.hpp"
+#include "CGuiElement.hpp"
+#include "CTextBox.hpp"
+#include "CButton.hpp"
+#include "API4Lua.hpp"
+#include "CTmxMap.hpp"
+#include "CAnimation.hpp"
+#include "CAnimatedSprite.hpp"
 
 
 
@@ -58,7 +60,7 @@ extern std::list<class CButton*> gButtonClicked;
 
 // Dane do CLogger [Loggera]
 #define LOGPATH "log.txt"
-#define ENGINEVERSION "0.4.5"
+#define ENGINEVERSION "0.5.0"
 
 // Dane do CSettingsParser
 #define SETTINGSPATH "res/misc/config.ini"
