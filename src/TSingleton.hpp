@@ -1,9 +1,3 @@
-/*
- *  Używaj tego szabloniku jeśli najdzie ciebie dzika myśl tworzenia klas globalnych.
- *  Oszczędzisz mi tym roboty.
- *
- *  May the fail be with you!
- */
 #ifndef TSINGLETON_HPP
 #define TSINGLETON_HPP
 
@@ -12,12 +6,16 @@ class TSingleton
 {
 protected:
     static T *m_pSelfInstance;
+
 public:
     virtual ~TSingleton(){}
 
     static T *GetInstance()
     {
-        if(!m_pSelfInstance) m_pSelfInstance = new T();
+        if(!m_pSelfInstance) 
+		{
+			m_pSelfInstance = new T();
+		}
         return m_pSelfInstance;
     }
 

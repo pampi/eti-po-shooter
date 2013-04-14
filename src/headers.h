@@ -50,6 +50,8 @@
 #include "CTmxMap.hpp"
 #include "CAnimation.hpp"
 #include "CAnimatedSprite.hpp"
+#include "CActor.hpp"
+#include "CPlayer.hpp"
 
 
 

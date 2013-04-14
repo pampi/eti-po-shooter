@@ -76,9 +76,10 @@ int CGame::Step(sf::RenderWindow & App)
         gDDraw.add((int) gFPS.getFPS() ,"FPS: ");
         gDDraw.draw(App);
 #endif
-		// demo systemu animacji
-		animatedSprite->update( m_deltaTime );
-		App.draw( *animatedSprite );
+
+		// obsługa gracza
+		m_player->update(App, m_deltaTime);
+		m_player->draw(App);
 
 		// Żeby się licznik fps aktualizował
         gFPS.update();
@@ -97,18 +98,9 @@ void CGame::m_Init()
     // Laduj menu
     gResources.loadLevel(0);
 
-	// demo systemu animacji
-	anitexture.loadFromImage( gResources.getImage("res/img/MC.png") );
-	walking = new CAnimation;
-	walking->setSpriteSheet( anitexture );
-	walking->addFrame(sf::IntRect(0, 0, 32, 48));
-	walking->addFrame(sf::IntRect(32, 0, 32, 48));
-	walking->addFrame(sf::IntRect(64, 0, 32, 48));
-	walking->addFrame(sf::IntRect(96, 0, 32, 48));
+	m_player = new CPlayer("1", sf::Vector2f(200,200), CActor::STAYING, 100.f, "res/img/MC.png");
+	
 
-	animatedSprite = new CAnimatedSprite(sf::seconds(0.2f));
-	animatedSprite->setAnimation( *walking );
-	animatedSprite->setPosition( 200, 200 );
 }
 
 void CGame::drawGui(sf::RenderWindow & App)
