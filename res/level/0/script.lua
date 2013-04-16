@@ -2,6 +2,12 @@ intro_sound = false
 idle_x = 0.0
 idle_y = 500.0
 
+anim_staying = 1
+anim_left = 2
+anim_right = 3
+anim_up = 4
+anim_down = 5
+
 if addTextBox("cosTam", "Example", 24, 500.0, 0.0) == true then
 	print ("Dodany przycisk!")
 else
@@ -68,4 +74,28 @@ end
 function zegnajSwiecie()
 	stopSound("res/audio/temporary_intro_theme.ogg")
 	print ("Papa swiecie")
+end
+
+function keyPressed(key)
+	if key == "UP" or key == "W" then
+		x, y=getPlayerPosition()
+		y = y - 5
+		setPlayerPosition(x, y)
+		setPlayerState(anim_up)
+	elseif key == "DOWN" or key == "S" then
+		x, y=getPlayerPosition()
+		y = y + 5
+		setPlayerPosition(x, y)
+		setPlayerState(anim_down)
+	elseif key == "LEFT" or key == "A" then
+		x, y=getPlayerPosition()
+		x = x - 5
+		setPlayerPosition(x, y)
+		setPlayerState(anim_left)
+	elseif key == "RIGHT" or key == "D" then
+		x, y=getPlayerPosition()
+		x = x + 5
+		setPlayerPosition(x, y)
+		setPlayerState(anim_right)
+	end
 end

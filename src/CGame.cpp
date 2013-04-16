@@ -2,6 +2,8 @@
 
 #define TIME_TO_IDLE 5
 
+extern const char *strKey[];
+
 CGame::CGame()
 {
 	m_inited = false;
@@ -19,9 +21,10 @@ int CGame::Step(sf::RenderWindow & App)
 		{
 			m_Init();
 		}
+        App.setKeyRepeatEnabled(true);
 
 		while( App.pollEvent(m_event) )
-		{
+        {
             if(m_idle)
             {
                 m_idle = false;
@@ -35,9 +38,22 @@ int CGame::Step(sf::RenderWindow & App)
 				return -1; // wyjdz z gry(-1)
             }
 
-            if(CInputHandler::GetInstance()->isToggled(CInputHandler::Escape))
+            if( m_event.type == sf::Event::KeyPressed )
             {
-                return -1; // wyjdz z gry(-1)
+                if( CInputHandler::GetInstance()->isToggled(CInputHandler::Escape) )
+                {
+                    return -1; // wyjdz z gry(-1)
+                }
+
+                for(int i=0; i<sf::Keyboard::KeyCount; i++)
+                {
+                    if(CInputHandler::GetInstance()->isKeyPressed(static_cast<sf::Keyboard::Key>(i)))
+                    {
+                        SLuaArgument *arg = new SLuaArgument(strKey[m_event.key.code]);
+                        callScriptFunction("keyPressed", 1, arg);
+                        delete arg;
+                    }
+                }
             }
 		} // events loop
 
@@ -98,7 +114,7 @@ void CGame::m_Init()
     // Laduj menu
     gResources.loadLevel(0);
 
-	m_player = new CPlayer("1", sf::Vector2f(200,200), CActor::STAYING, 100.f, "res/img/MC.png");
+    m_player = new CPlayer("1", sf::Vector2f(200,200), CActor::STAYING, 100.f, "res/img/MC.png");
 	
 
 }

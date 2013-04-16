@@ -35,6 +35,13 @@ namespace API4Lua
     //nic
     int stopAllSound(lua_State *vm);
 
+//Player
+    //void
+    int getPlayerPosition(lua_State *vm);
+    //x, y
+    int setPlayerPosition(lua_State *vm);
+    //anim
+    int setPlayerState(lua_State *vm);
 
 //MIX API
     //path to script

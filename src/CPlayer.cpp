@@ -50,6 +50,8 @@ CPlayer::CPlayer(std::string ID, sf::Vector2f position, State state, float hp, s
 	m_animationSprite = new CAnimatedSprite();
 	m_animationSprite->setAnimation( *m_ani_staying );
 	m_animationSprite->setPosition( m_position );
+
+    m_pSelfInstance = this;
 }
 
 void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
@@ -58,7 +60,7 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 
 	// elsy bo nie ma animacji poœrednich ani skoœnych
 	// LEWO 
-	if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::A) )
+    /*if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::A) )
 	{
 		if( m_state != CActor::WALKING_L )
 		{
@@ -105,8 +107,40 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 			m_state = CActor::STAYING;
 			m_animationSprite->setAnimation( *m_ani_staying );
 		}
-	}
+    }*/
 
+}
+
+void CPlayer::updatePosition()
+{
+    m_animationSprite->setPosition(m_position);
+}
+
+void CPlayer::setState(State newState)
+{
+    if(m_state!=newState)
+    {
+        m_state = newState;
+        switch(newState)
+        {
+            case CActor::WALKING_L:
+                m_animationSprite->setAnimation(*m_ani_walkingL);
+                break;
+            case CActor::WALKING_D:
+                m_animationSprite->setAnimation(*m_ani_walkingD);
+                break;
+            case CActor::WALKING_R:
+                m_animationSprite->setAnimation(*m_ani_walkingR);
+                break;
+            case CActor::WALKING_U:
+                m_animationSprite->setAnimation(*m_ani_walkingU);
+                break;
+            default:
+            case CActor::STAYING:
+                m_animationSprite->setAnimation(*m_ani_staying);
+                break;
+        }
+    }
 }
 
 void CPlayer::draw(sf::RenderTarget & target)

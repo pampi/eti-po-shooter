@@ -13,6 +13,10 @@ public:
 	void draw(sf::RenderTarget & target);
 	void update(sf::RenderWindow & App, sf::Time deltaTime);
 	
+    void updatePosition();
+
+    void setState(CActor::State newState);
+
 private:
 
 

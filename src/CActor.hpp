@@ -28,12 +28,12 @@ public:
 	~CActor() {};
 
 
-	void setPosition( sf::Vector2f newPosition )
+    void setPosition( sf::Vector2f newPosition )
 	{
 		m_position = newPosition;
 	}
 
-	void setPosition( float x, float y )
+    void setPosition( float x, float y )
 	{
 		m_position.x = x;
 		m_position.y = y;

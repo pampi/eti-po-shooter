@@ -1,5 +1,8 @@
 ﻿#include "headers.h"
 
+const char *szUndefined="NOT DEFINED";
+const char *strKey[sf::Keyboard::KeyCount];
+
 CInputHandler::CInputHandler()
 {
     for(int i=0; i<sf::Keyboard::KeyCount; i++)
@@ -18,6 +21,48 @@ CInputHandler::CInputHandler()
         }
         else m_mouseState[i]=KEY_UP;
     }
+
+    for(int i=0; i<sf::Keyboard::KeyCount; i++)
+    {
+        strKey[i]=szUndefined;
+    }
+
+    strKey[sf::Keyboard::A]="A";
+    strKey[sf::Keyboard::B]="B";
+    strKey[sf::Keyboard::C]="C";
+    strKey[sf::Keyboard::D]="D";
+    strKey[sf::Keyboard::E]="E";
+    strKey[sf::Keyboard::F]="F";
+    strKey[sf::Keyboard::G]="G";
+    strKey[sf::Keyboard::H]="H";
+    strKey[sf::Keyboard::I]="I";
+    strKey[sf::Keyboard::J]="J";
+    strKey[sf::Keyboard::K]="K";
+    strKey[sf::Keyboard::L]="L";
+    strKey[sf::Keyboard::M]="M";
+    strKey[sf::Keyboard::N]="N";
+    strKey[sf::Keyboard::O]="O";
+    strKey[sf::Keyboard::P]="P";
+    strKey[sf::Keyboard::Q]="Q";
+    strKey[sf::Keyboard::R]="R";
+    strKey[sf::Keyboard::S]="S";
+    strKey[sf::Keyboard::T]="T";
+    strKey[sf::Keyboard::U]="U";
+    strKey[sf::Keyboard::V]="V";
+    strKey[sf::Keyboard::W]="W";
+    strKey[sf::Keyboard::X]="X";
+    strKey[sf::Keyboard::Y]="Y";
+    strKey[sf::Keyboard::Z]="Z";
+
+    strKey[sf::Keyboard::Up]="UP";
+    strKey[sf::Keyboard::Down]="DOWN";
+    strKey[sf::Keyboard::Left]="LEFT";
+    strKey[sf::Keyboard::Right]="RIGHT";
+
+    strKey[sf::Keyboard::Space]="SPACEBAR";
+    strKey[sf::Keyboard::Escape]="ESC";
+    strKey[sf::Keyboard::Return]="RETURN";
+    strKey[sf::Keyboard::Tab]="TAB";
 
     gLogger << CLogger::LOG_INFO << "CInputHandler konstruktor";
 }

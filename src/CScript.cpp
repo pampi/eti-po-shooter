@@ -94,6 +94,13 @@ void CScript::RegisterEngineFunctions()
     //stopAllSound()
     lua_register(machine, "stopSoundAll", API4Lua::stopAllSound);
 
+    //player
+    //getPlayerPosition()
+    lua_register(machine, "getPlayerPosition", API4Lua::getPlayerPosition);
+    //setPlayerPosition(x, y)
+    lua_register(machine, "setPlayerPosition", API4Lua::setPlayerPosition);
+    //setState(anim)
+    lua_register(machine, "setPlayerState", API4Lua::setPlayerState);
 
     //mix
     //addScript(path_to_script)

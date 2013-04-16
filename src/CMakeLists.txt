@@ -24,6 +24,9 @@ set( GAME_SRC
     CSoundManager.cpp
     CTextBox.cpp
     CInputHandler.cpp
+    CAnimation.cpp
+    CAnimatedSprite.cpp
+	CPlayer.cpp
 )
 
 if(SFML_FOUND)
