@@ -8,7 +8,10 @@ protected:
     static T *m_pSelfInstance;
 
 public:
-    virtual ~TSingleton(){}
+    virtual ~TSingleton()
+	{
+		
+	}
 
     static T *GetInstance()
     {

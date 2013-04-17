@@ -379,8 +379,8 @@ int API4Lua::setPlayerPosition(lua_State *vm)
     if(lua_gettop(vm)==2)
     {
         sf::Vector2f pos;
-        pos.x=lua_tonumber(vm, 1);
-        pos.y=lua_tonumber(vm, 2);
+        pos.x=static_cast<float>( lua_tonumber(vm, 1) );
+        pos.y=static_cast<float>( lua_tonumber(vm, 2) );
         CPlayer::GetInstance()->setPosition(pos);
         CPlayer::GetInstance()->updatePosition();
     }

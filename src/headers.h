@@ -12,6 +12,7 @@
 #include <utility>
 #include <ctime>
 #include <cstdio>
+#include <cmath>
 
 // Biblioteki SFML
 #include <SFML/Audio.hpp>

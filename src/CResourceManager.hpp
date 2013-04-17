@@ -72,6 +72,7 @@ private:
 	// wskaźnik na domyślną czcionke
 	sf::Font *m_font;
 
-
+	// wskaźnik na teksture mapy
+	sf::RenderTexture *rendtex;
 };
 #endif

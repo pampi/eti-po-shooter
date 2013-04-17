@@ -1,4 +1,4 @@
-intro_sound = false
+intro_sound = true
 idle_x = 0.0
 idle_y = 500.0
 

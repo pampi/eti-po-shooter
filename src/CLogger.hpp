@@ -34,15 +34,11 @@ Jak używać:
 ################################################
 */
 
-/*
- *  Panie Boże.
- *  Proszę spraw aby ten kod zginął, przepadnął i nie był potrzebny do prawidłowego działania.
- *
- *  Amen
- */
 #ifndef gLogger
 #define gLogger CLogger::GetReference()
 #endif
+
+
 
 #ifndef LOG
 #define LOG(log_type,message) CLogger::GetReference() << log_type << message
@@ -80,7 +76,7 @@ public:
 			m_File << "File log created" << std::endl;
 			m_File << "Created: " << m_buffor <<std::endl << std::endl << std::endl;
 		}
-		
+		m_pSelfInstance = this;
 	}
 
 

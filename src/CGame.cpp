@@ -9,7 +9,6 @@ CGame::CGame()
 	m_inited = false;
     m_idle = false;
     m_lastEventTime = time(NULL);
-    gDDraw << "Dupa";
     gLogger << CLogger::LOG_INFO << "CGame konstruktor";
 }
 
@@ -45,7 +44,7 @@ int CGame::Step(sf::RenderWindow & App)
                     return -1; // wyjdz z gry(-1)
                 }
 
-                for(int i=0; i<sf::Keyboard::KeyCount; i++)
+                /*for(int i=0; i<sf::Keyboard::KeyCount; i++)
                 {
                     if(CInputHandler::GetInstance()->isKeyPressed(static_cast<sf::Keyboard::Key>(i)))
                     {
@@ -53,7 +52,7 @@ int CGame::Step(sf::RenderWindow & App)
                         callScriptFunction("keyPressed", 1, arg);
                         delete arg;
                     }
-                }
+                }*/
             }
 		} // events loop
 
@@ -82,7 +81,7 @@ int CGame::Step(sf::RenderWindow & App)
 
 
 
-        if(gResources.pTmxMap) App.draw( *gResources.mapSprite );
+        if(gResources.pTmxMap && gResources.mapSprite) App.draw( *gResources.mapSprite );
         drawGui(App);
 
 		// JĄDRO GRY /|\
@@ -114,7 +113,7 @@ void CGame::m_Init()
     // Laduj menu
     gResources.loadLevel(0);
 
-    m_player = new CPlayer("1", sf::Vector2f(200,200), CActor::STAYING, 100.f, "res/img/MC.png");
+    m_player = new CPlayer("1", sf::Vector2f(200,200), CActor::STAYING, 100.f, 0.f, 0.f, "res/img/dude.png");
 	
 
 }

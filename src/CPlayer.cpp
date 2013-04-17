@@ -1,146 +1,166 @@
 #include "headers.h"
 
+#define MAXSPEED 1000.f
+#define MINSPEED -1000.f
+#define DEGTORAD 0.0174532925199432957f
+#define RADTODEG 57.295779513082320876f
+#define M_PI 3.14159265358979323846f
 
 CPlayer::CPlayer() : CActor()
 {
 
 }
 
-CPlayer::CPlayer(std::string ID, sf::Vector2f position, State state, float hp, std::string spriteSheet) : CActor(ID, position, state, hp)
+CPlayer::CPlayer(std::string ID, sf::Vector2f position, State state, float hp, float speed, float rotation, std::string spriteSheet) : CActor(ID, position, state, hp, speed, rotation)
 {
 	m_texture = new sf::Texture;
 	m_texture->loadFromImage( gResources.getImage(spriteSheet) );
 
-	m_ani_walkingD = new CAnimation();
-	m_ani_walkingD->setSpriteSheet( *m_texture );
-	m_ani_walkingD->addFrame( sf::IntRect(0 , 0 , 32, 48) );
-	m_ani_walkingD->addFrame( sf::IntRect(32, 0 , 32, 48) );
-	m_ani_walkingD->addFrame( sf::IntRect(64, 0 , 32, 48) );
-	m_ani_walkingD->addFrame( sf::IntRect(96, 0 , 32, 48) );
-
-	m_ani_walkingL = new CAnimation();
-	m_ani_walkingL->setSpriteSheet( *m_texture );
-	m_ani_walkingL->addFrame( sf::IntRect(0 , 48, 32, 48) );
-	m_ani_walkingL->addFrame( sf::IntRect(32, 48, 32, 48) );
-	m_ani_walkingL->addFrame( sf::IntRect(64, 48, 32, 48) );
-	m_ani_walkingL->addFrame( sf::IntRect(96, 48, 32, 48) );
-
-	m_ani_walkingR = new CAnimation();
-	m_ani_walkingR->setSpriteSheet( *m_texture );
-	m_ani_walkingR->addFrame( sf::IntRect(0 , 96, 32, 48) );
-	m_ani_walkingR->addFrame( sf::IntRect(32, 96, 32, 48) );
-	m_ani_walkingR->addFrame( sf::IntRect(64, 96, 32, 48) );
-	m_ani_walkingR->addFrame( sf::IntRect(96, 96, 32, 48) );
-
+	#pragma region animacja
 	m_ani_walkingU = new CAnimation();
 	m_ani_walkingU->setSpriteSheet( *m_texture );
-	m_ani_walkingU->addFrame( sf::IntRect(0 , 144, 32, 48) );
-	m_ani_walkingU->addFrame( sf::IntRect(32, 144, 32, 48) );
-	m_ani_walkingU->addFrame( sf::IntRect(64, 144, 32, 48) );
-	m_ani_walkingU->addFrame( sf::IntRect(96, 144, 32, 48) );
+	m_ani_walkingU->addFrame( sf::IntRect(0 , 0, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(50 , 0, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(100 , 0, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(150 , 0, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(0 , 50, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(50 , 50, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(100 , 50, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(150 , 50, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(0 , 100, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(50 , 100, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(100 , 100, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(150 , 100, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(0 , 150, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(50 , 150, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(100 , 150, 50, 50) );
+	m_ani_walkingU->addFrame( sf::IntRect(150 , 150, 50, 50) );
+	
 
 	m_ani_staying = new CAnimation();
 	m_ani_staying->setSpriteSheet( *m_texture );
-	m_ani_staying->addFrame( sf::IntRect(0 , 192, 32, 48) );
-	m_ani_staying->addFrame( sf::IntRect(32, 192, 32, 48) );
-	m_ani_staying->addFrame( sf::IntRect(64, 192, 32, 48) );
-	m_ani_staying->addFrame( sf::IntRect(96, 192, 32, 48) );
+	m_ani_staying->addFrame( sf::IntRect(0 , 150, 50, 50) );
+	m_ani_staying->addFrame( sf::IntRect(0 , 150, 50, 50) );
+	m_ani_staying->addFrame( sf::IntRect(50 , 150, 50, 50) );
+	m_ani_staying->addFrame( sf::IntRect(50 , 150, 50, 50) );
+	m_ani_staying->addFrame( sf::IntRect(50, 50, 50, 50) );
+	m_ani_staying->addFrame( sf::IntRect(50, 50, 50, 50) );
+	m_ani_staying->addFrame( sf::IntRect(0, 50, 50, 50) );
+	m_ani_staying->addFrame( sf::IntRect(0, 50, 50, 50) );
 
-
-	m_animationSprite = new CAnimatedSprite();
+	m_animationSprite = new CAnimatedSprite( sf::milliseconds(300) );
 	m_animationSprite->setAnimation( *m_ani_staying );
 	m_animationSprite->setPosition( m_position );
+	m_animationSprite->setOrigin(sf::Vector2f(25,25));
+#pragma endregion
 
     m_pSelfInstance = this;
+
+	m_dx = 0;
+	m_dy = 0;
 }
 
 void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 {
 	m_animationSprite->update( deltaTime );
 
-	// elsy bo nie ma animacji poœrednich ani skoœnych
+
 	// LEWO 
-    /*if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::A) )
+    if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::A) )
 	{
-		if( m_state != CActor::WALKING_L )
-		{
-			m_state = CActor::WALKING_L;
-			m_animationSprite->setAnimation( *m_ani_walkingL );
-		}
+			m_rotation += ((-130.0f) * static_cast<float>( deltaTime.asSeconds() ));
+			m_animationSprite->setRotation(m_rotation);
 	}
 
 	// PRAWO
-	else if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::D) )
+	 if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::D) )
 	{
-		if( m_state != CActor::WALKING_R )
-		{
-			m_state = CActor::WALKING_R;
-			m_animationSprite->setAnimation( *m_ani_walkingR );
-		}
+			m_rotation +=  (130.0f * static_cast<float>( deltaTime.asSeconds() ));
+			m_animationSprite->setRotation(m_rotation);
 	}
 
 	// DÓ£
-	else if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::S) )
+	 if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::S) )
 	{
 		if( m_state != CActor::WALKING_D )
 		{
 			m_state = CActor::WALKING_D;
-			m_animationSprite->setAnimation( *m_ani_walkingD );
+			m_animationSprite->setAnimation( *m_ani_walkingU );
+			m_animationSprite->setFrameTime( sf::milliseconds(50) );
+			m_speed = -100.f;
 		}
 	}
 
 	// GÓRA
-	else if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::W) )
+	 if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::W) )
 	{
 		if( m_state != CActor::WALKING_U )
 		{
 			m_state = CActor::WALKING_U;
 			m_animationSprite->setAnimation( *m_ani_walkingU );
+			m_animationSprite->setFrameTime( sf::milliseconds(50) );
+			m_speed = 100.f;
 		}
+		
 	}
 
 	// STÓJ
-	else if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::Space) )
+	 if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::Space) )
 	{
 		if( m_state != CActor::STAYING )
 		{
 			m_state = CActor::STAYING;
 			m_animationSprite->setAnimation( *m_ani_staying );
+			m_animationSprite->setFrameTime( sf::milliseconds(300) );
+			m_speed = 0.f;
 		}
-    }*/
+		m_speed = 0.f;
+    }
+
+	if( m_speed > MAXSPEED )
+		m_speed = MAXSPEED;
+
+	if( m_speed < MINSPEED )
+		m_speed = MINSPEED;
+
+	if(m_rotation > 359)
+		m_rotation = 0;
+
+	if(m_rotation < 0)
+		m_rotation = 359;
+
+
+	m_dx += m_speed * cos((m_rotation*M_PI)/180);
+	m_dy += m_speed * sin((m_rotation*M_PI)/180);
+
+	
+	if( m_dx >= 1 || m_dx <= - 1 )
+	{ 
+		m_position.x += (int)(m_dx) * deltaTime.asSeconds();
+		m_dx = m_dx - (int)(m_dx);
+	}
+	if( m_dy >= 1 || m_dy <= - 1 )
+	{ 
+		m_position.y += (int)(m_dy) * deltaTime.asSeconds();
+		m_dy = m_dy - (int)(m_dy);
+	}
+	
+	
+	m_animationSprite->setPosition(m_position);
+
+	// just 4 debug
+	gDDraw.add(m_animationSprite->getPosition().x, "X: ");
+	gDDraw.add(m_animationSprite->getPosition().y, "Y: ");
+	gDDraw.add(m_dx, "dX: ");
+	gDDraw.add(m_dy, "dY: ");
+	gDDraw.add(m_position.x, "mX: ");
+	gDDraw.add(m_position.y, "mY: ");
 
 }
 
 void CPlayer::updatePosition()
 {
     m_animationSprite->setPosition(m_position);
-}
-
-void CPlayer::setState(State newState)
-{
-    if(m_state!=newState)
-    {
-        m_state = newState;
-        switch(newState)
-        {
-            case CActor::WALKING_L:
-                m_animationSprite->setAnimation(*m_ani_walkingL);
-                break;
-            case CActor::WALKING_D:
-                m_animationSprite->setAnimation(*m_ani_walkingD);
-                break;
-            case CActor::WALKING_R:
-                m_animationSprite->setAnimation(*m_ani_walkingR);
-                break;
-            case CActor::WALKING_U:
-                m_animationSprite->setAnimation(*m_ani_walkingU);
-                break;
-            default:
-            case CActor::STAYING:
-                m_animationSprite->setAnimation(*m_ani_staying);
-                break;
-        }
-    }
 }
 
 void CPlayer::draw(sf::RenderTarget & target)

@@ -14,6 +14,11 @@ void CAnimatedSprite::setAnimation(const CAnimation &animation)
 	setFrame(m_currentFrame);
 }
 
+void CAnimatedSprite::setFrameTime(sf::Time time)
+{
+	m_frameTime = time;
+}
+
 void CAnimatedSprite::play()
 {
 	if(m_isPaused)

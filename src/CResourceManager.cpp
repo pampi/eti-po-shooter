@@ -8,7 +8,9 @@ const char *EMPTY="";
 CResourceManager::CResourceManager() 
 {
 	m_font = new sf::Font();
-	this->pTmxMap = NULL;
+	pTmxMap = NULL;
+	mapSprite = NULL;
+	rendtex = NULL;
 }
 
 const sf::Image & CResourceManager::getImage(const std::string & filename)
@@ -425,7 +427,19 @@ void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
 
 void CResourceManager::generateTextureMap()
 {
-	sf::RenderTexture *rendtex = new sf::RenderTexture();
+	if (mapSprite)
+	{
+		delete mapSprite;
+		mapSprite = 0;
+	}
+
+	if(!rendtex)
+	{
+		rendtex = new sf::RenderTexture();
+	}
+
+	mapSprite = new sf::Sprite();
+	
     rendtex->create( pTmxMap->width * pTmxMap->tileWidth, pTmxMap->height * pTmxMap->tileHeight );
 	
 	sf::IntRect rect,rect2;
