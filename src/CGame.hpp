@@ -26,5 +26,8 @@ private:
 	sf::Clock m_deltaClock;
 
 	class CPlayer *m_player;
+
+	sf::View *m_view;
+	
 };
 #endif

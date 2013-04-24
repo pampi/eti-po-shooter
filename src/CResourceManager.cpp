@@ -11,6 +11,7 @@ CResourceManager::CResourceManager()
 	pTmxMap = NULL;
 	mapSprite = NULL;
 	rendtex = NULL;
+	
 }
 
 const sf::Image & CResourceManager::getImage(const std::string & filename)
@@ -247,7 +248,7 @@ void CResourceManager::loadLevel(int lvl)
                 {
                     if(img.first == "img")
                     {
-                        this->loadImage(img.second.get<std::string>("<xmlattr>.file_path", ""));
+                        this->loadImageKey(img.second.get<std::string>("<xmlattr>.file_path", ""));
                     }
                 }
             }
@@ -427,19 +428,19 @@ void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
 
 void CResourceManager::generateTextureMap()
 {
-	if (mapSprite)
-	{
-		delete mapSprite;
-		mapSprite = 0;
-	}
-
-	if(!rendtex)
-	{
-		rendtex = new sf::RenderTexture();
-	}
-
-	mapSprite = new sf::Sprite();
 	
+	/*if(!m_bigTexture)
+	{
+		//m_bigTexture = new thor::BigTexture();
+		//m_bigTexture->loadFromFile("res/img/desert.png");
+	}*/
+	
+	
+	m_bigTexture.loadFromImage(*gResources.getImagePointer("res/img/map1a.png"));
+	mapBigSprite.setTexture(m_bigTexture);
+	mapBigSprite.setPosition(100.f,50.f);
+	//cache.acquire(thor::Resources::fromFile<sf::Image>("res/img/map1a.png"));
+	rendtex = new sf::RenderTexture();
     rendtex->create( pTmxMap->width * pTmxMap->tileWidth, pTmxMap->height * pTmxMap->tileHeight );
 	
 	sf::IntRect rect,rect2;
@@ -467,7 +468,7 @@ void CResourceManager::generateTextureMap()
 
 			// jeżeli tileset się zmienił podczas ładowania kafelków to go załaduj, a jak nie to nie ładuj w koło tego samego
 			if( ptilset != tilset )
-				_tex.loadFromImage(getImage( tilset->filename ));
+				_tex.loadFromImage(*getImagePointer( tilset->filename ));
 
 			ptilset = tilset;
 			
@@ -519,3 +520,25 @@ void CResourceManager::addTimedTextBox(sf::Vector2f position, size_t charSize, s
     m_guiElements.push_back(new CTimedTextBox(position, charSize, text, ID, milisec, color));
 }
 
+std::shared_ptr<sf::Image> CResourceManager::getImagePointer(const std::string path)
+{
+	thor::ResourceKey<sf::Image> key = thor::Resources::fromFile<sf::Image>(path);
+	return m_multiCache.acquire(key);
+}
+
+bool CResourceManager::loadImageKey(const std::string path)
+{
+	try 
+	{
+		thor::ResourceKey<sf::Image> key = thor::Resources::fromFile<sf::Image>(path);
+		m_multiCache.acquire(key);
+		return true;
+	}
+	catch(thor::ResourceLoadingException &e)
+	{
+		gLogger<< CLogger::LOG_ERROR << e.what();
+		printf("%s\n", e.what());
+		return false;
+	}
+
+}

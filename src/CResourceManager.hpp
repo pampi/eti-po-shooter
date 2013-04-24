@@ -62,9 +62,19 @@ public:
 
 	// wskaźnik na gotowego sprita z mapą
 	sf::Sprite *mapSprite;
+	CBigSprite mapBigSprite;
+	CBigTexture m_bigTexture;
 	
+	//////////////////////////////Thor Approved///////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
+	std::shared_ptr<sf::Image> getImagePointer(const std::string path);
+	bool loadImageKey(const std::string path);
+
+	//////////////////////////////////////////////////////////////////////////
+
 private:
 	std::map<std::string , sf::Image > m_images;
+	thor::MultiResourceCache m_multiCache;
 
 	// lista ze wszystkimi elementami GUI
 	std::list<class CGuiElement*> m_guiElements;
@@ -74,5 +84,6 @@ private:
 
 	// wskaźnik na teksture mapy
 	sf::RenderTexture *rendtex;
+
 };
 #endif

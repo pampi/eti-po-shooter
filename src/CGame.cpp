@@ -10,10 +10,12 @@ CGame::CGame()
     m_idle = false;
     m_lastEventTime = time(NULL);
     gLogger << CLogger::LOG_INFO << "CGame konstruktor";
+	m_view = new sf::View(sf::FloatRect(0,0,1280,720));
 }
 
 int CGame::Step(sf::RenderWindow & App)
 {
+	
 	for(;;)
 	{
 		if(!m_inited)
@@ -44,15 +46,6 @@ int CGame::Step(sf::RenderWindow & App)
                     return -1; // wyjdz z gry(-1)
                 }
 
-                /*for(int i=0; i<sf::Keyboard::KeyCount; i++)
-                {
-                    if(CInputHandler::GetInstance()->isKeyPressed(static_cast<sf::Keyboard::Key>(i)))
-                    {
-                        SLuaArgument *arg = new SLuaArgument(strKey[m_event.key.code]);
-                        callScriptFunction("keyPressed", 1, arg);
-                        delete arg;
-                    }
-                }*/
             }
 		} // events loop
 
@@ -79,9 +72,14 @@ int CGame::Step(sf::RenderWindow & App)
         }
 		#pragma endregion
 
+		App.setView(*m_view);
+		m_view->setCenter(m_player->getPosition());
+		
+        if(gResources.pTmxMap) App.draw( *gResources.mapSprite );
+		gResources.mapBigSprite.calculateSprites( App.getView().getViewport() );
+		App.draw( gResources.mapBigSprite );
 
-
-        if(gResources.pTmxMap && gResources.mapSprite) App.draw( *gResources.mapSprite );
+		
         drawGui(App);
 
 		// JĄDRO GRY /|\
@@ -95,6 +93,7 @@ int CGame::Step(sf::RenderWindow & App)
 		// obsługa gracza
 		m_player->update(App, m_deltaTime);
 		m_player->draw(App);
+
 
 		// Żeby się licznik fps aktualizował
         gFPS.update();
@@ -114,7 +113,6 @@ void CGame::m_Init()
     gResources.loadLevel(0);
 
     m_player = new CPlayer("1", sf::Vector2f(200,200), CActor::STAYING, 100.f, 0.f, 0.f, "res/img/dude.png");
-	
 
 }
 

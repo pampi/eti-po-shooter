@@ -28,6 +28,11 @@
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
 
+// Biblioteki Thor
+//#include <Thor/Graphics/BigSprite.hpp>
+//#include <Thor/Graphics/BigTexture.hpp>
+#include <Thor/Resources.hpp>
+
 // Zewnętrzne
 #include "lua5.2/lua.hpp"
 
@@ -40,6 +45,8 @@
 #include "CInputHandler.hpp"
 #include "CScreen.hpp"
 #include "CScreenManager.hpp"
+#include "CBigSprite.h"
+#include "CBigTexture.h"
 #include "CResourceManager.hpp"
 #include "CSoundManager.hpp"
 #include "CScript.hpp"
@@ -53,6 +60,8 @@
 #include "CAnimatedSprite.hpp"
 #include "CActor.hpp"
 #include "CPlayer.hpp"
+
+
 
 
 

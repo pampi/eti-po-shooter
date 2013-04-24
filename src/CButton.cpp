@@ -25,7 +25,10 @@ void CButton::draw(sf::RenderTarget & target)
 
 void CButton::update(sf::RenderWindow & App)
 {
-	if( m_fRect.contains(static_cast<sf::Vector2f>( sf::Mouse::getPosition(App)) ) )
+	sf::Vector2i pos = sf::Mouse::getPosition(App);
+	
+
+	if( m_fRect.contains(static_cast<sf::Vector2f>( pos  ) ) )
 	{
 		this->m_text.setColor( m_hoverColor );
 

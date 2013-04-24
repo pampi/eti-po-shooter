@@ -14,7 +14,7 @@ CPlayer::CPlayer() : CActor()
 CPlayer::CPlayer(std::string ID, sf::Vector2f position, State state, float hp, float speed, float rotation, std::string spriteSheet) : CActor(ID, position, state, hp, speed, rotation)
 {
 	m_texture = new sf::Texture;
-	m_texture->loadFromImage( gResources.getImage(spriteSheet) );
+	m_texture->loadFromImage( *gResources.getImagePointer(spriteSheet) );
 
 	#pragma region animacja
 	m_ani_walkingU = new CAnimation();
