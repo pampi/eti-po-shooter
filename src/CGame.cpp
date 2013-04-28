@@ -75,9 +75,8 @@ int CGame::Step(sf::RenderWindow & App)
 		App.setView(*m_view);
 		m_view->setCenter(m_player->getPosition());
 		
-        if(gResources.pTmxMap) App.draw( *gResources.mapSprite );
-		gResources.mapBigSprite.calculateSprites( App.getView().getViewport() );
-		App.draw( gResources.mapBigSprite );
+        if(gResources.pTmxMap) gResources.drawMap(App);
+		
 
 		
         drawGui(App);
@@ -118,7 +117,7 @@ void CGame::m_Init()
 
 void CGame::drawGui(sf::RenderWindow & App)
 {
-    for( std::list<class CGuiElement*>::iterator it = gResources.getGuiList()->begin(); it != gResources.getGuiList()->end(); it++ )
+    for( std::list<class CGuiElement*>::iterator it = gResources.m_guiElements.begin(); it != gResources.m_guiElements.end(); it++ )
 	{
         switch((*it)->type)
         {

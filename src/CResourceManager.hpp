@@ -36,6 +36,9 @@ public:
 	// return size of images container
 	size_t getImgContainerSize();
 
+	// lista ze wszystkimi elementami GUI
+	std::list<class CGuiElement*> m_guiElements;
+
 	// return current default font
 	const sf::Font & getFont();
 
@@ -48,8 +51,8 @@ public:
     // return button or null
     class CGuiElement *findGUIElement(const char* id);
 
-	// zwraca wskaźnik na liste, tylko po co ?
-	std::list<class CGuiElement*> *getGuiList();
+	// rysuje mape, komentarz zbędny
+	void drawMap(sf::RenderWindow & App);
 
 	// load map from *.tmx file (csv encoding)
 	void loadTmxMap(const std::string &pathToMapFile);
@@ -57,13 +60,17 @@ public:
 	// na podstawie załadowanego Tmx tworzy mape i zapisuje do sprita
 	void generateTextureMap();
 
+	// tworzy mini-teksture o podanych wymiarach w gidach ( X,Y - od którego kafelka na mapie stworzyć teksture. SizeX,SizyY - ile kafelków ma się w niej zawierać )
+	// i zwraca wskaźnik na sprite który ją zawiera
+	sf::Sprite* createTextureByGID(unsigned int x, unsigned int y, unsigned int SizeX, unsigned int SizeY);
+
 	// pointer to loaded map
 	class TmxMap* pTmxMap;
 
 	// wskaźnik na gotowego sprita z mapą
 	sf::Sprite *mapSprite;
-	CBigSprite mapBigSprite;
-	CBigTexture m_bigTexture;
+	//CBigSprite mapBigSprite;
+	//CBigTexture m_bigTexture;
 	
 	//////////////////////////////Thor Approved///////////////////////////////
 	//////////////////////////////////////////////////////////////////////////
@@ -76,14 +83,16 @@ private:
 	std::map<std::string , sf::Image > m_images;
 	thor::MultiResourceCache m_multiCache;
 
-	// lista ze wszystkimi elementami GUI
-	std::list<class CGuiElement*> m_guiElements;
+	
 
 	// wskaźnik na domyślną czcionke
 	sf::Font *m_font;
 
 	// wskaźnik na teksture mapy
 	sf::RenderTexture *rendtex;
+
+	// zawiera wszystkie sprite'y składające się na całą mape
+	std::list<sf::Sprite*> m_mapSprites;
 
 };
 #endif

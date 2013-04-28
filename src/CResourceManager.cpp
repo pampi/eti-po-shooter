@@ -111,11 +111,13 @@ void CResourceManager::clearResources()
 
         if( !gButtonClicked.empty() ) gButtonClicked.clear();
     }
-}
 
-std::list<class CGuiElement*> *CResourceManager::getGuiList()
-{
-	return &m_guiElements;
+	// to chyba działa po wuju, bo pamięć nadal się zwiększa
+	for(std::list<sf::Sprite*>::iterator it = m_mapSprites.begin(); it != m_mapSprites.end(); )
+	{
+		delete (*it);
+		it = m_mapSprites.erase(it);
+	}
 }
 
 CGuiElement *CResourceManager::findGUIElement(const char *id)
@@ -428,21 +430,47 @@ void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
 
 void CResourceManager::generateTextureMap()
 {
-	
-	/*if(!m_bigTexture)
+	// tyle kafelków zmieści się na 1 teksturce w gpu
+	int gidsPerRow = sf::Texture::getMaximumSize() / pTmxMap->tileWidth;
+	int gidsPerCol = sf::Texture::getMaximumSize() / pTmxMap->tileHeight;
+
+	// czyli tyle pixeli
+	int MaxSizeY = gidsPerCol * pTmxMap->tileWidth;
+	int MaxSizeX = gidsPerRow * pTmxMap->tileHeight;
+
+	for (unsigned int y = 0u; y < (unsigned)gidsPerCol; y+= MaxSizeY) 
 	{
-		//m_bigTexture = new thor::BigTexture();
-		//m_bigTexture->loadFromFile("res/img/desert.png");
-	}*/
+		for (unsigned int x = 0u; x < (unsigned)gidsPerRow; x+= MaxSizeX) 
+		{ 
+			m_mapSprites.push_back(  createTextureByGID(x, y, pTmxMap->width%gidsPerRow, pTmxMap->height%gidsPerCol)  );
+			m_mapSprites.back()->setPosition( (float)(x*pTmxMap->tileWidth), (float)(y*pTmxMap->tileHeight) );
+		}
+	}
 	
-	
-	m_bigTexture.loadFromImage(*gResources.getImagePointer("res/img/map1a.png"));
-	mapBigSprite.setTexture(m_bigTexture);
-	mapBigSprite.setPosition(100.f,50.f);
-	//cache.acquire(thor::Resources::fromFile<sf::Image>("res/img/map1a.png"));
+}
+
+sf::Sprite* CResourceManager::createTextureByGID(unsigned int x, unsigned int y, unsigned int SizeX, unsigned int SizeY)
+{
 	rendtex = new sf::RenderTexture();
-    rendtex->create( pTmxMap->width * pTmxMap->tileWidth, pTmxMap->height * pTmxMap->tileHeight );
-	
+	unsigned int sizex = (SizeX ) * pTmxMap->tileWidth;
+	unsigned int sizey = (SizeY ) * pTmxMap->tileHeight;
+
+	if (sizex > sf::Texture::getMaximumSize() || sizey > sf::Texture::getMaximumSize() )
+	{
+		gLogger << CLogger::LOG_ERROR << "RenderTexture too big";
+		std::cout<<"RenderTexture too big\n";
+		return NULL;
+	}
+
+	if( SizeX > (unsigned)pTmxMap->width || SizeY > (unsigned)pTmxMap->height)
+	{
+		gLogger << CLogger::LOG_ERROR << "GID beyond range";
+		std::cout<<"GID beyond range\n";
+		return NULL;
+	}
+
+	rendtex->create( sizex, sizey );
+
 	sf::IntRect rect,rect2;
 
 	int _gid=0;
@@ -450,16 +478,16 @@ void CResourceManager::generateTextureMap()
 	int NUM_COL=0;
 	sf::Texture _tex;
 
-	for(int row = 0; row < pTmxMap->height; row++)
+	for(unsigned int row = y; row < SizeY; row++)
 	{
-		for(int col = 0; col <pTmxMap->width; col++)
+		for(unsigned int col = x; col <SizeX; col++)
 		{
 			_gid = pTmxMap->layers.front()->data[row][col];
 
 			// jeżeli jest to nieokreślony gid to leć dalej
 			if(_gid == 0)
 				continue;
-			
+
 			// szuka którego tilesetu użyć do aktualnego gida
 			tilset = pTmxMap->findTileset(_gid);
 
@@ -471,7 +499,7 @@ void CResourceManager::generateTextureMap()
 				_tex.loadFromImage(*getImagePointer( tilset->filename ));
 
 			ptilset = tilset;
-			
+
 			// określa ile kafelków mieści się w poziomie na tilsecie
 			NUM_COL = tilset->imageWidth / tilset->tileWidth;
 
@@ -483,7 +511,7 @@ void CResourceManager::generateTextureMap()
 			rect.top = tilset->margin + (tilset->spacing + tilset->tileHeight) * tileset_row;
 			rect.width = tilset->tileWidth;
 			rect.height = tilset->tileHeight;
-			
+
 			rect2.left = col * tilset->tileWidth;
 			rect2.top = row * tilset->tileHeight;
 			rect2.width = tilset->tileWidth;
@@ -491,7 +519,7 @@ void CResourceManager::generateTextureMap()
 
 
 			sf::Sprite sprite(_tex, rect);
-			sprite.setPosition((float)rect2.left, (float)rect2.top);
+			sprite.setPosition((float)rect2.left -(x*tilset->tileWidth), (float)rect2.top-(y*tilset->tileHeight));
 
 			// narysuj nasz kafelek na texturce mapy
 			rendtex->draw(sprite);
@@ -500,9 +528,10 @@ void CResourceManager::generateTextureMap()
 
 	}
 	rendtex->display();
-	mapSprite = new sf::Sprite( rendtex->getTexture() );
+	sf::Sprite *spritem = new sf::Sprite( rendtex->getTexture() );
 	// tymczasowo przesunięta | JUST 4 DBUG
-	mapSprite->move(100.f,50.f);
+	//mapSprite->move(100.f,50.f);
+	return spritem;
 }
 
 void CResourceManager::addButton(sf::Vector2f position, size_t charSize, sf::String text, std::string ActionToDo, std::string ID, bool hide, sf::Color normalColor, sf::Color hoverColor)
@@ -541,4 +570,12 @@ bool CResourceManager::loadImageKey(const std::string path)
 		return false;
 	}
 
+}
+
+void CResourceManager::drawMap(sf::RenderWindow & App)
+{
+	BOOST_FOREACH(const sf::Sprite* sprite, m_mapSprites)
+	{
+		App.draw( *sprite );
+	}
 }
