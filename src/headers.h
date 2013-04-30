@@ -41,6 +41,7 @@
 #include "CSettingsParser.hpp"
 #include "CFpsCounter.hpp"
 #include "CDebugDraw.hpp"
+#include "CQuadTree.h"
 #include "CInputHandler.hpp"
 #include "CScreen.hpp"
 #include "CScreenManager.hpp"

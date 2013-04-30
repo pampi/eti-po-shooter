@@ -260,7 +260,10 @@ void CResourceManager::loadLevel(int lvl)
         char path[512];
         sprintf(path, "res/level/%d/map1a.tmx", lvl);
         loadTmxMap(path);
-        if(pTmxMap) generateTextureMap();
+        if(pTmxMap) 
+		{
+			generateTextureMap();
+		}
 
         char script_path[512];
         sprintf(script_path, "res/level/%d/script.lua", lvl);
@@ -434,18 +437,37 @@ void CResourceManager::generateTextureMap()
 	int gidsPerRow = sf::Texture::getMaximumSize() / pTmxMap->tileWidth;
 	int gidsPerCol = sf::Texture::getMaximumSize() / pTmxMap->tileHeight;
 
-	// czyli tyle pixeli
-	int MaxSizeY = gidsPerCol * pTmxMap->tileWidth;
-	int MaxSizeX = gidsPerRow * pTmxMap->tileHeight;
-
-	for (unsigned int y = 0u; y < (unsigned)gidsPerCol; y+= MaxSizeY) 
+	for (int gy = 0; gy < pTmxMap->width; gy+=gidsPerRow)
 	{
-		for (unsigned int x = 0u; x < (unsigned)gidsPerRow; x+= MaxSizeX) 
-		{ 
-			m_mapSprites.push_back(  createTextureByGID(x, y, pTmxMap->width%gidsPerRow, pTmxMap->height%gidsPerCol)  );
-			m_mapSprites.back()->setPosition( (float)(x*pTmxMap->tileWidth), (float)(y*pTmxMap->tileHeight) );
+		if (gy > pTmxMap->width)
+		{
+			gy = pTmxMap->width;
+		}
+
+		for (int gx = 0; gx < pTmxMap->height; gx+=gidsPerCol)
+		{
+			if (gx > pTmxMap->height)
+			{
+				gx = pTmxMap->height;
+			}
+
+			// czyli tyle pixeli zmieści się na 1 teksturce
+			int MaxSizeY = gidsPerCol * pTmxMap->tileWidth;
+			int MaxSizeX = gidsPerRow * pTmxMap->tileHeight;
+
+			for (unsigned int y = 0u; y < (unsigned)gidsPerCol; y+= MaxSizeY) 
+			{
+				for (unsigned int x = 0u; x < (unsigned)gidsPerRow; x+= MaxSizeX) 
+				{ 
+					m_mapSprites.push_back(  createTextureByGID(x, y, pTmxMap->width%gidsPerRow, pTmxMap->height%gidsPerCol)  );
+					m_mapSprites.back()->setPosition( (float)(x*pTmxMap->tileWidth), (float)(y*pTmxMap->tileHeight) );
+				}
+			}
+
+
 		}
 	}
+
 	
 }
 
@@ -462,11 +484,18 @@ sf::Sprite* CResourceManager::createTextureByGID(unsigned int x, unsigned int y,
 		return NULL;
 	}
 
-	if( SizeX > (unsigned)pTmxMap->width || SizeY > (unsigned)pTmxMap->height)
+	if( SizeX > (unsigned)pTmxMap->width)
 	{
-		gLogger << CLogger::LOG_ERROR << "GID beyond range";
-		std::cout<<"GID beyond range\n";
-		return NULL;
+		gLogger << CLogger::LOG_ERROR << "GID X beyond range";
+		std::cout<<"GID X beyond range\n";
+		SizeX = pTmxMap->width;
+	}
+
+	if( SizeY > (unsigned)pTmxMap->height)
+	{
+		gLogger << CLogger::LOG_ERROR << "GID Y beyond range";
+		std::cout<<"GID Y beyond range\n";
+		SizeY = pTmxMap->height;
 	}
 
 	rendtex->create( sizex, sizey );
@@ -578,4 +607,19 @@ void CResourceManager::drawMap(sf::RenderWindow & App)
 	{
 		App.draw( *sprite );
 	}
+}
+
+sf::Vector2f CResourceManager::loadPlayerStartPosition()
+{
+	sf::Vector2f _val(0,0);
+	BOOST_FOREACH(class TmxMapObjectGroup *objectgroup, pTmxMap->objects)
+	{
+		if (objectgroup->name == "StartPosition")
+		{
+			_val.x = static_cast<float>( objectgroup->objects.front()->x );
+			_val.y = static_cast<float>( objectgroup->objects.front()->y );
+			return _val;
+		}
+	}
+	return _val;
 }

@@ -67,10 +67,13 @@ public:
 	// pointer to loaded map
 	class TmxMap* pTmxMap;
 
+	// z załadowanej mapy szuka objectgrup StartPosition i zwraca pozycję startową. 
+	// jak nie znajdzie to zwraca (0,0)
+	sf::Vector2f loadPlayerStartPosition();
+
 	// wskaźnik na gotowego sprita z mapą
 	sf::Sprite *mapSprite;
-	//CBigSprite mapBigSprite;
-	//CBigTexture m_bigTexture;
+
 	
 	//////////////////////////////Thor Approved///////////////////////////////
 	//////////////////////////////////////////////////////////////////////////

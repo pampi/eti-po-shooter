@@ -87,7 +87,7 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 			m_state = CActor::WALKING_D;
 			m_animationSprite->setAnimation( *m_ani_walkingU );
 			m_animationSprite->setFrameTime( sf::milliseconds(50) );
-			m_speed = -900.f;
+			m_speed = -100.f;
 		}
 	}
 
@@ -99,7 +99,7 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 			m_state = CActor::WALKING_U;
 			m_animationSprite->setAnimation( *m_ani_walkingU );
 			m_animationSprite->setFrameTime( sf::milliseconds(50) );
-			m_speed = 900.f;
+			m_speed = 100.f;
 		}
 		
 	}

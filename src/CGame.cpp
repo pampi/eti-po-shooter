@@ -111,7 +111,7 @@ void CGame::m_Init()
     // Laduj menu
     gResources.loadLevel(0);
 
-    m_player = new CPlayer("1", sf::Vector2f(200,200), CActor::STAYING, 100.f, 0.f, 0.f, "res/img/dude.png");
+    m_player = new CPlayer("1", gResources.loadPlayerStartPosition(), CActor::STAYING, 100.f, 0.f, 0.f, "res/img/dude.png");
 
 }
 
