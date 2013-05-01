@@ -16,7 +16,6 @@ public:
     void updatePosition();
 
 
-
 private:
 	float m_dx, m_dy;
 

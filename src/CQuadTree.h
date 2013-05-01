@@ -15,8 +15,8 @@ public:
 	float x, y, width, height;
 	Type typ;
 
-private:
 	sf::RectangleShape shape;
+	sf::FloatRect rect;
 };
 
 class CQuadTree

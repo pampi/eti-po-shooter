@@ -17,7 +17,7 @@ private:
     bool m_idle;
 
 	bool m_inited;
-	void m_Init();
+	void m_Init(sf::RenderWindow & App);
 
 	void manageButtons();
 	void drawGui(sf::RenderWindow & App);
@@ -29,5 +29,9 @@ private:
 
 	sf::View *m_view;
 	
+	// drzewko kolizji
+	CQuadTree *m_quadtree;
+
+	void checkCollisions(sf::RenderWindow & App);
 };
 #endif

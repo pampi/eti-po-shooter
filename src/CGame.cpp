@@ -20,9 +20,9 @@ int CGame::Step(sf::RenderWindow & App)
 	{
 		if(!m_inited)
 		{
-			m_Init();
+			m_Init(App);
 		}
-        App.setKeyRepeatEnabled(true);
+        //App.setKeyRepeatEnabled(true);
 
 		while( App.pollEvent(m_event) )
         {
@@ -54,6 +54,7 @@ int CGame::Step(sf::RenderWindow & App)
 
 		// JĄDRO GRY \|/
 
+		// tick timer
 		m_deltaTime = m_deltaClock.restart();
 
 		#pragma region IDLE
@@ -77,7 +78,8 @@ int CGame::Step(sf::RenderWindow & App)
 		
         if(gResources.pTmxMap) gResources.drawMap(App);
 		
-
+		// sprawdza kolizje
+		checkCollisions(App);
 		
         drawGui(App);
 
@@ -104,7 +106,7 @@ int CGame::Step(sf::RenderWindow & App)
 	} // main loop
 }
 
-void CGame::m_Init()
+void CGame::m_Init(sf::RenderWindow & App)
 {
 	m_inited = true;
 
@@ -112,6 +114,10 @@ void CGame::m_Init()
     gResources.loadLevel(0);
 
     m_player = new CPlayer("1", gResources.loadPlayerStartPosition(), CActor::STAYING, 100.f, 0.f, 0.f, "res/img/dude.png");
+
+	const sf::View *_view = new sf::View();
+	_view = &App.getView();
+	m_quadtree = new CQuadTree(0, 0, 1280, 720, 0, 5);
 
 }
 
@@ -190,4 +196,34 @@ void CGame::manageButtons()
 			}
 		}
 	} 
+}
+
+void CGame::checkCollisions(sf::RenderWindow & App)
+{
+	m_quadtree->clear();
+	sf::RectangleShape pshape;
+	pshape.setSize(sf::Vector2f(30,30));
+	pshape.setPosition(m_player->getPosition().x -15.0f,  m_player->getPosition().y -15.0f);
+	pshape.setFillColor(sf::Color::Red);
+	App.draw(pshape);
+	sf::FloatRect prect(m_player->getPosition().x -15.0f,  m_player->getPosition().y -15.0f, 30, 30);
+	
+
+	BOOST_FOREACH(CollisionObject *cobject, gResources.m_collisionObjects)
+	{
+		m_quadtree->addObject(cobject);
+		cobject->draw(App);
+	}
+
+	std::vector<CollisionObject*> odp = m_quadtree->getObjectsAt( m_player->getPosition().x  -15.0f,  m_player->getPosition().y -15.0f  );
+	BOOST_FOREACH(CollisionObject* obj, odp)
+	{
+		std::cout<<odp.size()<<'\n';
+		if( prect.contains(obj->x, obj->y) )
+		{
+			std::cout << "KOLIZJA\n";
+			break;
+		}
+	}
+	
 }

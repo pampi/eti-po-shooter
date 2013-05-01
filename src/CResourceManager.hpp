@@ -74,7 +74,16 @@ public:
 	// wskaźnik na gotowego sprita z mapą
 	sf::Sprite *mapSprite;
 
-	
+	// ładuje wszystkie elementy statyczne z którymi coś może kolidować (ściany, etc)
+	// wszystkie elementy z grupy Collision w mapie TMX
+	void loadStaticColliders();
+	std::vector<CollisionObject*> m_collisionObjects;
+
+
+
+
+
+
 	//////////////////////////////Thor Approved///////////////////////////////
 	//////////////////////////////////////////////////////////////////////////
 	std::shared_ptr<sf::Image> getImagePointer(const std::string path);

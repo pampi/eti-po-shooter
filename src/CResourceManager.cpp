@@ -263,6 +263,7 @@ void CResourceManager::loadLevel(int lvl)
         if(pTmxMap) 
 		{
 			generateTextureMap();
+			loadStaticColliders();
 		}
 
         char script_path[512];
@@ -622,4 +623,19 @@ sf::Vector2f CResourceManager::loadPlayerStartPosition()
 		}
 	}
 	return _val;
+}
+
+void CResourceManager::loadStaticColliders()
+{
+	BOOST_FOREACH(TmxMapObjectGroup *objectgroup, pTmxMap->objects)
+	{
+		if (objectgroup->name == "Collision")
+		{
+			BOOST_FOREACH(TmxMapObject *object, objectgroup->objects)
+			{
+				CollisionObject *cobject = new CollisionObject( (float)object->x, (float)object->y, (float)object->width, (float)object->height, CollisionObject::WALL );
+				m_collisionObjects.push_back( cobject );
+			}
+		}
+	}
 }
