@@ -438,32 +438,66 @@ void CResourceManager::generateTextureMap()
 	int gidsPerRow = sf::Texture::getMaximumSize() / pTmxMap->tileWidth;
 	int gidsPerCol = sf::Texture::getMaximumSize() / pTmxMap->tileHeight;
 
-	for (int gy = 0; gy < pTmxMap->width; gy+=gidsPerRow)
+    //printf("Suspect Rows: %d\nSuspect Columns: %d\nMaxSizeX: %d\n MaxSizeY: %d\n", gidsPerRow, gidsPerCol, MaxSizeX ,MaxSizeY);
+
+    //dlaczego tu gy bylo szerokoscia a
+    for (int gx = 0; gx < pTmxMap->width; gx+=gidsPerRow)
 	{
-		if (gy > pTmxMap->width)
+        if (gx > pTmxMap->width)    //logicznie rzecz biorac, to sie nigdy nie wykona(patrz warunek petli FOR) ; q
 		{
-			gy = pTmxMap->width;
+            gx = pTmxMap->width;
 		}
 
-		for (int gx = 0; gx < pTmxMap->height; gx+=gidsPerCol)
+        for (int gy = 0; gy < pTmxMap->height; gy+=gidsPerCol)
 		{
-			if (gx > pTmxMap->height)
+            if (gy > pTmxMap->height)   //never happens, for reason look at loop above
 			{
-				gx = pTmxMap->height;
+                gy = pTmxMap->height;
 			}
 
 			// czyli tyle pixeli zmieści się na 1 teksturce
-			int MaxSizeY = gidsPerCol * pTmxMap->tileWidth;
-			int MaxSizeX = gidsPerRow * pTmxMap->tileHeight;
+            //int MaxSizeY = gidsPerCol * pTmxMap->tileWidth;
+            //int MaxSizeX = gidsPerRow * pTmxMap->tileHeight;
 
-			for (unsigned int y = 0u; y < (unsigned)gidsPerCol; y+= MaxSizeY) 
+            if(pTmxMap->width-gx<gidsPerRow)
+            {
+                if(pTmxMap->height-gy<gidsPerCol)
+                {
+                    m_mapSprites.push_back( createTextureByGID(gx, gy, pTmxMap->width-gx, pTmxMap->height-gy)  );
+                    m_mapSprites.back()->setPosition( (float)(gx*pTmxMap->tileWidth), (float)(gy*pTmxMap->tileHeight) );
+                }
+                else
+                {
+                    m_mapSprites.push_back( createTextureByGID(gx, gy, pTmxMap->width-gx, gidsPerCol) );
+                    m_mapSprites.back()->setPosition( (float)(gx*pTmxMap->tileWidth), (float)(gy*pTmxMap->tileHeight) );
+                }
+            }
+            else
+            {
+                if(pTmxMap->height-gy<gidsPerCol)
+                {
+                    m_mapSprites.push_back( createTextureByGID(gx, gy, gidsPerRow, pTmxMap->height-gy)  );
+                    m_mapSprites.back()->setPosition( (float)(gx*pTmxMap->tileWidth), (float)(gy*pTmxMap->tileHeight) );
+                }
+                else
+                {
+                    m_mapSprites.push_back( createTextureByGID(gx, gy, gidsPerRow, gidsPerCol)  );
+                    m_mapSprites.back()->setPosition( (float)(gx*pTmxMap->tileWidth), (float)(gy*pTmxMap->tileHeight) );
+                }
+            }
+
+            printf("Position for new texture: %d %d\n", gx*pTmxMap->tileWidth, gy*pTmxMap->tileHeight);
+
+            //na wielkiego potwora spaghetti, po co te for'y?
+            /*for (unsigned int y = 0u; y < (unsigned)gidsPerCol; y+= MaxSizeY)
 			{
 				for (unsigned int x = 0u; x < (unsigned)gidsPerRow; x+= MaxSizeX) 
 				{ 
-					m_mapSprites.push_back(  createTextureByGID(x, y, pTmxMap->width%gidsPerRow, pTmxMap->height%gidsPerCol)  );
-					m_mapSprites.back()->setPosition( (float)(x*pTmxMap->tileWidth), (float)(y*pTmxMap->tileHeight) );
+                    m_mapSprites.push_back(  createTextureByGID(x, y, pTmxMap->width%gidsPerRow, pTmxMap->height%gidsPerCol)  );
+                    m_mapSprites.back()->setPosition( (float)(x*pTmxMap->tileWidth), (float)(y*pTmxMap->tileHeight) );
+                    printf("Create Tex For X: %d Y: %d Width: %d Height: %d\n", x, y, pTmxMap->width%gidsPerRow, pTmxMap->height%gidsPerCol);
 				}
-			}
+            }*/
 
 
 		}
@@ -477,6 +511,8 @@ sf::Sprite* CResourceManager::createTextureByGID(unsigned int x, unsigned int y,
 	rendtex = new sf::RenderTexture();
 	unsigned int sizex = (SizeX ) * pTmxMap->tileWidth;
 	unsigned int sizey = (SizeY ) * pTmxMap->tileHeight;
+
+    printf("X: %d Y: %d SizeX: %d SizeY: %d\n", x, y, SizeX, SizeY);
 
 	if (sizex > sf::Texture::getMaximumSize() || sizey > sf::Texture::getMaximumSize() )
 	{
@@ -605,7 +641,7 @@ bool CResourceManager::loadImageKey(const std::string path)
 void CResourceManager::drawMap(sf::RenderWindow & App)
 {
 	BOOST_FOREACH(const sf::Sprite* sprite, m_mapSprites)
-	{
+    {
 		App.draw( *sprite );
 	}
 }

@@ -27,6 +27,7 @@ set( GAME_SRC
     CAnimation.cpp
     CAnimatedSprite.cpp
 	CPlayer.cpp
+	CQuadTree.cpp
 )
 
 if(SFML_FOUND)
@@ -38,8 +39,8 @@ if(SFML_FOUND)
         target_link_libraries(ETI_SHOOTER sfml-main sfml-window sfml-graphics sfml-system)
 #inne
     else(WIN32)
-        SET (CMAKE_CXX_FLAGS    "-Wall")
-        target_link_libraries(ETI_SHOOTER sfml-window sfml-graphics sfml-system lua sfml-audio)
+        SET (CMAKE_CXX_FLAGS    "-Wall -std=c++11")
+        target_link_libraries(ETI_SHOOTER sfml-window sfml-graphics sfml-system lua sfml-audio thor)
     endif(WIN32)
 else(SFML_FOUND)
     message(Nie znaleziono SFML!)
