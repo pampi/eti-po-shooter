@@ -435,8 +435,8 @@ void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
 void CResourceManager::generateTextureMap()
 {
 	// tyle kafelków zmieści się na 1 teksturce w gpu
-	int gidsPerRow = sf::Texture::getMaximumSize() / pTmxMap->tileWidth;
-	int gidsPerCol = sf::Texture::getMaximumSize() / pTmxMap->tileHeight;
+	int gidsPerRow = sf::Texture::getMaximumSize() / pTmxMap->tileWidth-1;
+	int gidsPerCol = sf::Texture::getMaximumSize() / pTmxMap->tileHeight-1;
 
     //printf("Suspect Rows: %d\nSuspect Columns: %d\nMaxSizeX: %d\n MaxSizeY: %d\n", gidsPerRow, gidsPerCol, MaxSizeX ,MaxSizeY);
 
@@ -455,9 +455,6 @@ void CResourceManager::generateTextureMap()
                 gy = pTmxMap->height;
 			}
 
-			// czyli tyle pixeli zmieści się na 1 teksturce
-            //int MaxSizeY = gidsPerCol * pTmxMap->tileWidth;
-            //int MaxSizeX = gidsPerRow * pTmxMap->tileHeight;
 
             if(pTmxMap->width-gx<gidsPerRow)
             {
@@ -488,22 +485,9 @@ void CResourceManager::generateTextureMap()
 
             printf("Position for new texture: %d %d\n", gx*pTmxMap->tileWidth, gy*pTmxMap->tileHeight);
 
-            //na wielkiego potwora spaghetti, po co te for'y?
-            /*for (unsigned int y = 0u; y < (unsigned)gidsPerCol; y+= MaxSizeY)
-			{
-				for (unsigned int x = 0u; x < (unsigned)gidsPerRow; x+= MaxSizeX) 
-				{ 
-                    m_mapSprites.push_back(  createTextureByGID(x, y, pTmxMap->width%gidsPerRow, pTmxMap->height%gidsPerCol)  );
-                    m_mapSprites.back()->setPosition( (float)(x*pTmxMap->tileWidth), (float)(y*pTmxMap->tileHeight) );
-                    printf("Create Tex For X: %d Y: %d Width: %d Height: %d\n", x, y, pTmxMap->width%gidsPerRow, pTmxMap->height%gidsPerCol);
-				}
-            }*/
-
-
 		}
 	}
 
-	
 }
 
 sf::Sprite* CResourceManager::createTextureByGID(unsigned int x, unsigned int y, unsigned int SizeX, unsigned int SizeY)
@@ -544,9 +528,9 @@ sf::Sprite* CResourceManager::createTextureByGID(unsigned int x, unsigned int y,
 	int NUM_COL=0;
 	sf::Texture _tex;
 
-	for(unsigned int row = y; row < SizeY; row++)
+	for(unsigned int row = y; row < SizeY+y; row++)
 	{
-		for(unsigned int col = x; col <SizeX; col++)
+		for(unsigned int col = x; col <SizeX+x; col++)
 		{
 			_gid = pTmxMap->layers.front()->data[row][col];
 

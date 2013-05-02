@@ -95,7 +95,6 @@ private:
 	std::map<std::string , sf::Image > m_images;
 	thor::MultiResourceCache m_multiCache;
 
-	
 
 	// wskaźnik na domyślną czcionke
 	sf::Font *m_font;

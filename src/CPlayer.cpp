@@ -68,14 +68,14 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 	// LEWO 
     if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::A) )
 	{
-			m_rotation += ((-130.0f) * static_cast<float>( deltaTime.asSeconds() ));
+			m_rotation += ((-170.0f) * static_cast<float>( deltaTime.asSeconds() ));
 			m_animationSprite->setRotation(m_rotation);
 	}
 
 	// PRAWO
 	 if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::D) )
 	{
-			m_rotation +=  (130.0f * static_cast<float>( deltaTime.asSeconds() ));
+			m_rotation +=  (170.0f * static_cast<float>( deltaTime.asSeconds() ));
 			m_animationSprite->setRotation(m_rotation);
 	}
 

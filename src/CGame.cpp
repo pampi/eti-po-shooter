@@ -115,8 +115,7 @@ void CGame::m_Init(sf::RenderWindow & App)
 
     m_player = new CPlayer("1", gResources.loadPlayerStartPosition(), CActor::STAYING, 100.f, 0.f, 0.f, "res/img/dude.png");
 
-	const sf::View *_view = new sf::View();
-	_view = &App.getView();
+	// tu by trzeba było podawać rozmiary całej mapy a nie tylko ekranu // TO DO
 	m_quadtree = new CQuadTree(0, 0, 1280, 720, 0, 5);
 
 }
@@ -219,7 +218,7 @@ void CGame::checkCollisions(sf::RenderWindow & App)
 	BOOST_FOREACH(CollisionObject* obj, odp)
 	{
 		std::cout<<odp.size()<<'\n';
-		if( prect.contains(obj->x, obj->y) )
+		if( prect.intersects(obj->rect) )
 		{
 			std::cout << "KOLIZJA\n";
 			break;
