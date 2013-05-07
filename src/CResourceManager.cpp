@@ -118,6 +118,12 @@ void CResourceManager::clearResources()
 		delete (*it);
 		it = m_mapSprites.erase(it);
 	}
+
+	for(std::vector<CollisionObject*>::iterator it = m_collisionObjects.begin(); it != m_collisionObjects.end(); )
+	{
+		delete (*it);
+		it = m_collisionObjects.erase(it);
+	}
 }
 
 CGuiElement *CResourceManager::findGUIElement(const char *id)

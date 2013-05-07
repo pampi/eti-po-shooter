@@ -116,7 +116,7 @@ void CGame::m_Init(sf::RenderWindow & App)
     m_player = new CPlayer("1", gResources.loadPlayerStartPosition(), CActor::STAYING, 100.f, 0.f, 0.f, "res/img/dude.png");
 
 	// tu by trzeba było podawać rozmiary całej mapy a nie tylko ekranu // TO DO
-	m_quadtree = new CQuadTree(0, 0, 1280, 720, 0, 5);
+	m_quadtree = new CQuadTree(0, 0, 2000, 1000, 0, 5);
 
 }
 
@@ -204,23 +204,24 @@ void CGame::checkCollisions(sf::RenderWindow & App)
 	pshape.setSize(sf::Vector2f(30,30));
 	pshape.setPosition(m_player->getPosition().x -15.0f,  m_player->getPosition().y -15.0f);
 	pshape.setFillColor(sf::Color::Red);
-	App.draw(pshape);
+	//App.draw(pshape);
 	sf::FloatRect prect(m_player->getPosition().x -15.0f,  m_player->getPosition().y -15.0f, 30, 30);
-	
+	//m_quadtree->debugDraw(App);
 
 	BOOST_FOREACH(CollisionObject *cobject, gResources.m_collisionObjects)
 	{
 		m_quadtree->addObject(cobject);
-		cobject->draw(App);
+		//cobject->draw(App);
 	}
 
 	std::vector<CollisionObject*> odp = m_quadtree->getObjectsAt( m_player->getPosition().x  -15.0f,  m_player->getPosition().y -15.0f  );
 	BOOST_FOREACH(CollisionObject* obj, odp)
 	{
-		std::cout<<odp.size()<<'\n';
+		//std::cout<<odp.size()<<'\n';
 		if( prect.intersects(obj->rect) )
 		{
-			std::cout << "KOLIZJA\n";
+			//std::cout << "KOLIZJA\n";
+			App.draw(pshape);
 			break;
 		}
 	}
