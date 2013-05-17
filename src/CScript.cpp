@@ -100,7 +100,7 @@ void CScript::RegisterEngineFunctions()
     //setPlayerPosition(x, y)
     lua_register(machine, "setPlayerPosition", API4Lua::setPlayerPosition);
     //setState(anim)
-    lua_register(machine, "setPlayerState", API4Lua::setPlayerState);
+    lua_register(machine, "changePlayerState", API4Lua::changePlayerState);
 
     //mix
     //addScript(path_to_script)
@@ -113,6 +113,8 @@ void CScript::RegisterEngineFunctions()
     lua_register(machine, "logWarning", API4Lua::logWarning);
     //logError(message)
     lua_register(machine, "logError", API4Lua::logError);
+	//changeGameState(id_state)
+	lua_register(machine, "changeGameState", API4Lua::changeGameState);
 }
 
 SLuaArgument::SLuaArgument(bool val)

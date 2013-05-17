@@ -41,13 +41,15 @@ namespace API4Lua
     //x, y
     int setPlayerPosition(lua_State *vm);
     //anim
-    int setPlayerState(lua_State *vm);
+    int changePlayerState(lua_State *vm);
 
 //MIX API
     //path to script
     int loadAdditionalScript(lua_State *vm);
     //level_id
     int changeLevel(lua_State *vm);
+	//game_state
+	int changeGameState(lua_State *vm);
     //log_message
     int logNormal(lua_State *vm);
     //log_message

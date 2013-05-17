@@ -274,11 +274,11 @@ void CResourceManager::loadLevel(int lvl)
 
         char script_path[512];
         sprintf(script_path, "res/level/%d/script.lua", lvl);
-
-        if(!CScreenManager::GetInstance()->GetGame()->loadScript(script_path))
+		
+        if(!gGame->loadScript(script_path))
         {
             gLogger << CLogger::LOG_INFO << std::string("Script ")+script_path+" loaded successfully!";
-            CScreenManager::GetInstance()->GetGame()->callScriptFunction("greet_the_world");
+            gGame->callScriptFunction("greet_the_world");
         }
         else gLogger << CLogger::LOG_ERROR << std::string("Failed to load ")+script_path+" script!";
     }
@@ -286,6 +286,15 @@ void CResourceManager::loadLevel(int lvl)
     {
         gLogger << CLogger::LOG_ERROR << e.what();
     }
+
+	// ustaw stan gry na PLAYING
+	gGame->gameState = CGame::PLAYING;
+
+	if( gGame->collisionTree )
+	{
+		delete gGame->collisionTree;
+	}
+	gGame->collisionTree = new CQuadTree(0, 0, pTmxMap->width*pTmxMap->tileWidth, pTmxMap->height*pTmxMap->tileHeight, 0, 5);
 }
 
 void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
@@ -489,7 +498,7 @@ void CResourceManager::generateTextureMap()
                 }
             }
 
-            printf("Position for new texture: %d %d\n", gx*pTmxMap->tileWidth, gy*pTmxMap->tileHeight);
+           // printf("Position for new texture: %d %d\n", gx*pTmxMap->tileWidth, gy*pTmxMap->tileHeight);
 
 		}
 	}

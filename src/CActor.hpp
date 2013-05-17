@@ -101,9 +101,11 @@ public:
 		m_id = newID;
 	}
 
+	sf::FloatRect fRect;
+
 protected:
 	std::string m_id;
-	sf::Vector2f m_position;
+	sf::Vector2f m_position, m_prevPositon;
 	State m_state;
 	float m_hp;
 	sf::Texture *m_texture;

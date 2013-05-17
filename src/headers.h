@@ -27,6 +27,7 @@
 #include <boost/format.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/thread.hpp>
 
 // Biblioteki Thor
 #include <Thor/Config.hpp>
@@ -63,20 +64,17 @@
 
 
 
-//Tu był item "Puszka pandory"
+// lista naciśniętych buttonów
 extern std::list<class CButton*> gButtonClicked;
 
 #endif
 
 // Dane do CLogger [Loggera]
 #define LOGPATH "log.txt"
-#define ENGINEVERSION "0.5.0"
+#define ENGINEVERSION "0.5.5"
 
 // Dane do CSettingsParser
 #define SETTINGSPATH "res/misc/config.ini"
 
 // Dane do czcionki
 #define PATHTOFONT "res/misc/HelveticaWorld.ttf"
-
-// Czy wyświetlać debug dane
-#define DRAWDEBUG 1

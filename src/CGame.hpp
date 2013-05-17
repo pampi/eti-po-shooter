@@ -7,8 +7,20 @@ class CGame : public CScreen, public CScript, public CSoundManager
 {
 public:
 	CGame();
+	~CGame();
 
 	virtual int Step(sf::RenderWindow & App);
+
+	class CPlayer *getPlayer();
+
+	enum State { NOT_SURE, LOADING, PAUSE, IDLE, PLAYING, SHOWINGMENU, ABANDON_ERROR };
+
+	State gameState;
+
+	// drzewko kolizji
+	CQuadTree *collisionTree;
+
+	void timeToLoadNewLevel(int level);
 
 private:
 	sf::Event m_event;
@@ -29,9 +41,9 @@ private:
 
 	sf::View *m_view;
 	
-	// drzewko kolizji
-	CQuadTree *m_quadtree;
+	void manageGameStates(sf::RenderWindow & App);
 
-	void checkCollisions(sf::RenderWindow & App);
+	// Aktualizuje drzewo kolizji. Musi być wołane przed jakim kolwiek sprawdzaniem kolizji
+	void updateQuadTree(sf::RenderWindow & App);
 };
 #endif

@@ -183,12 +183,27 @@ int API4Lua::changeLevel(lua_State *vm)
 {
     if(lua_gettop(vm)==1)
     {
+		gGame->gameState = CGame::LOADING;
         int level_to_load = lua_tointeger(vm, 1);
         gResources.loadLevel(level_to_load);
+		//gGame->timeToLoadNewLevel(level_to_load);
         lua_pushboolean(vm, LTRUE);
     }
     else lua_pushboolean(vm, LFALSE);
     return 1;
+}
+
+int API4Lua::changeGameState(lua_State *vm)
+{
+	
+	if(lua_gettop(vm)==1)
+	{
+		int state_to_load = lua_tointeger(vm, 1);
+		gGame->gameState = (CGame::State)state_to_load;
+		lua_pushboolean(vm, LTRUE);
+	}
+	else lua_pushboolean(vm, LFALSE);
+	return 1;
 }
 
 int API4Lua::logNormal(lua_State *vm)
@@ -368,7 +383,7 @@ int API4Lua::addTimedTextBox(lua_State *vm)
 
 int API4Lua::getPlayerPosition(lua_State *vm)
 {
-    sf::Vector2f pos=CPlayer::GetInstance()->getPosition();
+    sf::Vector2f pos=gGame->getPlayer()->getPosition();
     lua_pushnumber(vm, pos.x);
     lua_pushnumber(vm, pos.y);
     return 2;
@@ -381,18 +396,18 @@ int API4Lua::setPlayerPosition(lua_State *vm)
         sf::Vector2f pos;
         pos.x=static_cast<float>( lua_tonumber(vm, 1) );
         pos.y=static_cast<float>( lua_tonumber(vm, 2) );
-        CPlayer::GetInstance()->setPosition(pos);
-        CPlayer::GetInstance()->updatePosition();
+        gGame->getPlayer()->setPosition(pos);
+        gGame->getPlayer()->updatePosition();
     }
     return 0;
 }
 
-int API4Lua::setPlayerState(lua_State *vm)
+int API4Lua::changePlayerState(lua_State *vm)
 {
     if(lua_gettop(vm)==1)
     {
         int i=lua_tointeger(vm, 1);
-        CPlayer::GetInstance()->setState(static_cast<CActor::State>(i));
+        gGame->getPlayer()->changePlayerState( static_cast<CActor::State>(i) );
     }
     return 0;
 }

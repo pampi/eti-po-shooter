@@ -3,7 +3,7 @@
 
 #include "headers.h"
 
-class CPlayer : public CActor, public TSingleton<CPlayer>
+class CPlayer : public CActor
 {
 public:
 	CPlayer();
@@ -15,6 +15,8 @@ public:
 	
     void updatePosition();
 
+
+	void changePlayerState(CActor::State stan);
 
 private:
 	float m_dx, m_dy;

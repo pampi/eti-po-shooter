@@ -79,11 +79,6 @@ public:
 	void loadStaticColliders();
 	std::vector<CollisionObject*> m_collisionObjects;
 
-
-
-
-
-
 	//////////////////////////////Thor Approved///////////////////////////////
 	//////////////////////////////////////////////////////////////////////////
 	std::shared_ptr<sf::Image> getImagePointer(const std::string path);

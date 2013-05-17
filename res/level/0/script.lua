@@ -8,6 +8,17 @@ anim_right = 3
 anim_up = 4
 anim_down = 5
 
+-- Stany gry
+game_notSure = 0
+game_loading = 1
+game_pause = 2
+game_idle = 3
+game_playing = 4
+game_showingmenu = 5
+game_abandon_error = 6
+
+
+
 if addTextBox("cosTam", "Example", 24, 500.0, 0.0) == true then
 	print ("Dodany przycisk!")
 else
@@ -36,6 +47,7 @@ function stopIdleAction()
 	if setGUIHide("txtIdle", true) == false then
 		print("Can't hide txtIdle!")
 	end
+	changeGameState(game_playing)
 end
 
 function greet_the_world()
@@ -62,9 +74,10 @@ function greet_the_world()
 end
 
 function startNewGame()
-        print ("Czas zaczac nowa gre!")
+    print ("Czas zaczac nowa gre!")
 	stopSoundAll()
-        changeLevel(1)
+	changeGameState(game_loading)
+	changeLevel(1)
 end
 
 function nadpisanie()
@@ -81,21 +94,21 @@ function keyPressed(key)
 		x, y=getPlayerPosition()
 		y = y - 5
 		setPlayerPosition(x, y)
-		setPlayerState(anim_up)
+		changePlayerState(anim_up)
 	elseif key == "DOWN" or key == "S" then
 		x, y=getPlayerPosition()
 		y = y + 5
 		setPlayerPosition(x, y)
-		setPlayerState(anim_down)
+		changePlayerState(anim_down)
 	elseif key == "LEFT" or key == "A" then
 		x, y=getPlayerPosition()
 		x = x - 5
 		setPlayerPosition(x, y)
-		setPlayerState(anim_left)
+		changePlayerState(anim_left)
 	elseif key == "RIGHT" or key == "D" then
 		x, y=getPlayerPosition()
 		x = x + 5
 		setPlayerPosition(x, y)
-		setPlayerState(anim_right)
+		changePlayerState(anim_right)
 	end
 end

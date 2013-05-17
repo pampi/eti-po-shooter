@@ -54,16 +54,19 @@ CPlayer::CPlayer(std::string ID, sf::Vector2f position, State state, float hp, f
 	m_animationSprite->setOrigin(sf::Vector2f(25,25));
 #pragma endregion
 
-    m_pSelfInstance = this;
 
 	m_dx = 0;
 	m_dy = 0;
+
+	fRect.width = fRect.height = 30;
+	
+	
 }
 
 void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 {
 	m_animationSprite->update( deltaTime );
-
+	m_prevPositon = m_position;
 
 	// LEWO 
     if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::A) )
@@ -82,39 +85,19 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 	// DÓ£
 	 if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::S) )
 	{
-		if( m_state != CActor::WALKING_D )
-		{
-			m_state = CActor::WALKING_D;
-			m_animationSprite->setAnimation( *m_ani_walkingU );
-			m_animationSprite->setFrameTime( sf::milliseconds(50) );
-			m_speed = -100.f;
-		}
+		changePlayerState( CActor::WALKING_D );
 	}
 
 	// GÓRA
 	 if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::W) )
 	{
-		if( m_state != CActor::WALKING_U )
-		{
-			m_state = CActor::WALKING_U;
-			m_animationSprite->setAnimation( *m_ani_walkingU );
-			m_animationSprite->setFrameTime( sf::milliseconds(50) );
-			m_speed = 100.f;
-		}
-		
+		changePlayerState( CActor::WALKING_U );
 	}
 
 	// STÓJ
 	 if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::Space) )
 	{
-		if( m_state != CActor::STAYING )
-		{
-			m_state = CActor::STAYING;
-			m_animationSprite->setAnimation( *m_ani_staying );
-			m_animationSprite->setFrameTime( sf::milliseconds(300) );
-			m_speed = 0.f;
-		}
-		m_speed = 0.f;
+		changePlayerState( CActor::STAYING );
     }
 
 	if( m_speed > MAXSPEED )
@@ -144,7 +127,28 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 		m_position.y += (int)(m_dy) * deltaTime.asSeconds();
 		m_dy = m_dy - (int)(m_dy);
 	}
-	
+
+	fRect.left = m_position.x -15.0f;
+	fRect.top = m_position.y -15.0f;
+
+	std::vector<CollisionObject*> odp = gGame->collisionTree->getObjectsAt( m_position.x  -15.0f,  m_position.y -15.0f  );
+	BOOST_FOREACH(CollisionObject* obj, odp)
+	{
+		if( fRect.intersects( obj->rect ) )
+		{
+			m_position = m_prevPositon;
+
+			changePlayerState( CActor::STAYING );
+
+			sf::RectangleShape pshape;
+			pshape.setSize(sf::Vector2f(30,30));
+			pshape.setPosition(m_position.x -15.0f,  m_position.y -15.0f);
+			pshape.setFillColor(sf::Color::Red);
+			App.draw(pshape);
+
+			break;
+		}
+	}
 	
 	m_animationSprite->setPosition(m_position);
 
@@ -166,4 +170,49 @@ void CPlayer::updatePosition()
 void CPlayer::draw(sf::RenderTarget & target)
 {
 	target.draw( *m_animationSprite );
+}
+
+void CPlayer::changePlayerState(CActor::State stan)
+{
+	switch(stan)
+	{
+	case CActor::WALKING_D :
+		{
+			if( m_state != CActor::WALKING_D )
+			{
+				m_state = CActor::WALKING_D;
+				m_animationSprite->setAnimation( *m_ani_walkingU );
+				m_animationSprite->setFrameTime( sf::milliseconds(50) );
+				m_speed = -100.f;
+			}
+			break;
+		}
+
+	case CActor::WALKING_U :
+		{
+			if( m_state != CActor::WALKING_U )
+			{
+				m_state = CActor::WALKING_U;
+				m_animationSprite->setAnimation( *m_ani_walkingU );
+				m_animationSprite->setFrameTime( sf::milliseconds(50) );
+				m_speed = 100.f;
+			}
+			break;
+		}
+
+	case CActor::STAYING :
+		{
+			if( m_state != CActor::STAYING )
+			{
+				m_state = CActor::STAYING;
+				m_animationSprite->setAnimation( *m_ani_staying );
+				m_animationSprite->setFrameTime( sf::milliseconds(300) );
+				m_speed = 0.f;
+			}
+			m_speed = 0.f;
+
+			break;
+		}
+
+	}
 }

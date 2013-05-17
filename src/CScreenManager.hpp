@@ -3,6 +3,10 @@
 
 #include "headers.h"
 
+#ifndef gGame
+#define gGame CScreenManager::GetReference().GetGame()
+#endif
+
 class CScreenManager: public TSingleton<CScreenManager>
 {
 public:

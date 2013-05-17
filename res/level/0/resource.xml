@@ -15,8 +15,6 @@ and filling the streets with outcries." hidden="0" position="800.0 600.0" size="
 
   <images>
 	  <img file_path="res/img/desert.png"/>
-	  <img file_path="res/img/MC.png"/>
 	  <img file_path="res/img/dude.png"/>
-	  <img file_path="res/img/map1a.png"/>
   </images>
 </gui>

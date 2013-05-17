@@ -9,20 +9,31 @@ CGame::CGame()
 	m_inited = false;
     m_idle = false;
     m_lastEventTime = time(NULL);
-    gLogger << CLogger::LOG_INFO << "CGame konstruktor";
+    gLogger << CLogger::LOG_INFO << "CGame constructor";
 	m_view = new sf::View(sf::FloatRect(0,0,1280,720));
+
+	gameState = PLAYING;
+	collisionTree = NULL;
+}
+
+CGame::~CGame()
+{
+	gLogger << CLogger::LOG_INFO << "CGame destructor";
+}
+
+CPlayer* CGame::getPlayer()
+{
+	return m_player;
 }
 
 int CGame::Step(sf::RenderWindow & App)
 {
-	
 	for(;;)
 	{
 		if(!m_inited)
 		{
 			m_Init(App);
 		}
-        //App.setKeyRepeatEnabled(true);
 
 		while( App.pollEvent(m_event) )
         {
@@ -52,7 +63,7 @@ int CGame::Step(sf::RenderWindow & App)
 		// clear window
 		App.clear();
 
-		// JĄDRO GRY \|/
+
 
 		// tick timer
 		m_deltaTime = m_deltaClock.restart();
@@ -61,40 +72,19 @@ int CGame::Step(sf::RenderWindow & App)
 		//jeśli IDLE
         if(time(NULL)>m_lastEventTime+TIME_TO_IDLE)
         {
-            if(m_idle)
-            {
-                callScriptFunction("performIdleAction");
-            }
-            else
-            {
-                m_idle = true;
-                callScriptFunction("startIdleAction");
-            }
+            gameState = CGame::IDLE;
         }
 		#pragma endregion
 
-		App.setView(*m_view);
-		m_view->setCenter(m_player->getPosition());
-		
-        if(gResources.pTmxMap) gResources.drawMap(App);
-		
-		// sprawdza kolizje
-		checkCollisions(App);
-		
-        drawGui(App);
 
-		// JĄDRO GRY /|\
+		manageGameStates(App);
 
+		
 
-#if (DRAWDEBUG)
+	
+		// Rysuj DebugDraw
         gDDraw.add((int) gFPS.getFPS() ,"FPS: ");
         gDDraw.draw(App);
-#endif
-
-		// obsługa gracza
-		m_player->update(App, m_deltaTime);
-		m_player->draw(App);
-
 
 		// Żeby się licznik fps aktualizował
         gFPS.update();
@@ -110,13 +100,14 @@ void CGame::m_Init(sf::RenderWindow & App)
 {
 	m_inited = true;
 
-    // Laduj menu
+    // Laduj poziom
     gResources.loadLevel(0);
 
-    m_player = new CPlayer("1", gResources.loadPlayerStartPosition(), CActor::STAYING, 100.f, 0.f, 0.f, "res/img/dude.png");
+	m_player = new CPlayer("1", gResources.loadPlayerStartPosition(), CActor::STAYING, 100.f, 0.f, 0.f, "res/img/dude.png");
+    
 
 	// tu by trzeba było podawać rozmiary całej mapy a nie tylko ekranu // TO DO
-	m_quadtree = new CQuadTree(0, 0, 2000, 1000, 0, 5);
+	//collisionTree = new CQuadTree(0, 0, 2000, 1000, 0, 5);
 
 }
 
@@ -197,33 +188,103 @@ void CGame::manageButtons()
 	} 
 }
 
-void CGame::checkCollisions(sf::RenderWindow & App)
+void CGame::updateQuadTree(sf::RenderWindow & App)
 {
-	m_quadtree->clear();
-	sf::RectangleShape pshape;
-	pshape.setSize(sf::Vector2f(30,30));
-	pshape.setPosition(m_player->getPosition().x -15.0f,  m_player->getPosition().y -15.0f);
-	pshape.setFillColor(sf::Color::Red);
-	//App.draw(pshape);
-	sf::FloatRect prect(m_player->getPosition().x -15.0f,  m_player->getPosition().y -15.0f, 30, 30);
-	//m_quadtree->debugDraw(App);
+	collisionTree->clear();
+	
+	collisionTree->debugDraw(App);
 
 	BOOST_FOREACH(CollisionObject *cobject, gResources.m_collisionObjects)
 	{
-		m_quadtree->addObject(cobject);
+		collisionTree->addObject(cobject);
 		//cobject->draw(App);
 	}
 
-	std::vector<CollisionObject*> odp = m_quadtree->getObjectsAt( m_player->getPosition().x  -15.0f,  m_player->getPosition().y -15.0f  );
-	BOOST_FOREACH(CollisionObject* obj, odp)
+	
+	
+}
+
+void CGame::manageGameStates(sf::RenderWindow & App)
+{
+
+	switch(gameState)
 	{
-		//std::cout<<odp.size()<<'\n';
-		if( prect.intersects(obj->rect) )
+
+	case CGame::LOADING :
 		{
-			//std::cout << "KOLIZJA\n";
-			App.draw(pshape);
+			gDDraw.add("Laduje poziom\n");
+
+
 			break;
 		}
-	}
-	
+
+	case CGame::IDLE :
+		{
+			gDDraw.add("IDLUJE\n");
+
+			if(m_idle)
+			{
+				callScriptFunction("performIdleAction");
+			}
+			else
+			{
+				m_idle = true;
+				callScriptFunction("startIdleAction");
+			}
+
+
+			// rysowanie statyczne
+			App.setView(App.getDefaultView());
+			drawGui(App);
+
+			break;
+		}
+
+	case CGame::PLAYING :
+		{
+			gDDraw.add("GRAM\n");
+			
+
+			// rysowanie dynamiczne
+			App.setView(*m_view);
+			m_view->setCenter(m_player->getPosition());
+
+			if(gResources.pTmxMap) gResources.drawMap(App);
+
+			// aktualizuje drzewo kolizji
+			updateQuadTree(App);
+
+
+			// obsługa gracza
+			m_player->update(App, m_deltaTime);
+			m_player->draw(App);
+			
+
+			// rysowanie statyczne
+			App.setView(App.getDefaultView());
+			drawGui(App);
+
+
+
+			break;
+		}
+
+	case CGame::PAUSE :
+		{
+			gDDraw.add("PAUSA\n");
+
+			break;
+		}
+
+
+	} // end switch
+
+
+}
+
+void CGame::timeToLoadNewLevel(int level)
+{
+  gResources.loadLevel(level);
+  m_player->setPosition( gResources.loadPlayerStartPosition() );
+  gameState = PLAYING;
 }
