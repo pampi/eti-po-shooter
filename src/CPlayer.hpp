@@ -18,8 +18,18 @@ public:
 
 	void changePlayerState(CActor::State stan);
 
+
+
 private:
-	float m_dx, m_dy;
+	float m_dx, m_dy, m_gunRotate, m_xH, m_yH;
+	sf::Vector2i m_ImousePos;
+	sf::Vector2f m_mousePos;
+
+	void shoot(sf::RenderWindow & App);
+
+	void updateBullets(sf::RenderWindow & App, float deltaTime);
+
+	std::list<class CBullet*> m_bulletsList;
 
 };
 #endif

@@ -100,6 +100,12 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 		changePlayerState( CActor::STAYING );
     }
 
+	// STRZEL
+	if( CInputHandler::GetInstance()->isButtonPressed(sf::Mouse::Left) )
+	{
+		shoot(App);
+	}
+
 	if( m_speed > MAXSPEED )
 		m_speed = MAXSPEED;
 
@@ -112,6 +118,13 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 	if(m_rotation < 0)
 		m_rotation = 359;
 
+
+	m_ImousePos = sf::Mouse::getPosition(App);
+	m_mousePos = App.mapPixelToCoords(m_ImousePos);
+
+	m_xH = getPosition().x - m_mousePos.x;
+	m_yH = getPosition().y - m_mousePos.y;
+	m_gunRotate = (float)( atan2(m_yH, m_xH) * 180.f / M_PI + 180.f );
 
 	m_dx += m_speed * cos((m_rotation*M_PI)/180);
 	m_dy += m_speed * sin((m_rotation*M_PI)/180);
@@ -130,7 +143,12 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 
 	fRect.left = m_position.x -15.0f;
 	fRect.top = m_position.y -15.0f;
+//################################################################################
 
+	// aktualizacja pozycji pociskow
+	updateBullets(App, deltaTime.asSeconds() );
+
+	// sprawdzanie kolizji ze œcianami
 	std::vector<CollisionObject*> odp = gGame->collisionTree->getObjectsAt( m_position.x  -15.0f,  m_position.y -15.0f  );
 	BOOST_FOREACH(CollisionObject* obj, odp)
 	{
@@ -159,7 +177,7 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 	gDDraw.add(m_dy, "dY: ");
 	gDDraw.add(m_position.x, "mX: ");
 	gDDraw.add(m_position.y, "mY: ");
-
+	gDDraw.add((int)m_bulletsList.size(), "Bullets: ");
 }
 
 void CPlayer::updatePosition()
@@ -170,6 +188,11 @@ void CPlayer::updatePosition()
 void CPlayer::draw(sf::RenderTarget & target)
 {
 	target.draw( *m_animationSprite );
+}
+
+void CPlayer::shoot(sf::RenderWindow & App)
+{
+	m_bulletsList.push_back( new CBullet(App, getPosition(), -m_gunRotate, 50) );
 }
 
 void CPlayer::changePlayerState(CActor::State stan)
@@ -214,5 +237,22 @@ void CPlayer::changePlayerState(CActor::State stan)
 			break;
 		}
 
+	}
+}
+
+void CPlayer::updateBullets(sf::RenderWindow & App, float deltaTime)
+{
+	for(std::list<class CBullet*>::iterator it = m_bulletsList.begin(); it!= m_bulletsList.end(); )
+	{
+		if( (*it)->toDelete() )
+		{
+			delete (*it);
+			it = m_bulletsList.erase(it);
+		}
+		else
+		{
+			(*it)->update(App, deltaTime);
+			it++;
+		}
 	}
 }

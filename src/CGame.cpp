@@ -56,8 +56,13 @@ int CGame::Step(sf::RenderWindow & App)
                 {
                     return -1; // wyjdz z gry(-1)
                 }
-
             }
+
+			if( m_event.type == sf::Event::Resized)
+			{
+				sf::FloatRect visibleArea(0, 0, m_event.size.width, m_event.size.height);
+				App.setView(sf::View(visibleArea));
+			}
 		} // events loop
 
 		// clear window
@@ -192,7 +197,7 @@ void CGame::updateQuadTree(sf::RenderWindow & App)
 {
 	collisionTree->clear();
 	
-	collisionTree->debugDraw(App);
+	//collisionTree->debugDraw(App);
 
 	BOOST_FOREACH(CollisionObject *cobject, gResources.m_collisionObjects)
 	{

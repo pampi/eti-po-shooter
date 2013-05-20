@@ -59,6 +59,7 @@
 #include "CAnimatedSprite.hpp"
 #include "CActor.hpp"
 #include "CPlayer.hpp"
+#include "CBullet.h"
 
 
 
