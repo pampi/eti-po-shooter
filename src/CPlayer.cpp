@@ -145,26 +145,27 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 	fRect.top = m_position.y -15.0f;
 //################################################################################
 
-	// aktualizacja pozycji pociskow
-	updateBullets(App, deltaTime.asSeconds() );
 
 	// sprawdzanie kolizji ze œcianami
 	std::vector<CollisionObject*> odp = gGame->collisionTree->getObjectsAt( m_position.x  -15.0f,  m_position.y -15.0f  );
 	BOOST_FOREACH(CollisionObject* obj, odp)
 	{
-		if( fRect.intersects( obj->rect ) )
+		if( obj->typ == CollisionObject::WALL )
 		{
-			m_position = m_prevPositon;
+			if( fRect.intersects( obj->rect ) )
+			{
+				m_position = m_prevPositon;
 
-			changePlayerState( CActor::STAYING );
+				changePlayerState( CActor::STAYING );
 
-			sf::RectangleShape pshape;
-			pshape.setSize(sf::Vector2f(30,30));
-			pshape.setPosition(m_position.x -15.0f,  m_position.y -15.0f);
-			pshape.setFillColor(sf::Color::Red);
-			App.draw(pshape);
+				sf::RectangleShape pshape;
+				pshape.setSize(sf::Vector2f(30,30));
+				pshape.setPosition(m_position.x -15.0f,  m_position.y -15.0f);
+				pshape.setFillColor(sf::Color::Red);
+				App.draw(pshape);
 
-			break;
+				break;
+			}
 		}
 	}
 	
@@ -177,7 +178,9 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 	gDDraw.add(m_dy, "dY: ");
 	gDDraw.add(m_position.x, "mX: ");
 	gDDraw.add(m_position.y, "mY: ");
-	gDDraw.add((int)m_bulletsList.size(), "Bullets: ");
+	gDDraw.add((int)gGame->mg_bulletsList.size(), "Bullets: ");
+
+
 }
 
 void CPlayer::updatePosition()
@@ -192,7 +195,8 @@ void CPlayer::draw(sf::RenderTarget & target)
 
 void CPlayer::shoot(sf::RenderWindow & App)
 {
-	m_bulletsList.push_back( new CBullet(App, getPosition(), -m_gunRotate, 50) );
+	if( gGame->mg_bulletsList.empty() )
+		gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, getPosition(), -m_gunRotate, 50)) );
 }
 
 void CPlayer::changePlayerState(CActor::State stan)
@@ -237,22 +241,5 @@ void CPlayer::changePlayerState(CActor::State stan)
 			break;
 		}
 
-	}
-}
-
-void CPlayer::updateBullets(sf::RenderWindow & App, float deltaTime)
-{
-	for(std::list<class CBullet*>::iterator it = m_bulletsList.begin(); it!= m_bulletsList.end(); )
-	{
-		if( (*it)->toDelete() )
-		{
-			delete (*it);
-			it = m_bulletsList.erase(it);
-		}
-		else
-		{
-			(*it)->update(App, deltaTime);
-			it++;
-		}
 	}
 }

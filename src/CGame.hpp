@@ -22,6 +22,9 @@ public:
 
 	void timeToLoadNewLevel(int level);
 
+	// Lista wszystkich globalnych pocisków
+	std::list< std::shared_ptr<class CBullet> > mg_bulletsList;
+
 private:
 	sf::Event m_event;
 
@@ -45,5 +48,8 @@ private:
 
 	// Aktualizuje drzewo kolizji. Musi być wołane przed jakim kolwiek sprawdzaniem kolizji
 	void updateQuadTree(sf::RenderWindow & App);
+
+	// Aktualizuje pociski
+	void updateBullets(sf::RenderWindow & App);
 };
 #endif

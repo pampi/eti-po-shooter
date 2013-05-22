@@ -12,6 +12,7 @@
 #include <utility>
 #include <ctime>
 #include <cstdio>
+#include <memory>
 #include <cmath>
 
 // Biblioteki SFML

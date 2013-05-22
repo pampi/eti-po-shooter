@@ -15,10 +15,11 @@ CollisionObject::CollisionObject(float _x, float _y, float _width, float _height
 	shape.setPosition( x, y );
 	shape.setSize( sf::Vector2f( width, height ) );
 
-	rect.left = x;
-	rect.top = y;
-	rect.height = height;
-	rect.width = width;
+
+	rect.left = _x;
+	rect.top = _y;
+	rect.height = _height;
+	rect.width = _width;
 
 	switch (_typ)
 	{

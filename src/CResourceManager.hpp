@@ -62,7 +62,7 @@ public:
 
 	// tworzy mini-teksture o podanych wymiarach w gidach ( X,Y - od którego kafelka na mapie stworzyć teksture. SizeX,SizyY - ile kafelków ma się w niej zawierać )
 	// i zwraca wskaźnik na sprite który ją zawiera
-	sf::Sprite* createTextureByGID(unsigned int x, unsigned int y, unsigned int SizeX, unsigned int SizeY);
+	std::shared_ptr<sf::Sprite> createTextureByGID(unsigned int x, unsigned int y, unsigned int SizeX, unsigned int SizeY);
 
 	// pointer to loaded map
 	class TmxMap* pTmxMap;
@@ -71,13 +71,10 @@ public:
 	// jak nie znajdzie to zwraca (0,0)
 	sf::Vector2f loadPlayerStartPosition();
 
-	// wskaźnik na gotowego sprita z mapą
-	sf::Sprite *mapSprite;
-
 	// ładuje wszystkie elementy statyczne z którymi coś może kolidować (ściany, etc)
 	// wszystkie elementy z grupy Collision w mapie TMX
 	void loadStaticColliders();
-	std::vector<CollisionObject*> m_collisionObjects;
+	std::list<CollisionObject*> m_staticObjects;
 
 	//////////////////////////////Thor Approved///////////////////////////////
 	//////////////////////////////////////////////////////////////////////////
@@ -98,7 +95,7 @@ private:
 	sf::RenderTexture *rendtex;
 
 	// zawiera wszystkie sprite'y składające się na całą mape
-	std::list<sf::Sprite*> m_mapSprites;
+	std::list< std::shared_ptr<sf::Sprite> > m_mapSprites;
 
 };
 #endif

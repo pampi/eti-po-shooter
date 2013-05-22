@@ -6,7 +6,7 @@
 class CollisionObject
 {
 public:
-	enum Type { DELTA, WALL, BULLET, PLAYER, ENEMY };
+	enum Type { DELTA, WALL, BULLET, PLAYER, ENEMY, ENEMYBULLET };
 	CollisionObject();
 	CollisionObject(float x, float y, float width, float height, Type typ = DELTA);
 

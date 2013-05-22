@@ -15,7 +15,6 @@ public:
 	
     void updatePosition();
 
-
 	void changePlayerState(CActor::State stan);
 
 
@@ -27,9 +26,6 @@ private:
 
 	void shoot(sf::RenderWindow & App);
 
-	void updateBullets(sf::RenderWindow & App, float deltaTime);
-
-	std::list<class CBullet*> m_bulletsList;
 
 };
 #endif

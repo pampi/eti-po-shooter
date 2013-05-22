@@ -58,11 +58,6 @@ int CGame::Step(sf::RenderWindow & App)
                 }
             }
 
-			if( m_event.type == sf::Event::Resized)
-			{
-				sf::FloatRect visibleArea(0, 0, m_event.size.width, m_event.size.height);
-				App.setView(sf::View(visibleArea));
-			}
 		} // events loop
 
 		// clear window
@@ -111,8 +106,6 @@ void CGame::m_Init(sf::RenderWindow & App)
 	m_player = new CPlayer("1", gResources.loadPlayerStartPosition(), CActor::STAYING, 100.f, 0.f, 0.f, "res/img/dude.png");
     
 
-	// tu by trzeba było podawać rozmiary całej mapy a nie tylko ekranu // TO DO
-	//collisionTree = new CQuadTree(0, 0, 2000, 1000, 0, 5);
 
 }
 
@@ -199,7 +192,8 @@ void CGame::updateQuadTree(sf::RenderWindow & App)
 	
 	//collisionTree->debugDraw(App);
 
-	BOOST_FOREACH(CollisionObject *cobject, gResources.m_collisionObjects)
+	// dodaj ściany do kolizji
+	BOOST_FOREACH(CollisionObject *cobject, gResources.m_staticObjects)
 	{
 		collisionTree->addObject(cobject);
 		//cobject->draw(App);
@@ -254,11 +248,13 @@ void CGame::manageGameStates(sf::RenderWindow & App)
 			App.setView(*m_view);
 			m_view->setCenter(m_player->getPosition());
 
+			// rysuj mapę
 			if(gResources.pTmxMap) gResources.drawMap(App);
 
 			// aktualizuje drzewo kolizji
 			updateQuadTree(App);
-
+			// aktualiazuje pociski
+			updateBullets(App);
 
 			// obsługa gracza
 			m_player->update(App, m_deltaTime);
@@ -292,4 +288,50 @@ void CGame::timeToLoadNewLevel(int level)
   gResources.loadLevel(level);
   m_player->setPosition( gResources.loadPlayerStartPosition() );
   gameState = PLAYING;
+}
+
+void CGame::updateBullets(sf::RenderWindow & App)
+{
+	for(std::list< std::shared_ptr<CBullet> >::iterator it = mg_bulletsList.begin(); it != mg_bulletsList.end(); )
+	{
+		
+		// sprawdzanie kolizji pocisków ze ścianami
+		/*std::vector<CollisionObject*> odp = gGame->collisionTree->getObjectsAt( (*it)->fRect.top,  (*it)->fRect.left );
+		BOOST_FOREACH(CollisionObject* obj, odp)
+		{
+			if( obj->typ == CollisionObject::WALL )
+			{
+				if( (*it)->fRect.intersects( obj->rect ) )
+				{
+					(*it)->setToDelete();
+					break;
+				}
+			}
+		}*/
+
+		BOOST_FOREACH(CollisionObject* obj, gResources.m_staticObjects)
+		{
+			obj->draw(App);
+			if( obj->typ == CollisionObject::WALL )
+			{
+				if( (*it)->fRect.intersects( obj->rect ) )
+				{
+					(*it)->setToDelete();
+					break;
+				}
+				
+			}
+		}
+
+		if( (*it)->toDelete() )
+		{
+			it = mg_bulletsList.erase(it);
+		}
+		else
+		{
+			(*it)->update(App, m_deltaTime.asSeconds());
+			it++;
+		}
+		
+	}
 }

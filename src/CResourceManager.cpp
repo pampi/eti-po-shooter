@@ -9,7 +9,6 @@ CResourceManager::CResourceManager()
 {
 	m_font = new sf::Font();
 	pTmxMap = NULL;
-	mapSprite = NULL;
 	rendtex = NULL;
 	
 }
@@ -113,16 +112,15 @@ void CResourceManager::clearResources()
     }
 
 	// to chyba działa po wuju, bo pamięć nadal się zwiększa
-	for(std::list<sf::Sprite*>::iterator it = m_mapSprites.begin(); it != m_mapSprites.end(); )
+	for(std::list< std::shared_ptr<sf::Sprite> >::iterator it = m_mapSprites.begin(); it != m_mapSprites.end(); )
 	{
-		delete (*it);
 		it = m_mapSprites.erase(it);
 	}
 
-	for(std::vector<CollisionObject*>::iterator it = m_collisionObjects.begin(); it != m_collisionObjects.end(); )
+	for(std::list<CollisionObject*>::iterator it = m_staticObjects.begin(); it != m_staticObjects.end(); )
 	{
 		delete (*it);
-		it = m_collisionObjects.erase(it);
+		it = m_staticObjects.erase(it);
 	}
 }
 
@@ -290,11 +288,12 @@ void CResourceManager::loadLevel(int lvl)
 	// ustaw stan gry na PLAYING
 	gGame->gameState = CGame::PLAYING;
 
+	// stwórz nowe quadtree do kolizji
 	if( gGame->collisionTree )
 	{
 		delete gGame->collisionTree;
 	}
-	gGame->collisionTree = new CQuadTree(0, 0, pTmxMap->width*pTmxMap->tileWidth, pTmxMap->height*pTmxMap->tileHeight, 0, 5);
+	gGame->collisionTree = new CQuadTree(0, 0, (float)(pTmxMap->width*pTmxMap->tileWidth), (float)(pTmxMap->height*pTmxMap->tileHeight), 0, 5);
 }
 
 void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
@@ -505,7 +504,7 @@ void CResourceManager::generateTextureMap()
 
 }
 
-sf::Sprite* CResourceManager::createTextureByGID(unsigned int x, unsigned int y, unsigned int SizeX, unsigned int SizeY)
+std::shared_ptr<sf::Sprite> CResourceManager::createTextureByGID(unsigned int x, unsigned int y, unsigned int SizeX, unsigned int SizeY)
 {
 	rendtex = new sf::RenderTexture();
 	unsigned int sizex = (SizeX ) * pTmxMap->tileWidth;
@@ -584,6 +583,7 @@ sf::Sprite* CResourceManager::createTextureByGID(unsigned int x, unsigned int y,
 
 
 			sf::Sprite sprite(_tex, rect);
+			//std::shared_ptr<sf::Sprite> sprite = std::make_shared<sf::Sprite>(_tex, rect);
 			sprite.setPosition((float)rect2.left -(x*tilset->tileWidth), (float)rect2.top-(y*tilset->tileHeight));
 
 			// narysuj nasz kafelek na texturce mapy
@@ -593,9 +593,8 @@ sf::Sprite* CResourceManager::createTextureByGID(unsigned int x, unsigned int y,
 
 	}
 	rendtex->display();
-	sf::Sprite *spritem = new sf::Sprite( rendtex->getTexture() );
-	// tymczasowo przesunięta | JUST 4 DBUG
-	//mapSprite->move(100.f,50.f);
+	//sf::Sprite *spritem = new sf::Sprite( rendtex->getTexture() );
+	std::shared_ptr<sf::Sprite> spritem = std::make_shared<sf::Sprite>( rendtex->getTexture() );
 	return spritem;
 }
 
@@ -639,9 +638,9 @@ bool CResourceManager::loadImageKey(const std::string path)
 
 void CResourceManager::drawMap(sf::RenderWindow & App)
 {
-	BOOST_FOREACH(const sf::Sprite* sprite, m_mapSprites)
-    {
-		App.draw( *sprite );
+	for(std::list< std::shared_ptr<sf::Sprite> >::iterator it = m_mapSprites.begin(); it != m_mapSprites.end(); it++)
+	{
+		App.draw(*(*it));
 	}
 }
 
@@ -669,7 +668,7 @@ void CResourceManager::loadStaticColliders()
 			BOOST_FOREACH(TmxMapObject *object, objectgroup->objects)
 			{
 				CollisionObject *cobject = new CollisionObject( (float)object->x, (float)object->y, (float)object->width, (float)object->height, CollisionObject::WALL );
-				m_collisionObjects.push_back( cobject );
+				m_staticObjects.push_back( cobject );
 			}
 		}
 	}
