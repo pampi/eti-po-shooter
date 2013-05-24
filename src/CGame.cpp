@@ -309,15 +309,15 @@ void CGame::updateBullets(sf::RenderWindow & App)
 			}
 		}*/
 
-		BOOST_FOREACH(CollisionObject* obj, gResources.m_staticObjects)
+		for(std::list< CollisionObject* >::iterator its = gResources.m_staticObjects.begin(); its != gResources.m_staticObjects.end(); its++)
 		{
-			obj->draw(App);
-			if( obj->typ == CollisionObject::WALL )
+			(*its)->draw(App);
+			if( (*its)->typ == CollisionObject::WALL )
 			{
-				if( (*it)->fRect.intersects( obj->rect ) )
+				if( (*its)->rect.intersects( (*it)->fRect ) )
 				{
 					(*it)->setToDelete();
-					break;
+					//break;
 				}
 				
 			}

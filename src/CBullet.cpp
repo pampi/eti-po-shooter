@@ -7,7 +7,7 @@ CBullet::CBullet()
 
 CBullet::CBullet(sf::RenderWindow & App, sf::Vector2f pStartPosition, float pRotation, int pBulletDmg)
 {
-	m_vel = 200.f;
+	m_vel = 500.f;
 	m_lifetime = 0;
 	m_damage = pBulletDmg;
 
@@ -47,7 +47,7 @@ CBullet::CBullet(sf::RenderWindow & App, sf::Vector2f pStartPosition, float pRot
 
 void CBullet::update(sf::RenderWindow & App, float deltaTime)
 {
-	if( m_lifetime < 50 && !m_toDelete )
+	if( m_lifetime < 100 && !m_toDelete )
 	{
 		m_sprite.move(-m_dis * deltaTime);
 		//m_sprite.setPosition( m_sprite.getPosition().x + (-m_dis.x *deltaTime), (float)sin(m_sprite.getPosition().x/100)*100 );

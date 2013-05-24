@@ -62,7 +62,7 @@ public:
 
 	// tworzy mini-teksture o podanych wymiarach w gidach ( X,Y - od którego kafelka na mapie stworzyć teksture. SizeX,SizyY - ile kafelków ma się w niej zawierać )
 	// i zwraca wskaźnik na sprite który ją zawiera
-	std::shared_ptr<sf::Sprite> createTextureByGID(unsigned int x, unsigned int y, unsigned int SizeX, unsigned int SizeY);
+	sf::Sprite* createTextureByGID(unsigned int x, unsigned int y, unsigned int SizeX, unsigned int SizeY);
 
 	// pointer to loaded map
 	class TmxMap* pTmxMap;
@@ -92,10 +92,13 @@ private:
 	sf::Font *m_font;
 
 	// wskaźnik na teksture mapy
-	sf::RenderTexture *rendtex;
+	//sf::RenderTexture *rendtex;
+
+	// zawiera wszystkie renderowane textury użyte na mapie
+	std::list< std::shared_ptr<sf::RenderTexture> > m_rendTexList;
 
 	// zawiera wszystkie sprite'y składające się na całą mape
-	std::list< std::shared_ptr<sf::Sprite> > m_mapSprites;
+	std::list< sf::Sprite* > m_mapSprites;
 
 };
 #endif

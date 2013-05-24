@@ -195,7 +195,7 @@ void CPlayer::draw(sf::RenderTarget & target)
 
 void CPlayer::shoot(sf::RenderWindow & App)
 {
-	if( gGame->mg_bulletsList.empty() )
+	//if( gGame->mg_bulletsList.empty() )
 		gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, getPosition(), -m_gunRotate, 50)) );
 }
 

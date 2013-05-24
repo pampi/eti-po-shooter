@@ -9,7 +9,7 @@ CResourceManager::CResourceManager()
 {
 	m_font = new sf::Font();
 	pTmxMap = NULL;
-	rendtex = NULL;
+	//rendtex = NULL;
 	
 }
 
@@ -112,8 +112,9 @@ void CResourceManager::clearResources()
     }
 
 	// to chyba działa po wuju, bo pamięć nadal się zwiększa
-	for(std::list< std::shared_ptr<sf::Sprite> >::iterator it = m_mapSprites.begin(); it != m_mapSprites.end(); )
+	for(std::list< sf::Sprite* >::iterator it = m_mapSprites.begin(); it != m_mapSprites.end(); )
 	{
+		delete (*it);
 		it = m_mapSprites.erase(it);
 	}
 
@@ -121,6 +122,11 @@ void CResourceManager::clearResources()
 	{
 		delete (*it);
 		it = m_staticObjects.erase(it);
+	}
+
+	for(std::list< std::shared_ptr<sf::RenderTexture> >::iterator it = m_rendTexList.begin(); it != m_rendTexList.end(); )
+	{
+		it = m_rendTexList.erase(it);
 	}
 }
 
@@ -504,9 +510,11 @@ void CResourceManager::generateTextureMap()
 
 }
 
-std::shared_ptr<sf::Sprite> CResourceManager::createTextureByGID(unsigned int x, unsigned int y, unsigned int SizeX, unsigned int SizeY)
+sf::Sprite* CResourceManager::createTextureByGID(unsigned int x, unsigned int y, unsigned int SizeX, unsigned int SizeY)
 {
-	rendtex = new sf::RenderTexture();
+	//sf::RenderTexture *rendtex = new sf::RenderTexture();
+	std::shared_ptr<sf::RenderTexture> rendtex(new sf::RenderTexture);
+	m_rendTexList.push_back( rendtex  );
 	unsigned int sizex = (SizeX ) * pTmxMap->tileWidth;
 	unsigned int sizey = (SizeY ) * pTmxMap->tileHeight;
 
@@ -533,8 +541,9 @@ std::shared_ptr<sf::Sprite> CResourceManager::createTextureByGID(unsigned int x,
 		SizeY = pTmxMap->height;
 	}
 
-	rendtex->create( sizex, sizey );
-
+	//rendtex->create( sizex, sizey );
+	m_rendTexList.back()->create( sizex, sizey );
+	
 	sf::IntRect rect,rect2;
 
 	int _gid=0;
@@ -587,14 +596,17 @@ std::shared_ptr<sf::Sprite> CResourceManager::createTextureByGID(unsigned int x,
 			sprite.setPosition((float)rect2.left -(x*tilset->tileWidth), (float)rect2.top-(y*tilset->tileHeight));
 
 			// narysuj nasz kafelek na texturce mapy
-			rendtex->draw(sprite);
+			//rendtex->draw(sprite);
+			m_rendTexList.back()->draw(sprite);
 
 		}
 
 	}
-	rendtex->display();
+	//rendtex->display();
+	m_rendTexList.back()->display();
 	//sf::Sprite *spritem = new sf::Sprite( rendtex->getTexture() );
-	std::shared_ptr<sf::Sprite> spritem = std::make_shared<sf::Sprite>( rendtex->getTexture() );
+	sf::Sprite *spritem = new sf::Sprite( m_rendTexList.back()->getTexture() );
+	//std::shared_ptr<sf::Sprite> spritem = std::make_shared<sf::Sprite>( rendtex->getTexture() );
 	return spritem;
 }
 
@@ -638,7 +650,7 @@ bool CResourceManager::loadImageKey(const std::string path)
 
 void CResourceManager::drawMap(sf::RenderWindow & App)
 {
-	for(std::list< std::shared_ptr<sf::Sprite> >::iterator it = m_mapSprites.begin(); it != m_mapSprites.end(); it++)
+	for(std::list< sf::Sprite* >::iterator it = m_mapSprites.begin(); it != m_mapSprites.end(); it++)
 	{
 		App.draw(*(*it));
 	}
