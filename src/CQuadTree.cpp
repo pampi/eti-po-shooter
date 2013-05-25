@@ -12,25 +12,25 @@ CollisionObject::CollisionObject(float _x, float _y, float _width, float _height
 	height ( _height ), 
 	typ ( _typ)
 {
-	shape.setPosition( x, y );
-	shape.setSize( sf::Vector2f( width, height ) );
+	rShape.setPosition( x, y );
+	rShape.setSize( sf::Vector2f( width, height ) );
 
 
-	rect.left = _x;
-	rect.top = _y;
-	rect.height = _height;
-	rect.width = _width;
+	fRect.left = _x;
+	fRect.top = _y;
+	fRect.height = _height;
+	fRect.width = _width;
 
 	switch (_typ)
 	{
 	case PLAYER :
 			 {
-				 shape.setFillColor( sf::Color( 255, 128, 255 ) );
+				 rShape.setFillColor( sf::Color( 255, 128, 255 ) );
 				 break;
 			 }
 	case WALL :
 			 {
-				 shape.setFillColor( sf::Color( 32, 128, 255 ) );
+				 rShape.setFillColor( sf::Color( 32, 128, 255 ) );
 				 break;
 			 }
 			
@@ -40,7 +40,7 @@ CollisionObject::CollisionObject(float _x, float _y, float _width, float _height
 
 void CollisionObject::draw( sf::RenderTarget &canvas ) 
 {
-	canvas.draw( shape );
+	canvas.draw( rShape );
 }
 
 

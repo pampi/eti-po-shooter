@@ -2,6 +2,10 @@
 
 #define TIME_TO_IDLE 5
 
+#define DEGTORAD 0.0174532925199432957f
+#define RADTODEG 57.295779513082320876f
+#define M_PI 3.14159265358979323846f
+
 extern const char *strKey[];
 
 CGame::CGame()
@@ -292,34 +296,32 @@ void CGame::timeToLoadNewLevel(int level)
 
 void CGame::updateBullets(sf::RenderWindow & App)
 {
+	/*sf::RectangleShape pshape;
+	pshape.setSize(sf::Vector2f(150,100));
+	pshape.setPosition(500,  500);
+	pshape.setFillColor(sf::Color::Red);
+	//pshape.setRotation(45);
+	App.draw(pshape);
+
+	sf::RectangleShape pshape2;
+	pshape2.setSize(sf::Vector2f(150,100));
+	pshape2.setPosition(500,  500);
+	pshape2.setOrigin(pshape2.getSize().x/2, pshape2.getSize().y/2);
+	pshape2.setFillColor(sf::Color::Green);
+	pshape2.setRotation(45);
+	App.draw(pshape2);*/
+
+
 	for(std::list< std::shared_ptr<CBullet> >::iterator it = mg_bulletsList.begin(); it != mg_bulletsList.end(); )
 	{
-		
 		// sprawdzanie kolizji pocisków ze ścianami
-		/*std::vector<CollisionObject*> odp = gGame->collisionTree->getObjectsAt( (*it)->fRect.top,  (*it)->fRect.left );
+		std::vector<CollisionObject*> odp = gGame->collisionTree->getObjectsAt( (*it)->fRect.top,  (*it)->fRect.left );
 		BOOST_FOREACH(CollisionObject* obj, odp)
 		{
-			if( obj->typ == CollisionObject::WALL )
+			obj->draw(App);
+			if( checkCircleRectangleCollisiton( (*it)->cShape, obj->rShape ) )
 			{
-				if( (*it)->fRect.intersects( obj->rect ) )
-				{
-					(*it)->setToDelete();
-					break;
-				}
-			}
-		}*/
-
-		for(std::list< CollisionObject* >::iterator its = gResources.m_staticObjects.begin(); its != gResources.m_staticObjects.end(); its++)
-		{
-			(*its)->draw(App);
-			if( (*its)->typ == CollisionObject::WALL )
-			{
-				if( (*its)->rect.intersects( (*it)->fRect ) )
-				{
-					(*it)->setToDelete();
-					//break;
-				}
-				
+				(*it)->setToDelete();
 			}
 		}
 
@@ -334,4 +336,56 @@ void CGame::updateBullets(sf::RenderWindow & App)
 		}
 		
 	}
+}
+
+bool CGame::checkCircleRectangleCollisiton(sf::CircleShape &cShape, sf::RectangleShape &rShape)
+{
+	sf::Vector2f recCenter;
+	recCenter.x = rShape.getPosition().x + (rShape.getSize().x /2);
+	recCenter.y = rShape.getPosition().y + (rShape.getSize().y /2);
+	
+
+	float unrotatedCircleX = cos( rShape.getRotation()*M_PI / 180 ) * (cShape.getPosition().x - recCenter.x) - 
+		sin( rShape.getRotation()*M_PI / 180 ) * (cShape.getPosition().y - recCenter.y) + recCenter.x;
+
+	float unrotatedCircleY  = sin( rShape.getRotation()*M_PI / 180 ) * (cShape.getPosition().x - recCenter.x) + 
+		cos( rShape.getRotation()*M_PI / 180 ) * (cShape.getPosition().y - recCenter.y) + recCenter.y;
+
+	// Closest point in the rectangle to the center of circle rotated backwards(unrotated)
+	float closestX, closestY;
+
+	// Find the unrotated closest x point from center of unrotated circle
+	if (unrotatedCircleX  < rShape.getPosition().x )
+		closestX = rShape.getPosition().x;
+	else if (unrotatedCircleX  > rShape.getPosition().x + rShape.getSize().x)
+		closestX = rShape.getPosition().x + rShape.getSize().x;
+	else
+		closestX = unrotatedCircleX ;
+
+	// Find the unrotated closest y point from center of unrotated circle
+	if (unrotatedCircleY < rShape.getPosition().y)
+		closestY = rShape.getPosition().y;
+	else if (unrotatedCircleY > rShape.getPosition().y + rShape.getSize().y)
+		closestY = rShape.getPosition().y + rShape.getSize().y;
+	else
+		closestY = unrotatedCircleY;
+
+	// Determine collision
+	bool collision = false;
+
+	float distance = findDistance(unrotatedCircleX , unrotatedCircleY, closestX, closestY);
+	if (distance < cShape.getRadius() )
+		collision = true; // Collision
+	else
+		collision = false;
+
+	return collision;
+}
+
+float CGame::findDistance(float fromX, float fromY, float toX, float toY)
+{
+	float a = abs( fromX - toX );
+	float b = abs( fromY - toY );
+
+	return sqrt( (a*a) + (b*b) );
 }

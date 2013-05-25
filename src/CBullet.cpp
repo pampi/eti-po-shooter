@@ -7,7 +7,7 @@ CBullet::CBullet()
 
 CBullet::CBullet(sf::RenderWindow & App, sf::Vector2f pStartPosition, float pRotation, int pBulletDmg)
 {
-	m_vel = 500.f;
+	m_vel = 700.f;
 	m_lifetime = 0;
 	m_damage = pBulletDmg;
 
@@ -38,29 +38,31 @@ CBullet::CBullet(sf::RenderWindow & App, sf::Vector2f pStartPosition, float pRot
 	m_sprite.setPosition(m_startPos);
 	m_sprite.setRotation(-m_rotation);
 
-	fRect.width = (float)m_textureU->getSize().x-5;
-	fRect.height = (float)m_textureU->getSize().y-5;
+	fRect.width = (float)m_textureU->getSize().x-10;
+	fRect.height = (float)m_textureU->getSize().y-10;
 	fRect.top = m_startPos.x;
 	fRect.left = m_startPos.y;
 
+	cShape.setFillColor(sf::Color::Yellow);
+	cShape.setRadius((float)(m_textureU->getSize().x-10));
+	cShape.setOrigin(cShape.getRadius()/2, cShape.getRadius()/2 );
+	cShape.setPosition(m_startPos);
 }
 
 void CBullet::update(sf::RenderWindow & App, float deltaTime)
 {
-	if( m_lifetime < 100 && !m_toDelete )
+	if( m_lifetime < 200 && !m_toDelete )
 	{
 		m_sprite.move(-m_dis * deltaTime);
-		//m_sprite.setPosition( m_sprite.getPosition().x + (-m_dis.x *deltaTime), (float)sin(m_sprite.getPosition().x/100)*100 );
 		fRect.top = m_sprite.getPosition().x - m_textureU->getSize().x/2;
 		fRect.left = m_sprite.getPosition().y - m_textureU->getSize().y/2;
-		//App.draw( m_sprite );
+		App.draw( m_sprite );
 		m_lifetime++;
 
-		sf::RectangleShape pshape;
-		pshape.setSize(sf::Vector2f(fRect.width, fRect.height));
-		pshape.setPosition(fRect.top,  fRect.left);
-		pshape.setFillColor(sf::Color::Magenta);
-		App.draw(pshape);
+		cShape.setPosition(fRect.top,  fRect.left);
+		//gDDraw.add(fRect.top, "top: ");
+		//gDDraw.add(fRect.left, "left: ");
+		//App.draw(cShape);
 
 		
 	}

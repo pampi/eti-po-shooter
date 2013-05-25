@@ -23,6 +23,7 @@ public:
 	int getBulletDamage() const;
 
 	sf::FloatRect fRect;
+	sf::CircleShape cShape;
 
 	sf::Vector2f getPosition() const;
 

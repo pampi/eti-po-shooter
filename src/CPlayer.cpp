@@ -145,14 +145,14 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 	fRect.top = m_position.y -15.0f;
 //################################################################################
 
-
+/*
 	// sprawdzanie kolizji ze œcianami
 	std::vector<CollisionObject*> odp = gGame->collisionTree->getObjectsAt( m_position.x  -15.0f,  m_position.y -15.0f  );
 	BOOST_FOREACH(CollisionObject* obj, odp)
 	{
 		if( obj->typ == CollisionObject::WALL )
 		{
-			if( fRect.intersects( obj->rect ) )
+			if( fRect.intersects( obj->fRect ) )
 			{
 				m_position = m_prevPositon;
 
@@ -168,14 +168,14 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 			}
 		}
 	}
-	
+*/	
 	m_animationSprite->setPosition(m_position);
 
 	// just 4 debug
 	gDDraw.add(m_animationSprite->getPosition().x, "X: ");
 	gDDraw.add(m_animationSprite->getPosition().y, "Y: ");
-	gDDraw.add(m_dx, "dX: ");
-	gDDraw.add(m_dy, "dY: ");
+	//gDDraw.add(m_dx, "dX: ");
+	//gDDraw.add(m_dy, "dY: ");
 	gDDraw.add(m_position.x, "mX: ");
 	gDDraw.add(m_position.y, "mY: ");
 	gDDraw.add((int)gGame->mg_bulletsList.size(), "Bullets: ");

@@ -51,5 +51,9 @@ private:
 
 	// Aktualizuje pociski
 	void updateBullets(sf::RenderWindow & App);
+
+	static bool checkCircleRectangleCollisiton(sf::CircleShape &cShape, sf::RectangleShape &rShape);
+
+	static float findDistance(float fromX, float fromY, float toX, float toY);
 };
 #endif
