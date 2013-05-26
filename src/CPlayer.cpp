@@ -1,10 +1,16 @@
 #include "headers.h"
 
-#define MAXSPEED 1000.f
-#define MINSPEED -1000.f
+
 #define DEGTORAD 0.0174532925199432957f
 #define RADTODEG 57.295779513082320876f
 #define M_PI 3.14159265358979323846f
+
+#define MAXSPEED 1000.f
+#define MINSPEED -1000.f
+
+#define MAXSTAMINA 200
+#define STAMINAFACTORUP 2.f
+#define STAMINAFACTORDOWN 4.f
 
 CPlayer::CPlayer() : CActor()
 {
@@ -60,7 +66,8 @@ CPlayer::CPlayer(std::string ID, sf::Vector2f position, State state, float hp, f
 
 	fRect.width = fRect.height = 30;
 	
-	
+	m_stamina = MAXSTAMINA;
+	m_staminaClock.restart();
 }
 
 void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
@@ -119,8 +126,15 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 		m_newState = CActor::RUNNING;
 	}
 	
+	// STAMINA GRACZA
+	if( m_stamina <= 0 )
+	{
+		m_newState = CActor::WALKING_U;
+	}
 
 	changePlayerState(m_newState);
+
+	updateStamina();
 
 //#################################################################################	
 
@@ -213,8 +227,8 @@ void CPlayer::draw(sf::RenderTarget & target)
 
 void CPlayer::shoot(sf::RenderWindow & App)
 {
-	//if( gGame->mg_bulletsList.empty() )
-		gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, getPosition(), -m_gunRotate, 50)) );
+	gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::NORMAL, getPosition(), -m_gunRotate, 50)) );
+	gGame->bulletCounter++;
 }
 
 void CPlayer::changePlayerState(CActor::State stan)
@@ -273,4 +287,46 @@ void CPlayer::changePlayerState(CActor::State stan)
 		}
 
 	}
+}
+
+void CPlayer::updateStamina()
+{
+	if( m_state == CActor::RUNNING )
+	{
+		if( m_staminaClock.getElapsedTime().asSeconds() >= 0.5f )
+		{
+			m_stamina -= STAMINAFACTORDOWN;
+			if( m_stamina < 0)
+				m_stamina = 0;
+
+			m_staminaClock.restart();
+		}
+	}
+	else
+	{
+		if( m_staminaClock.getElapsedTime().asSeconds() >= 1.0f )
+		{
+			m_stamina += STAMINAFACTORUP;
+
+			if( m_stamina > MAXSTAMINA)
+				m_stamina = MAXSTAMINA;
+
+			m_staminaClock.restart();
+		}
+	}
+}
+
+float CPlayer::getPercentStamina() const
+{
+	return m_stamina / MAXSTAMINA * 100.f;
+}
+
+float CPlayer::getStamina() const
+{
+	return m_stamina;
+}
+
+void CPlayer::setStamina(float newStamina)
+{
+	m_stamina = newStamina;
 }

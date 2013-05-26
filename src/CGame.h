@@ -25,6 +25,18 @@ public:
 	// Lista wszystkich globalnych pocisków
 	std::list< std::shared_ptr<class CBullet> > mg_bulletsList;
 
+	// aktualny poziom na którym gramy
+	int currentLevel;
+
+	// ilość wystrzelonych pocisków
+	int bulletCounter;
+
+	// czas aktualnego poziomu
+	sf::Clock gameTimer;
+
+	// dodaje efekt eksplozji w podanym miejscu
+	void addExplosion(sf::Vector2f position);
+
 private:
 	sf::Event m_event;
 
@@ -43,7 +55,9 @@ private:
 	class CPlayer *m_player;
 
 	sf::View *m_view;
-	
+
+	class CExplosionManager *m_explosionMng;
+
 	// zarządza stanami gry
 	void manageGameStates(sf::RenderWindow & App);
 

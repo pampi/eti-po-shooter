@@ -18,12 +18,13 @@ public:
 		m_speed = 0;
 		m_rotation = 0;
 	}
-	CActor(std::string ID, sf::Vector2f position, State state, float hp, float speed, float rotation) : m_animationSprite(NULL)
+	CActor(std::string ID, sf::Vector2f position, State state, float maxHp, float speed, float rotation) : m_animationSprite(NULL)
 	{
 		m_id = ID;
 		m_position = position;
 		m_state = state;
-		m_hp = hp;
+		m_maxHP = maxHp;
+		m_hp = m_maxHP;
 		m_speed = speed;
 		m_rotation = rotation;
 	}
@@ -76,6 +77,11 @@ public:
 		return m_hp;
 	}
 
+	float getPercentHP() const
+	{
+		return m_hp / m_maxHP * 100.f;
+	}
+
 	void setHP(float newHP)
 	{
 		m_hp = newHP;
@@ -107,7 +113,7 @@ protected:
 	std::string m_id;
 	sf::Vector2f m_position, m_prevPositon;
 	State m_state, m_prevState, m_newState;
-	float m_hp;
+	float m_maxHP, m_hp;
 	sf::Texture *m_texture;
 	float m_speed;
 	float m_rotation;

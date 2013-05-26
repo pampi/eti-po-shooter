@@ -18,6 +18,9 @@ CGame::CGame()
 
 	gameState = SHOWINGMENU;
 	collisionTree = NULL;
+
+	currentLevel = 0;
+	bulletCounter = 0;
 }
 
 CGame::~CGame()
@@ -110,7 +113,7 @@ void CGame::m_Init(sf::RenderWindow & App)
 	m_inited = true;
 
     // Laduj poziom
-    gResources.loadLevel(0);
+    gResources.loadLevel(currentLevel);
 
 	m_player = new CPlayer("1", gResources.loadPlayerStartPosition(), CActor::STAYING, 100.f, 0.f, 0.f, "res/img/dude.png");
     
@@ -141,6 +144,19 @@ void CGame::drawGui(sf::RenderWindow & App)
                     CTextBox *textbox=static_cast<CTextBox *>(*it);
                     if( !textbox->isHidden() )
                     {
+						if( *textbox->getID() == "gameTimer" )
+						{
+							std::ostringstream buff;
+							buff<<"Timer: "<<(int)gameTimer.getElapsedTime().asSeconds();
+							textbox->setText( buff.str().c_str() );
+						}
+
+						if( *textbox->getID() == "bulletCounter" )
+						{
+							std::ostringstream buff;
+							buff<<"Used bullets: "<<bulletCounter;
+							textbox->setText( buff.str().c_str() );
+						}
                         textbox->draw(App);
                     }
 					break;
@@ -153,11 +169,7 @@ void CGame::drawGui(sf::RenderWindow & App)
 					{
 						if( *gui_overlay->getID() == "skill1" )
 						{
-							/*sf::RectangleShape pshape;
-							pshape.setSize(sf::Vector2f((float)gui_overlay->getWidth(), (float)gui_overlay->getHeight()));
-							pshape.setPosition(200.f, 625.f);
-							pshape.setFillColor(sf::Color::Red);
-							App.draw(pshape);*/
+							
 						}
 						gui_overlay->draw(App);
 					}
@@ -176,6 +188,16 @@ void CGame::drawGui(sf::RenderWindow & App)
 					CProgressBar *progressBar = static_cast<CProgressBar *>(*it);
 					if( !progressBar->isHidden() )
 					{
+						if( *progressBar->getID() == "stamina" )
+						{
+							progressBar->setValue( m_player->getPercentStamina() );
+						}
+
+						if( *progressBar->getID() == "hp" )
+						{
+							progressBar->setValue( m_player->getPercentHP() );
+						}
+
 						progressBar->draw(App);
 					}
 					
@@ -298,6 +320,7 @@ void CGame::manageGameStates(sf::RenderWindow & App)
 
 			// aktualizuje drzewo kolizji
 			updateQuadTree(App);
+
 			// aktualiazuje pociski
 			updateBullets(App);
 

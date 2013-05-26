@@ -28,10 +28,8 @@
 #include <boost/format.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/thread.hpp>
 
 // Biblioteki Thor
-#include <Thor/Config.hpp>
 #include <Thor/Resources.hpp>
 
 // Zewnętrzne
@@ -63,6 +61,7 @@
 #include "CActor.h"
 #include "CPlayer.h"
 #include "CBullet.h"
+#include "CExplosionManager.h"
 
 
 

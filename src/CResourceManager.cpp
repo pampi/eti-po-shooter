@@ -90,19 +90,45 @@ void CResourceManager::clearResources()
         {
             case CGuiElement::GUI_BUTTON:
                 {
-                    CButton *btnToDel=static_cast<CButton *>(pGuiElement);
+                    CButton *btnToDel = static_cast<CButton *>(pGuiElement);
                     delete btnToDel;
+					break;
                 }
-                break;
+                
             case CGuiElement::GUI_TEXTBOX:
                 {
-                    CTextBox *txtToDel=static_cast<CTextBox *>(pGuiElement);
+                    CTextBox *txtToDel = static_cast<CTextBox *>(pGuiElement);
                     delete txtToDel;
+					break;
                 }
-                break;
+
+			case CGuiElement::GUI_STATIC_OVERLAY:
+				{
+					CGuiOverlay *gui_overlay = static_cast<CGuiOverlay *>(pGuiElement);
+					delete gui_overlay;
+					break;
+				}
+
+			case CGuiElement::GUI_TIMED_TEXTBOX:
+				{
+					CTimedTextBox *timedTextBox = static_cast<CTimedTextBox *>(pGuiElement);
+					delete timedTextBox;
+					break;
+				}
+
+			case CGuiElement::GUI_BAR:
+				{
+					CProgressBar *progressBar = static_cast<CProgressBar *>(pGuiElement);
+					delete progressBar;
+					break;
+				}
+                
             default:
-                gLogger << CLogger::LOG_ERROR << "Unkown size of memory block, it's impossible to free memory! Be careful, you're leaking memory!";
-                break;
+				{
+					gLogger << CLogger::LOG_ERROR << "Unkown size of memory block, it's impossible to free memory! Be careful, you're leaking memory!";
+					std::cout<<"Unkown size of memory block, it's impossible to free memory! Be careful, you're leaking memory!\n";
+					break;
+				}
         }
 
         //delete *(this->m_guiElements.begin());
@@ -111,7 +137,8 @@ void CResourceManager::clearResources()
         if( !gButtonClicked.empty() ) gButtonClicked.clear();
     }
 
-	// to chyba działa po wuju, bo pamięć nadal się zwiększa
+	
+
 	for(std::list< sf::Sprite* >::iterator it = m_mapSprites.begin(); it != m_mapSprites.end(); )
 	{
 		delete (*it);
@@ -137,7 +164,7 @@ CGuiElement *CResourceManager::findGUIElement(const char *id)
     {
         std::string str_id=id;
         CGuiElement *gui;
-        for(std::list<CGuiElement *>::iterator i=m_guiElements.begin(); i!=m_guiElements.end(); i++)    //kochany STL :*
+        for(std::list<CGuiElement *>::iterator i=m_guiElements.begin(); i!=m_guiElements.end(); i++)
         {
             gui=(*i);
             if(gui->getID()->compare(str_id)==0)
@@ -366,7 +393,11 @@ void CResourceManager::loadLevel(int lvl)
             gLogger << CLogger::LOG_INFO << std::string("Script ")+script_path+" loaded successfully!";
             gGame->callScriptFunction("greet_the_world");
         }
-        else gLogger << CLogger::LOG_ERROR << std::string("Failed to load ")+script_path+" script!";
+        else 
+		{
+			gLogger << CLogger::LOG_ERROR << std::string("Failed to load ")+script_path+" script!";
+		}
+
     }
     catch(boost::property_tree::xml_parser_error const &e)
     {
@@ -382,6 +413,9 @@ void CResourceManager::loadLevel(int lvl)
 		delete gGame->collisionTree;
 	}
 	gGame->collisionTree = new CQuadTree(0, 0, (float)(pTmxMap->width*pTmxMap->tileWidth), (float)(pTmxMap->height*pTmxMap->tileHeight), 0, 5);
+	gGame->currentLevel = lvl;
+	gGame->bulletCounter = 0;
+	gGame->gameTimer.restart();
 }
 
 void CResourceManager::loadTmxMap(const std::string &pathToMapFile)

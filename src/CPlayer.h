@@ -17,7 +17,9 @@ public:
 
 	void changePlayerState(CActor::State stan);
 
-
+	float getStamina() const;
+	float getPercentStamina() const;
+	void setStamina(float newStamina);
 
 private:
 	float m_dx, m_dy, m_gunRotate, m_xH, m_yH;
@@ -26,6 +28,10 @@ private:
 
 	void shoot(sf::RenderWindow & App);
 
+	float m_stamina;
+	sf::Clock m_staminaClock;
+
+	void updateStamina();
 
 };
 #endif

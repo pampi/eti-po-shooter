@@ -1,15 +1,12 @@
 #include "headers.h"
 
-CBullet::CBullet()
-{
 
-}
-
-CBullet::CBullet(sf::RenderWindow & App, sf::Vector2f pStartPosition, float pRotation, int pBulletDmg)
+CBullet::CBullet(sf::RenderWindow & App, bulletType bType, sf::Vector2f pStartPosition, float pRotation, int pBulletDmg)
 {
 	m_vel = 700.f;
 	m_lifetime = 0;
 	m_damage = pBulletDmg;
+	m_type = bType;
 
 	this->m_startPos = pStartPosition;
 	this->m_toDelete = false;
@@ -28,10 +25,19 @@ CBullet::CBullet(sf::RenderWindow & App, sf::Vector2f pStartPosition, float pRot
 	m_dis.x *= m_vel;
 	m_dis.y *= m_vel;
 
-	//m_texture = new sf::Texture;
-	//m_texture->loadFromImage( *gResources.getImagePointer("res/img/bullet1.png") );
+
 	m_textureU = std::make_shared<sf::Texture>(sf::Texture());
-	m_textureU->loadFromImage( *gResources.getImagePointer("res/img/bullet1.png") );
+
+	if( m_type == NORMAL )
+	{
+		m_textureU->loadFromImage( *gResources.getImagePointer("res/img/bullet1.png") );
+	}
+
+	if( m_type == BIG )
+	{
+		m_textureU->loadFromImage( *gResources.getImagePointer("res/img/bullet2.png") );
+	}
+	
 
 	m_sprite.setTexture( *m_textureU );
 	m_sprite.setOrigin( (float)m_textureU->getSize().x /2, (float)m_textureU->getSize().y /2);
