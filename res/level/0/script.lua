@@ -16,14 +16,15 @@ game_idle = 3
 game_playing = 4
 game_showingmenu = 5
 game_abandon_error = 6
+game_exiting = 7
 
 
 
-if addTextBox("cosTam", "Example", 24, 500.0, 0.0) == true then
-	print ("Dodany przycisk!")
-else
-	print ("Somehow fail!")
-end
+-- if addTextBox("cosTam", "Example", 24, 500.0, 0.0) == true then
+	-- print ("Dodany przycisk!")
+-- else
+	-- print ("Somehow fail!")
+-- end
 
 function startIdleAction()
 	if setGUIHide("txtIdle", false) == false then
@@ -62,30 +63,21 @@ function greet_the_world()
 	end
 	
 	--playSound(music_file, loop)
-	if intro_sound == false then
-		intro_sound = true
-		playSound("res/audio/Romeointro.ogg", true)
-	end
---	nadpisanie()
---	addScript("res/level/0/dodatkowy.lua")
---	nadpisanie()
---	nowa_funkcja()
---	print("END of Greet World!")
+	--playSound("res/audio/mainmenu.ogg", true)
+
+
 end
 
 function startNewGame()
     print ("Czas zaczac nowa gre!")
 	stopSoundAll()
-	changeGameState(game_loading)
 	changeLevel(1)
-end
-
-function nadpisanie()
-	print("script.lua")
+	changeGameState(game_playing)
 end
 
 function zegnajSwiecie()
 	stopSound("res/audio/temporary_intro_theme.ogg")
+	changeGameState(game_exiting)
 	print ("Papa swiecie")
 end
 

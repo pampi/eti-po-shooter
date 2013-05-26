@@ -1,6 +1,16 @@
 <?xml version="1.0"?>
 <gui>
   <buttons>
-    <button id="newLevelButton" action="backToBack" text="Welcome to level 1" hidden="0" position="300.0 0.0" size="32" normal_color="255 0 255 255" hover_color="0 255 0 255"/>
+    <button id="newLevelButton" action="backToBack" text="Wroc do poziomu 0" hidden="0" position="300.0 0.0" size="32" normal_color="255 0 255 255" hover_color="0 255 0 255"/>
   </buttons>
+  
+  <images>
+	  <img file_path="res/img/gui-prototype.png"/>
+	  <img file_path="res/img/tilea4mack.png"/>
+  </images>
+  
+  <gui_static_overlay>
+	  <img id="main" file_path="res/img/gui-prototype.png" hidden="0" position="0.0 620.0"/>
+  </gui_static_overlay>
+  
 </gui>
