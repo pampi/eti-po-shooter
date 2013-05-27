@@ -28,8 +28,8 @@ private:
 
 	void shoot(sf::RenderWindow & App);
 
-	float m_stamina;
-	sf::Clock m_staminaClock;
+	float m_stamina, m_shootDelay;
+	sf::Clock m_staminaClock, m_shootClock;
 
 	void updateStamina();
 

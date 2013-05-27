@@ -6,6 +6,8 @@ CExplosionManager::CExplosionManager()
 	m_texture = std::make_shared<sf::Texture>(sf::Texture());
 	m_texture->loadFromImage( *gResources.getImagePointer("res/img/smokeSheet2.png") );
 
+#pragma region animacja
+
 	m_explosionAnimation = new CAnimation();
 	m_explosionAnimation->setSpriteSheet( *m_texture );
 	m_explosionAnimation->addFrame(sf::IntRect(0, 0, 30, 34));
@@ -23,7 +25,7 @@ CExplosionManager::CExplosionManager()
 	m_explosionAnimation->addFrame(sf::IntRect(450, 0, 30, 34));
 	m_explosionAnimation->addFrame(sf::IntRect(487, 0, 30, 34));
 	m_explosionAnimation->addFrame(sf::IntRect(520, 0, 30, 34));
-
+#pragma endregion
 }
 
 void CExplosionManager::addExplosion(sf::Vector2f position)

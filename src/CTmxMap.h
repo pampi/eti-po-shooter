@@ -46,7 +46,7 @@ public:
 	int y;
 	int width;
 	int height;
-	int count;
+	std::string type;
 };
 
 class TmxMapObjectGroup

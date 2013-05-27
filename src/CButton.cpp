@@ -36,8 +36,6 @@ void CButton::update(sf::RenderWindow & App)
 		{
             gButtonClicked.push_back( this );
 			m_clicked = true;
-            //DEBUG TO DEL
-			//std::cout<<this->m_actionToDo<<std::endl;
 		}
 	}
 	else

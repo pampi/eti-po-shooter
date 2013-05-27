@@ -6,7 +6,7 @@
 class CGuiElement
 {
 public:
-	enum guiType { GUI_NOPE, GUI_BUTTON, GUI_BAR, GUI_TEXTBOX, GUI_TIMED_TEXTBOX, GUI_STATIC_OVERLAY };
+	enum guiType { GUI_NOPE, GUI_BUTTON, GUI_BAR, GUI_TEXTBOX, GUI_TIMED_TEXTBOX, GUI_STATIC_OVERLAY, GUI_HIDDEN_BUTTON };
 	guiType type;
 
 	virtual void draw(sf::RenderTarget & target)=0;

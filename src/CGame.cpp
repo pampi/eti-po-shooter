@@ -167,10 +167,53 @@ void CGame::drawGui(sf::RenderWindow & App)
 					CGuiOverlay *gui_overlay=static_cast<CGuiOverlay *>(*it);
 					if( !gui_overlay->isHidden() )
 					{
-						if( *gui_overlay->getID() == "skill1" )
+						switch( getPlayer()->activSkill )
 						{
-							
+						case CActor::SINGLE_SHOOTING :
+							{
+								if( *gui_overlay->getID() == "skill1" )
+								{
+									gui_overlay->setActive(true);
+								}
+								else
+								{
+									gui_overlay->setActive(false);
+								}
+								break;
+							}
+
+						case CActor::TRIPLE_SHOOTING :
+							{
+								if( *gui_overlay->getID() == "skill2" )
+								{
+									gui_overlay->setActive(true);
+								}
+								else
+								{
+									gui_overlay->setActive(false);
+								}
+								break;
+							}
+
+						case CActor::BIG_SHOOTING :
+							{
+								if( *gui_overlay->getID() == "skill3" )
+								{
+									gui_overlay->setActive(true);
+								}
+								else
+								{
+									gui_overlay->setActive(false);
+								}
+								break;
+							}
 						}
+						
+
+						
+
+						
+						
 						gui_overlay->draw(App);
 					}
 					break;

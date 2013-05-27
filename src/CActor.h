@@ -7,6 +7,7 @@ class CActor
 {
 public:
 	enum State { NOPE, STAYING, WALKING_L, WALKING_R, WALKING_U, WALKING_D, SHOOTING, RUNNING, DYING, DEAD }; // dying - imies≥Ûw przymiotnikowy teraüniejszy czynny
+	enum Skill { SINGLE_SHOOTING, BIG_SHOOTING, TRIPLE_SHOOTING };
 
 	CActor() : m_animationSprite(NULL)
 	{
@@ -27,6 +28,7 @@ public:
 		m_hp = m_maxHP;
 		m_speed = speed;
 		m_rotation = rotation;
+		activSkill = SINGLE_SHOOTING;
 	}
 	virtual void draw(sf::RenderTarget & target)=0;
 	virtual void update(sf::RenderWindow & App, sf::Time deltaTime)=0;
@@ -109,6 +111,8 @@ public:
 
 	sf::FloatRect fRect;
 
+	Skill activSkill;
+
 protected:
 	std::string m_id;
 	sf::Vector2f m_position, m_prevPositon;
@@ -120,7 +124,6 @@ protected:
 
 	class CAnimation *m_ani_walkingU, *m_ani_walkingD, *m_ani_walkingL, *m_ani_walkingR, *m_ani_staying, *m_ani_dying;
 	class CAnimatedSprite *m_animationSprite;
-
 
 };
 #endif

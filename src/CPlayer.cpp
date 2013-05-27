@@ -68,6 +68,8 @@ CPlayer::CPlayer(std::string ID, sf::Vector2f position, State state, float hp, f
 	
 	m_stamina = MAXSTAMINA;
 	m_staminaClock.restart();
+
+	m_shootDelay = 0.25f;
 }
 
 void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
@@ -125,7 +127,28 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 	{
 		m_newState = CActor::RUNNING;
 	}
-	
+
+	//SKILL 1
+	if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::Num1) )
+	{
+		if( activSkill != CActor::SINGLE_SHOOTING )
+			activSkill = CActor::SINGLE_SHOOTING;
+	}
+
+	//SKILL 2
+	if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::Num2) )
+	{
+		if( activSkill != CActor::TRIPLE_SHOOTING )
+			activSkill = CActor::TRIPLE_SHOOTING;
+	}
+
+	//SKILL 3
+	if( CInputHandler::GetInstance()->isKeyPressed(sf::Keyboard::Num3) )
+	{
+		if( activSkill != CActor::BIG_SHOOTING )
+			activSkill = CActor::BIG_SHOOTING;
+	}
+
 	// STAMINA GRACZA
 	if( m_stamina <= 0 )
 	{
@@ -227,8 +250,42 @@ void CPlayer::draw(sf::RenderTarget & target)
 
 void CPlayer::shoot(sf::RenderWindow & App)
 {
-	gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::NORMAL, getPosition(), -m_gunRotate, 50)) );
-	gGame->bulletCounter++;
+	if( m_shootClock.getElapsedTime().asSeconds() >= m_shootDelay )
+	{
+		if( activSkill == CActor::SINGLE_SHOOTING )
+		{
+			gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::NORMAL, getPosition(), -m_gunRotate, 50)) );
+			gGame->bulletCounter++;
+		}
+		else if( activSkill == CActor::BIG_SHOOTING )
+		{
+			if( m_stamina >= 10.f )
+			{
+				gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::BIG, getPosition(), -m_gunRotate, 50)) );
+				gGame->bulletCounter++;
+				m_stamina -= 10.f;
+			}
+		}
+		else if( activSkill == CActor::TRIPLE_SHOOTING )
+		{
+			if( m_stamina >= 20.f )
+			{
+				sf::Vector2f bPos = getPosition();
+				gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::NORMAL, bPos, -m_gunRotate, 50)) );
+				bPos.x += 30;
+				bPos.y += 30;
+				gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::NORMAL, bPos, -m_gunRotate, 50)) );
+				bPos.x -= 60;
+				bPos.y -= 60;
+				gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::NORMAL, bPos, -m_gunRotate, 50)) );
+				gGame->bulletCounter += 3;
+				m_stamina -= 20.f;
+			}
+		}
+		
+		m_shootClock.restart();
+	}
+	
 }
 
 void CPlayer::changePlayerState(CActor::State stan)

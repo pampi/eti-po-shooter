@@ -295,14 +295,18 @@ void CResourceManager::loadLevel(int lvl)
 			{
 				BOOST_FOREACH( boost::property_tree::ptree::value_type &gui_static, root.second)
 				{
-					if(gui_static.first == "img")
+					if(gui_static.first == "gui_static")
 					{
 						// id
 						std::string id_gui = gui_static.second.get<std::string>("<xmlattr>.id","");
 
-						// img path
-						std::string iPath = gui_static.second.get<std::string>("<xmlattr>.file_path", "");
-						this->loadImageKey(iPath);
+						// img pathNormal
+						std::string iPathNormal = gui_static.second.get<std::string>("<xmlattr>.file_path_normal", "");
+						this->loadImageKey(iPathNormal);
+
+						// img pathActive
+						std::string iPathActive = gui_static.second.get<std::string>("<xmlattr>.file_path_active", "");
+						this->loadImageKey(iPathActive);
 
 						//Position
 						sf::Vector2f pos;
@@ -312,6 +316,9 @@ void CResourceManager::loadLevel(int lvl)
 						//hidden?
 						int hide = gui_static.second.get<int>("<xmlattr>.hidden", 0);
 
+						//active?
+						int active = gui_static.second.get<int>("<xmlattr>.active", 0);
+
 						//width
 						int width = gui_static.second.get<int>("<xmlattr>.width", 0);
 
@@ -320,7 +327,7 @@ void CResourceManager::loadLevel(int lvl)
 						
 
 
-						this->m_guiElements.push_back((CGuiElement*)(new CGuiOverlay(pos, id_gui, height, width, (bool)(hide!=0), iPath)));
+						this->m_guiElements.push_back((CGuiElement*)(new CGuiOverlay(pos, id_gui, height, width, (bool)(hide!=0), (bool)(active!=0), iPathNormal, iPathActive)));
 
 					}
 				}
@@ -548,6 +555,7 @@ void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
 						object->y = o.second.get<int>( "<xmlattr>.y" );
 						object->width = o.second.get<int>( "<xmlattr>.width" );
 						object->height = o.second.get<int>( "<xmlattr>.height" );
+						object->type = o.second.get<std::string>( "<xmlattr>.type", "Small" );
                     
 						//std::cout << "object " << object->name << " at " << object->x << ", " << object->y << std::endl;
 
@@ -799,6 +807,15 @@ void CResourceManager::loadStaticColliders()
 			{
 				CollisionObject *cobject = new CollisionObject( (float)object->x, (float)object->y, (float)object->width, (float)object->height, CollisionObject::WALL );
 				m_staticObjects.push_back( cobject );
+			}
+		}
+
+		if (objectgroup->name == "SpawnPositions")
+		{
+			BOOST_FOREACH(TmxMapObject *object, objectgroup->objects)
+			{
+				//CollisionObject *cobject = new CollisionObject( (float)object->x, (float)object->y, (float)object->width, (float)object->height, CollisionObject::WALL );
+				//m_staticObjects.push_back( cobject );
 			}
 		}
 	}
