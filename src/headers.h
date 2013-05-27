@@ -48,6 +48,7 @@
 #include "CResourceManager.h"
 #include "CSoundManager.h"
 #include "CScript.h"
+#include "CExplosionManager.h"
 #include "CGame.h"
 #include "CGuiElement.h"
 #include "CTextBox.h"
@@ -61,7 +62,7 @@
 #include "CActor.h"
 #include "CPlayer.h"
 #include "CBullet.h"
-#include "CExplosionManager.h"
+
 
 
 

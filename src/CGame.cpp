@@ -328,6 +328,8 @@ void CGame::manageGameStates(sf::RenderWindow & App)
 			m_player->update(App, m_deltaTime);
 			m_player->draw(App);
 			
+			// aktualizacja ekspolzji
+			updateExplosion(App, m_deltaTime);
 
 			// rysowanie statyczne
 			App.setView(App.getDefaultView());
@@ -390,6 +392,7 @@ void CGame::updateBullets(sf::RenderWindow & App)
 			if( checkCircleRectangleCollisiton( (*it)->cShape, obj->rShape ) )
 			{
 				(*it)->setToDelete();
+				addExplosion( (*it)->m_sprite.getPosition() );
 			}
 		}
 

@@ -3,7 +3,7 @@
 
 #include "headers.h"
 
-class CGame : public CScreen, public CScript, public CSoundManager
+class CGame : public CScreen, public CScript, public CSoundManager, public CExplosionManager
 {
 public:
 	CGame();
@@ -34,8 +34,6 @@ public:
 	// czas aktualnego poziomu
 	sf::Clock gameTimer;
 
-	// dodaje efekt eksplozji w podanym miejscu
-	void addExplosion(sf::Vector2f position);
 
 private:
 	sf::Event m_event;
@@ -56,7 +54,6 @@ private:
 
 	sf::View *m_view;
 
-	class CExplosionManager *m_explosionMng;
 
 	// zarządza stanami gry
 	void manageGameStates(sf::RenderWindow & App);
