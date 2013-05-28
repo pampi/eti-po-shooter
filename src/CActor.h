@@ -6,7 +6,7 @@
 class CActor
 {
 public:
-	enum State { NOPE, STAYING, WALKING_L, WALKING_R, WALKING_U, WALKING_D, SHOOTING, RUNNING, DYING, DEAD }; // dying - imies≥Ûw przymiotnikowy teraüniejszy czynny
+	enum State { NOPE, STAYING, WALKING_U, WALKING_D, SHOOTING, RUNNING, DYING, DEAD }; // dying - imies≥Ûw przymiotnikowy teraüniejszy czynny
 	enum Skill { SINGLE_SHOOTING, BIG_SHOOTING, TRIPLE_SHOOTING };
 
 	CActor() : m_animationSprite(NULL)
@@ -99,9 +99,9 @@ public:
 		m_state = newState;
 	}
 
-	std::string getID() const
+	std::string* getID()
 	{
-		return m_id;
+		return &m_id;
 	}
 
 	void setID(std::string newID)
@@ -118,11 +118,12 @@ protected:
 	sf::Vector2f m_position, m_prevPositon;
 	State m_state, m_prevState, m_newState;
 	float m_maxHP, m_hp;
-	sf::Texture *m_texture;
+	//sf::Texture *m_texture;
+	std::shared_ptr<sf::Texture> m_texture;
 	float m_speed;
 	float m_rotation;
 
-	class CAnimation *m_ani_walkingU, *m_ani_walkingD, *m_ani_walkingL, *m_ani_walkingR, *m_ani_staying, *m_ani_dying;
+	class CAnimation *m_ani_walkingU, *m_ani_walkingD, *m_ani_staying, *m_ani_dying, *m_ani_meleeAttack;
 	class CAnimatedSprite *m_animationSprite;
 
 };

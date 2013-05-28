@@ -19,7 +19,8 @@ CPlayer::CPlayer() : CActor()
 
 CPlayer::CPlayer(std::string ID, sf::Vector2f position, State state, float hp, float speed, float rotation, std::string spriteSheet) : CActor(ID, position, state, hp, speed, rotation)
 {
-	m_texture = new sf::Texture;
+	//m_texture = new sf::Texture;
+	m_texture = std::make_shared<sf::Texture>(sf::Texture());
 	m_texture->loadFromImage( *gResources.getImagePointer(spriteSheet) );
 
 	#pragma region animacja

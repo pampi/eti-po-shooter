@@ -61,6 +61,7 @@
 #include "CAnimatedSprite.h"
 #include "CActor.h"
 #include "CPlayer.h"
+#include "CEnemy.h"
 #include "CBullet.h"
 
 

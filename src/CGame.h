@@ -22,7 +22,7 @@ public:
 
 	void timeToLoadNewLevel(int level);
 
-	// Lista wszystkich globalnych pocisków
+	// Globalna lista wszystkich pocisków
 	std::list< std::shared_ptr<class CBullet> > mg_bulletsList;
 
 	// aktualny poziom na którym gramy
@@ -34,6 +34,8 @@ public:
 	// czas aktualnego poziomu
 	sf::Clock gameTimer;
 
+	// Globalna lista wszystkich wrogów na mapie
+	std::list< std::shared_ptr<class CEnemy> > mg_enemiesList;
 
 private:
 	sf::Event m_event;
