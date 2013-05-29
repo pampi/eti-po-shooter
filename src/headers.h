@@ -1,6 +1,9 @@
 ﻿#ifndef HEADERS_H
 #define HEADERS_H
 
+#pragma comment(lib, "wininet.lib")
+#pragma comment(lib, "advapi32.lib")
+
 // Biblioteki STL
 #include <iostream>
 #include <string>
@@ -28,9 +31,18 @@
 #include <boost/format.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
+//#include <boost/thread.hpp>
 
 // Biblioteki Thor
 #include <Thor/Resources.hpp>
+
+
+#ifdef WIN32
+// Windowsowe ZUO
+#include <windows.h>
+#include <wininet.h>
+#include <winbase.h>
+#endif
 
 // Zewnętrzne
 #include "lua5.2/lua.hpp"

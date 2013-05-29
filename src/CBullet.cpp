@@ -1,12 +1,14 @@
 #include "headers.h"
 
 
-CBullet::CBullet(sf::RenderWindow & App, bulletType bType, sf::Vector2f pStartPosition, float pRotation, int pBulletDmg)
+CBullet::CBullet(sf::RenderWindow & App, bulletType bType, ebulletOwner bOwner, sf::Vector2f pStartPosition, float pRotation, int pBulletDmg, float bSpeed)
 {
-	m_vel = 700.f;
+	//m_vel = 700.f;
+	m_vel = bSpeed;
 	m_lifetime = 0;
 	m_damage = pBulletDmg;
 	m_type = bType;
+	bulletOwner = bOwner;
 
 	this->m_startPos = pStartPosition;
 	this->m_toDelete = false;
@@ -28,16 +30,27 @@ CBullet::CBullet(sf::RenderWindow & App, bulletType bType, sf::Vector2f pStartPo
 
 	m_textureU = std::make_shared<sf::Texture>(sf::Texture());
 
-	if( m_type == NORMAL )
+	if( bulletOwner == ENEMY )
 	{
-		m_textureU->loadFromImage( *gResources.getImagePointer("res/img/bullet1.png") );
+		m_textureU->loadFromImage( *gResources.getImagePointer("res/img/enemy_bullet1.png") );
 	}
+	else
+	{
+		if( m_type == NORMAL )
+		{
+			m_textureU->loadFromImage( *gResources.getImagePointer("res/img/bullet1.png") );
+		}
 
-	if( m_type == BIG )
-	{
-		m_textureU->loadFromImage( *gResources.getImagePointer("res/img/bullet2.png") );
+		if( m_type == BIG )
+		{
+			m_textureU->loadFromImage( *gResources.getImagePointer("res/img/bullet2.png") );
+		}
+
+		if( m_type == TRIPLE )
+		{
+			m_textureU->loadFromImage( *gResources.getImagePointer("res/img/bullet3.png") );
+		}
 	}
-	
 
 	m_sprite.setTexture( *m_textureU );
 	m_sprite.setOrigin( (float)m_textureU->getSize().x /2, (float)m_textureU->getSize().y /2);

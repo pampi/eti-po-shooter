@@ -7,21 +7,28 @@ CSoundManager::CSoundManager()
 
 bool CSoundManager::play(const char *file, bool loop)
 {
-    SAudio *pAudio = new SAudio();
+	if( playlist.size() <= 150 )
+	{
+		SAudio *pAudio = new SAudio();
 
-    pAudio->file = file;
-    if(!pAudio->music.openFromFile(pAudio->file))
-    {
-        delete pAudio;
-        return false;
-    }
-	
+		pAudio->file = file;
+		if(!pAudio->music.openFromFile(pAudio->file))
+		{
+			delete pAudio;
+			return false;
+		}
 
-    pAudio->music.setLoop(loop);
-    pAudio->music.play();
-    playlist.push_back(pAudio);
 
-    return true;
+		pAudio->music.setLoop(loop);
+		pAudio->music.play();
+		playlist.push_back(pAudio);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+    
 }
 
 bool CSoundManager::stop(const char *file, bool all)
@@ -60,6 +67,29 @@ bool CSoundManager::stop(const char *file, bool all)
     }
 
     return ret_val;
+}
+
+void CSoundManager::updateSound()
+{
+	for(std::list<SAudio *>::iterator i=playlist.begin(); i!=playlist.end(); i++)
+	{
+		 SAudio *pAudio = *playlist.begin();
+
+		//zatrzymanie odtwarzania pliku
+		if(pAudio->music.getStatus() == sf::SoundSource::Stopped || pAudio->music.getStatus() == sf::SoundSource::Paused)
+		{
+			pAudio->music.stop();
+
+			//zwalnianie pamięci
+			delete pAudio;
+
+			//usuwanie z playlisty
+			std::list<SAudio *>::iterator tmp=i;
+			i--;
+			playlist.erase(tmp);
+		
+		}
+	}
 }
 
 void CSoundManager::stopAll()

@@ -10,7 +10,7 @@ CResourceManager::CResourceManager()
 	m_font = new sf::Font();
 	pTmxMap = NULL;
 	//rendtex = NULL;
-	
+	std::srand((size_t)time(NULL));
 }
 
 const sf::Image & CResourceManager::getImage(const std::string & filename)
@@ -154,6 +154,11 @@ void CResourceManager::clearResources()
 	for(std::list< std::shared_ptr<sf::RenderTexture> >::iterator it = m_rendTexList.begin(); it != m_rendTexList.end(); )
 	{
 		it = m_rendTexList.erase(it);
+	}
+
+	for(std::list< std::shared_ptr<class CEnemy> >::iterator it = gGame->mg_enemiesList.begin(); it != gGame->mg_enemiesList.end(); )
+	{
+		it = gGame->mg_enemiesList.erase(it);
 	}
 }
 
@@ -390,6 +395,7 @@ void CResourceManager::loadLevel(int lvl)
 		{
 			generateTextureMap();
 			loadStaticColliders();
+			//boost::thread worker( &CResourceManager::loadStaticColliders, this);
 		}
 
         char script_path[512];
@@ -422,6 +428,7 @@ void CResourceManager::loadLevel(int lvl)
 	gGame->collisionTree = new CQuadTree(0, 0, (float)(pTmxMap->width*pTmxMap->tileWidth), (float)(pTmxMap->height*pTmxMap->tileHeight), 0, 5);
 	gGame->currentLevel = lvl;
 	gGame->bulletCounter = 0;
+	gGame->corpseCounter = 0;
 	gGame->gameTimer.restart();
 }
 
@@ -557,7 +564,7 @@ void CResourceManager::loadTmxMap(const std::string &pathToMapFile)
 						object->height = o.second.get<int>( "<xmlattr>.height" );
 						object->type = o.second.get<std::string>( "<xmlattr>.type", "Small" );
                     
-						//std::cout << "object " << object->name << " at " << object->x << ", " << object->y << std::endl;
+						//std::cout << "object " << object->name << " at " << object->x << ", " << object->y << " type: "<<object->type<<std::endl;
 
 						
                     
@@ -812,10 +819,91 @@ void CResourceManager::loadStaticColliders()
 
 		if (objectgroup->name == "SpawnPositions")
 		{
+			
 			BOOST_FOREACH(TmxMapObject *object, objectgroup->objects)
 			{
-				//CollisionObject *cobject = new CollisionObject( (float)object->x, (float)object->y, (float)object->width, (float)object->height, CollisionObject::WALL );
-				//m_staticObjects.push_back( cobject );
+				//std::cout<<"weszlo\n";
+				if( object->type == "Small" )
+				{
+					for(int i=0; i<50; i++)
+					{
+						//CEnemy(std::string pID, sf::Vector2f pPosition, State stan, enemyType type, float damage, float maxHp, float speed, float atackDistance, std::string spriteSheet, float rotation = 0.f);
+						sf::Vector2f startPos;
+						startPos.x = (float)(std::rand()%(object->x+object->width) + object->x);
+						startPos.y = (float)(std::rand()%(object->y+object->height) + object->y);
+						float dmg = (float)(std::rand()%20+5);
+						float mHp = (float)(std::rand()%200+50);
+						float dist = (float)(std::rand()%1000+400);
+						float speed = (float)(std::rand()%200+50);
+						CEnemy::enemyType typ = (CEnemy::enemyType)(std::rand()%2);
+
+						char ide[512];
+						sprintf(ide, "%d", i);
+
+						gGame->mg_enemiesList.push_back( std::make_shared<class CEnemy>(CEnemy(ide, startPos, CActor::WALKING_U, typ, dmg, mHp, speed, dist, "res/img/zombi1.png")) );
+						//std::cout<<*gGame->mg_enemiesList.back()->getID()<<std::endl;
+					}
+				}
+				else if( object->type == "Medium")
+				{
+					for(int i=0; i<80; i++)
+					{
+						//CEnemy(std::string pID, sf::Vector2f pPosition, State stan, enemyType type, float damage, float maxHp, float speed, float atackDistance, std::string spriteSheet, float rotation = 0.f);
+						sf::Vector2f startPos;
+						startPos.x = (float)(std::rand()%(object->x+object->width) + object->x);
+						startPos.y = (float)(std::rand()%(object->y+object->height) + object->y);
+						float dmg = (float)(std::rand()%20+5);
+						float mHp = (float)(std::rand()%200+50);
+						float dist = (float)(std::rand()%1000+400);
+						float speed = (float)(std::rand()%200+50);
+						CEnemy::enemyType typ = (CEnemy::enemyType)(std::rand()%2);
+
+						char ide[512];
+						sprintf(ide, "%d", i);
+
+						gGame->mg_enemiesList.push_back( std::make_shared<class CEnemy>(CEnemy(ide, startPos, CActor::WALKING_U, typ, dmg, mHp, speed, dist, "res/img/zombi1.png")) );
+					}
+				}
+				else if( object->type == "Big")
+				{
+					for(int i=0; i<100; i++)
+					{
+						//CEnemy(std::string pID, sf::Vector2f pPosition, State stan, enemyType type, float damage, float maxHp, float speed, float atackDistance, std::string spriteSheet, float rotation = 0.f);
+						sf::Vector2f startPos;
+						startPos.x = (float)(std::rand()%(object->x+object->width) + object->x);
+						startPos.y = (float)(std::rand()%(object->y+object->height) + object->y);
+						float dmg = (float)(std::rand()%20+5);
+						float mHp = (float)(std::rand()%200+50);
+						float dist = (float)(std::rand()%1000+400);
+						float speed = (float)(std::rand()%200+50);
+						CEnemy::enemyType typ = (CEnemy::enemyType)(std::rand()%2);
+
+						char ide[512];
+						sprintf(ide, "%d", i);
+
+						gGame->mg_enemiesList.push_back( std::make_shared<class CEnemy>(CEnemy(ide, startPos, CActor::WALKING_U, typ, dmg, mHp, speed, dist, "res/img/zombi1.png")) );
+					}
+				}
+				else if( object->type == "Ultra")
+				{
+					for(int i=0; i<200; i++)
+					{
+						//CEnemy(std::string pID, sf::Vector2f pPosition, State stan, enemyType type, float damage, float maxHp, float speed, float atackDistance, std::string spriteSheet, float rotation = 0.f);
+						sf::Vector2f startPos;
+						startPos.x = (float)(std::rand()%(object->x+object->width) + object->x);
+						startPos.y = (float)(std::rand()%(object->y+object->height) + object->y);
+						float dmg = (float)(std::rand()%20+5);
+						float mHp = (float)(std::rand()%200+50);
+						float dist = (float)(std::rand()%1000+400);
+						float speed = (float)(std::rand()%200+50);
+						CEnemy::enemyType typ = (CEnemy::enemyType)(std::rand()%2);
+
+						char ide[512];
+						sprintf(ide, "%d", i);
+
+						gGame->mg_enemiesList.push_back( std::make_shared<class CEnemy>(CEnemy(ide, startPos, CActor::WALKING_U, typ, dmg, mHp, speed, dist, "res/img/zombi1.png")) );
+					}
+				}
 			}
 		}
 	}

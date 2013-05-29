@@ -1,16 +1,39 @@
 <?xml version="1.0"?>
 <gui>
-  <buttons>
-    <button id="newLevelButton" action="backToBack" text="Wroc do poziomu 0" hidden="0" position="300.0 0.0" size="32" normal_color="255 0 255 255" hover_color="0 255 0 255"/>
-  </buttons>
   
   <images>
-	  <img file_path="res/img/gui-prototype.png"/>
-	  <img file_path="res/img/tilea4mack.png"/>
+	<img file_path="res/img/btnFrame1.png"/>
+	<img file_path="res/img/skill1_icon.png"/>
+	<img file_path="res/img/skill2_icon.png"/>
+	<img file_path="res/img/skill3_icon.png"/>
+	<img file_path="res/img/barFrame.png"/>
+	<img file_path="res/img/smokeSheet2.png"/>
   </images>
   
   <gui_static_overlay>
-	  <img id="main" file_path="res/img/gui-prototype.png" hidden="0" position="0.0 620.0"/>
+	<gui_static id="main" file_path_normal="res/img/black_bar.png" file_path_active="res/img/black_bar.png" hidden="0" position="0.0 620.0" width="1280" height="100" active="0" />
+	
+	<gui_static id="skill1_icon" file_path_normal="res/img/skill1_icon.png" file_path_active="res/img/skill1_icon.png" hidden="0" position="90.0 625.0" width="94" height="93" />
+	<gui_static id="skill1" file_path_normal="res/img/btnFrame1.png" file_path_active="res/img/btnFrame2.png" hidden="0" position="90.0 625.0" width="94" height="93" active="0" />
+	
+	<gui_static id="skill2_icon" file_path_normal="res/img/skill2_icon.png" file_path_active="res/img/skill2_icon.png" hidden="0" position="200.0 625.0" width="94" height="93" />
+	<gui_static id="skill2" file_path_normal="res/img/btnFrame1.png" file_path_active="res/img/btnFrame2.png" hidden="0" position="200.0 625.0" width="94" height="93" active="0" />
+	
+	<gui_static id="skill3_icon" file_path_normal="res/img/skill3_icon.png" file_path_active="res/img/skill3_icon.png" hidden="0" position="310.0 625.0" width="94" height="93" />
+	<gui_static id="skill3" file_path_normal="res/img/btnFrame1.png" file_path_active="res/img/btnFrame2.png" hidden="0" position="310.0 625.0" width="94" height="93" active="0" />
   </gui_static_overlay>
+  
+ <texts>
+	<static id="hpLabel" text="Health:" hidden="0" position="685.0 630.0" size="20" normal_color="255 0 0 255"/>
+	<static id="staminaLabel" text="Stamina:" hidden="0" position="670.0 670.0" size="20" normal_color="255 255 0 255"/>
+	<static id="gameTimer" text="CZAS:CZAS" hidden="0" position="420.0 630.0" size="20" normal_color="255 255 255 255"/>
+	<static id="bulletCounter" text="TEKST:ILOSC" hidden="0" position="420.0 650.0" size="20" normal_color="255 160 255 255"/>
+	<static id="corpseCounter" text="TEKST:ILOSC" hidden="0" position="420.0 670.0" size="20" normal_color="255 0 160 255"/>
+</texts>
+  
+  <gui_bars>
+	<bar id="hp" file_path="res/img/barFrame.png" position="750.0 630.0" hidden="0" width="421" height="34" color="255 0 0 255" startValue="50" />
+	<bar id="stamina" file_path="res/img/barFrame.png" position="750.0 670.0" hidden="0" width="421" height="34" color="255 255 0 255" startValue="75" />
+  </gui_bars>
   
 </gui>

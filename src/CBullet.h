@@ -8,8 +8,9 @@ class CBullet
 {
 public:
 	enum bulletType {NONE, NORMAL, DOUBLE, TRIPLE, BIG, SINUS, SPIN360};
+	enum ebulletOwner {PLAYER, ENEMY };
 
-	CBullet(sf::RenderWindow & App, bulletType bType, sf::Vector2f StartPosition, float Rotation, int bulletDmg);
+	CBullet(sf::RenderWindow & App, bulletType bType, ebulletOwner bOwner, sf::Vector2f StartPosition, float Rotation, int bulletDmg, float bSpeed);
 
 	void update(sf::RenderWindow & App, float deltaTime);
 
@@ -26,6 +27,8 @@ public:
 	sf::CircleShape cShape;
 
 	sf::Vector2f getPosition() const;
+
+	ebulletOwner bulletOwner;
 
 private:
 	sf::Vector2f m_dis, m_startPos, m_mousePos;

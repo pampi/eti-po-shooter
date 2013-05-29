@@ -72,6 +72,7 @@ public:
 	sf::Vector2f getPosition() const
 	{
 		return m_position;
+		//return m_animationSprite->getPosition();
 	}
 
 	float getHP() const
@@ -87,6 +88,10 @@ public:
 	void setHP(float newHP)
 	{
 		m_hp = newHP;
+		if( m_hp < 0 )
+		{
+			m_hp = 0;
+		}
 	}
 
 	State getState() const

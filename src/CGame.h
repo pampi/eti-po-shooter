@@ -13,7 +13,7 @@ public:
 
 	class CPlayer *getPlayer();
 
-	enum State { NOT_SURE, LOADING, PAUSE, IDLE, PLAYING, SHOWINGMENU, ABANDON_ERROR, EXITING };
+	enum State { NOT_SURE, LOADING, PAUSE, IDLE, PLAYING, SHOWINGMENU, GAME_OVER, ABANDON_ERROR, EXITING };
 
 	State gameState;
 
@@ -21,6 +21,12 @@ public:
 	CQuadTree *collisionTree;
 
 	void timeToLoadNewLevel(int level);
+
+	static bool checkCircleRectangleCollisiton(sf::CircleShape &cShape, sf::RectangleShape &rShape);
+
+	static float findDistance(float fromX, float fromY, float toX, float toY);
+
+	static float findDistance(sf::Vector2f From, sf::Vector2f To);
 
 	// Globalna lista wszystkich pocisków
 	std::list< std::shared_ptr<class CBullet> > mg_bulletsList;
@@ -30,6 +36,9 @@ public:
 
 	// ilość wystrzelonych pocisków
 	int bulletCounter;
+
+	// ilość zabitych zombi
+	int corpseCounter;
 
 	// czas aktualnego poziomu
 	sf::Clock gameTimer;
@@ -50,12 +59,13 @@ private:
 	void drawGui(sf::RenderWindow & App);
 
 	sf::Time m_deltaTime;
-	sf::Clock m_deltaClock;
+	sf::Clock m_deltaClock, m_biteClock;
 
 	class CPlayer *m_player;
 
 	sf::View *m_view;
 
+	sf::RectangleShape m_blackGround;
 
 	// zarządza stanami gry
 	void manageGameStates(sf::RenderWindow & App);
@@ -66,8 +76,46 @@ private:
 	// Aktualizuje pociski
 	void updateBullets(sf::RenderWindow & App);
 
-	static bool checkCircleRectangleCollisiton(sf::CircleShape &cShape, sf::RectangleShape &rShape);
+	// Aktualizuje wrogów
+	void updateEnemies(sf::RenderWindow & App);
 
-	static float findDistance(float fromX, float fromY, float toX, float toY);
+	bool m_podsumowane;
+	void gameOver(sf::RenderWindow & App);
+
+
+
+
+
+#define SCORE_URL "http://eti-inquisition.cba.pl/add_score.php?"
+
+	static char* getPCUsername()
+	{
+		char *username=new char[64];
+		DWORD len=64;
+		GetUserNameA(username, &len);
+		username[len]=0;
+		return username;
+	}
+
+	static void add_score_to_internet(unsigned int score, unsigned int bullets, const char* player_name=getPCUsername())
+	{
+		HINTERNET handle = InternetOpenA(0, INTERNET_OPEN_TYPE_DIRECT, 0, 0, 0);
+		if ( handle == 0 )
+		{
+			const DWORD error = ::GetLastError();
+			printf("Jakis error!\n");
+			return;
+		}
+
+		char completeURL[512];
+		sprintf(completeURL, "%ss=%u&p=%s&b=%u", SCORE_URL, score, player_name, bullets);
+		HINTERNET handle2=InternetOpenUrlA(handle, completeURL, 0, 0, INTERNET_FLAG_RELOAD, 0);
+
+		Sleep(1000);
+		InternetCloseHandle(handle2);
+		InternetCloseHandle(handle);
+	}
+
+
 };
 #endif

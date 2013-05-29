@@ -21,6 +21,8 @@ public:
 	float getPercentStamina() const;
 	void setStamina(float newStamina);
 
+	sf::RectangleShape m_rShape;
+
 private:
 	float m_dx, m_dy, m_gunRotate, m_xH, m_yH;
 	sf::Vector2i m_ImousePos;
@@ -32,6 +34,8 @@ private:
 	sf::Clock m_staminaClock, m_shootClock;
 
 	void updateStamina();
+
+	
 
 };
 #endif

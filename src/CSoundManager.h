@@ -28,6 +28,8 @@ public:
     bool stop(const char* file, bool all=false);
     //Zatrzymaj wszelaką muzykę
     void stopAll();
+
+	void updateSound();
 };
 
 #endif // CSOUNDMANAGER_H

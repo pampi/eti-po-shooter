@@ -8,7 +8,7 @@
 #define MAXSPEED 1000.f
 #define MINSPEED -1000.f
 
-#define MAXSTAMINA 200
+#define MAXSTAMINA 300
 #define STAMINAFACTORUP 2.f
 #define STAMINAFACTORDOWN 4.f
 
@@ -55,6 +55,9 @@ CPlayer::CPlayer(std::string ID, sf::Vector2f position, State state, float hp, f
 	m_ani_staying->addFrame( sf::IntRect(0, 50, 50, 50) );
 	m_ani_staying->addFrame( sf::IntRect(0, 50, 50, 50) );
 
+	
+	
+	
 	m_animationSprite = new CAnimatedSprite( sf::milliseconds(300) );
 	m_animationSprite->setAnimation( *m_ani_staying );
 	m_animationSprite->setPosition( m_position );
@@ -66,6 +69,8 @@ CPlayer::CPlayer(std::string ID, sf::Vector2f position, State state, float hp, f
 	m_dy = 0;
 
 	fRect.width = fRect.height = 30;
+	m_rShape.setSize(sf::Vector2f(30,30));
+	m_rShape.setFillColor(sf::Color::Red);
 	
 	m_stamina = MAXSTAMINA;
 	m_staminaClock.restart();
@@ -199,6 +204,7 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 
 	fRect.left = m_position.x -15.0f;
 	fRect.top = m_position.y -15.0f;
+	m_rShape.setPosition(m_position.x -15.0f,  m_position.y -15.0f);
 //################################################################################
 
 
@@ -206,6 +212,7 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 	std::vector<CollisionObject*> odp = gGame->collisionTree->getObjectsAt( m_position.x  -15.0f,  m_position.y -15.0f  );
 	BOOST_FOREACH(CollisionObject* obj, odp)
 	{
+		obj->draw(App);
 		if( obj->typ == CollisionObject::WALL )
 		{
 			if( fRect.intersects( obj->fRect ) )
@@ -214,27 +221,35 @@ void CPlayer::update(sf::RenderWindow & App, sf::Time deltaTime)
 
 				changePlayerState( CActor::STAYING );
 
-				sf::RectangleShape pshape;
-				pshape.setSize(sf::Vector2f(30,30));
-				pshape.setPosition(m_position.x -15.0f,  m_position.y -15.0f);
-				pshape.setFillColor(sf::Color::Red);
-				App.draw(pshape);
+				
+				
+				//App.draw(m_rShape);
 
 				break;
 			}
 		}
 	}
-	
+//################################################################################
+
 	m_animationSprite->setPosition(m_position);
+
+	if( getHP() <= 0)
+	{
+		m_state = CActor::DEAD;
+		gGame->gameState = CGame::GAME_OVER;
+	}
+
+
 
 	// just 4 debug
 	gDDraw.add(m_animationSprite->getPosition().x, "X: ");
 	gDDraw.add(m_animationSprite->getPosition().y, "Y: ");
 	//gDDraw.add(m_dx, "dX: ");
 	//gDDraw.add(m_dy, "dY: ");
-	gDDraw.add(m_position.x, "mX: ");
-	gDDraw.add(m_position.y, "mY: ");
+	//gDDraw.add(m_position.x, "mX: ");
+	//gDDraw.add(m_position.y, "mY: ");
 	gDDraw.add((int)gGame->mg_bulletsList.size(), "Bullets: ");
+	gDDraw.add(getHP(), "HP: ");
 
 
 }
@@ -255,14 +270,14 @@ void CPlayer::shoot(sf::RenderWindow & App)
 	{
 		if( activSkill == CActor::SINGLE_SHOOTING )
 		{
-			gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::NORMAL, getPosition(), -m_gunRotate, 50)) );
+			gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::NORMAL, CBullet::PLAYER, getPosition(), -m_gunRotate, 50, 800.f)) );
 			gGame->bulletCounter++;
 		}
 		else if( activSkill == CActor::BIG_SHOOTING )
 		{
 			if( m_stamina >= 10.f )
 			{
-				gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::BIG, getPosition(), -m_gunRotate, 50)) );
+				gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::BIG, CBullet::PLAYER, getPosition(), -m_gunRotate, 150, 300.f)) );
 				gGame->bulletCounter++;
 				m_stamina -= 10.f;
 			}
@@ -272,19 +287,20 @@ void CPlayer::shoot(sf::RenderWindow & App)
 			if( m_stamina >= 20.f )
 			{
 				sf::Vector2f bPos = getPosition();
-				gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::NORMAL, bPos, -m_gunRotate, 50)) );
+				gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::TRIPLE, CBullet::PLAYER, bPos, -m_gunRotate, 75, 500.f)) );
 				bPos.x += 30;
 				bPos.y += 30;
-				gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::NORMAL, bPos, -m_gunRotate, 50)) );
+				gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::TRIPLE, CBullet::PLAYER, bPos, -m_gunRotate, 75, 500.f)) );
 				bPos.x -= 60;
 				bPos.y -= 60;
-				gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::NORMAL, bPos, -m_gunRotate, 50)) );
+				gGame->mg_bulletsList.push_back( std::make_shared<CBullet>(CBullet(App, CBullet::TRIPLE, CBullet::PLAYER, bPos, -m_gunRotate, 75, 500.f)) );
 				gGame->bulletCounter += 3;
 				m_stamina -= 20.f;
 			}
 		}
 		
 		m_shootClock.restart();
+		//gGame->play("res/audio/shoot2.wav", false);
 	}
 	
 }
@@ -311,7 +327,7 @@ void CPlayer::changePlayerState(CActor::State stan)
 			{
 				m_state = CActor::WALKING_U;
 				m_animationSprite->setAnimation( *m_ani_walkingU );
-				m_animationSprite->setFrameTime( sf::milliseconds(50) );
+				m_animationSprite->setFrameTime( sf::milliseconds(30) );
 				m_speed = 100.f;
 			}
 			break;
@@ -349,6 +365,11 @@ void CPlayer::changePlayerState(CActor::State stan)
 
 void CPlayer::updateStamina()
 {
+	if( m_stamina > MAXSTAMINA )
+	{
+		m_stamina = MAXSTAMINA;
+	}
+
 	if( m_state == CActor::RUNNING )
 	{
 		if( m_staminaClock.getElapsedTime().asSeconds() >= 0.5f )

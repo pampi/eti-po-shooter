@@ -21,6 +21,9 @@ CGame::CGame()
 
 	currentLevel = 0;
 	bulletCounter = 0;
+	corpseCounter = 0;
+
+	m_podsumowane = false;
 }
 
 CGame::~CGame()
@@ -76,7 +79,6 @@ int CGame::Step(sf::RenderWindow & App)
 		App.clear();
 
 
-
 		// tick timer
 		m_deltaTime = m_deltaClock.restart();
 
@@ -91,7 +93,7 @@ int CGame::Step(sf::RenderWindow & App)
 
 		manageGameStates(App);
 
-		
+		updateSound();
 
 	
 		// Rysuj DebugDraw
@@ -102,7 +104,7 @@ int CGame::Step(sf::RenderWindow & App)
         gFPS.update();
 
 		// Sleep żeby proca nie katowało
-		sf::sleep(sf::milliseconds(10));
+		//sf::sleep(sf::milliseconds(10));
 
 		App.display();
 	} // main loop
@@ -115,10 +117,11 @@ void CGame::m_Init(sf::RenderWindow & App)
     // Laduj poziom
     gResources.loadLevel(currentLevel);
 
-	m_player = new CPlayer("1", gResources.loadPlayerStartPosition(), CActor::STAYING, 100.f, 0.f, 0.f, "res/img/dude.png");
+	m_player = new CPlayer("1", gResources.loadPlayerStartPosition(), CActor::STAYING, 500.f, 0.f, 0.f, "res/img/dude.png");
     
-
-
+	m_blackGround.setFillColor(sf::Color::Black);
+	m_blackGround.setPosition(sf::Vector2f(350,200));
+	m_blackGround.setSize(sf::Vector2f(500,300));
 }
 
 void CGame::drawGui(sf::RenderWindow & App)
@@ -157,6 +160,14 @@ void CGame::drawGui(sf::RenderWindow & App)
 							buff<<"Used bullets: "<<bulletCounter;
 							textbox->setText( buff.str().c_str() );
 						}
+
+						if( *textbox->getID() == "corpseCounter" )
+						{
+							std::ostringstream buff;
+							buff<<"Zombies killed: "<<corpseCounter;
+							textbox->setText( buff.str().c_str() );
+						}
+
                         textbox->draw(App);
                     }
 					break;
@@ -307,7 +318,6 @@ void CGame::updateQuadTree(sf::RenderWindow & App)
 	}
 
 	
-	
 }
 
 void CGame::manageGameStates(sf::RenderWindow & App)
@@ -371,6 +381,9 @@ void CGame::manageGameStates(sf::RenderWindow & App)
 			m_player->update(App, m_deltaTime);
 			m_player->draw(App);
 			
+			// akutalizacja wrogów
+			updateEnemies(App);
+
 			// aktualizacja ekspolzji
 			updateExplosion(App, m_deltaTime);
 
@@ -386,20 +399,78 @@ void CGame::manageGameStates(sf::RenderWindow & App)
 	case CGame::SHOWINGMENU :
 		{
 			gDDraw.add("MENU\n");
-			
 
+			if( m_podsumowane )
+			{
+				m_podsumowane = false;
+				getPlayer()->setHP(500.f);
+				getPlayer()->changePlayerState(CActor::STAYING);
+			}
+			
 			m_view->setCenter(650,450);
 			App.setView(*m_view);
 
 			// rysuj mapę
 			if(gResources.pTmxMap) gResources.drawMap(App);
 			
+			// aktualizuje drzewo kolizji
+			updateQuadTree(App);
+
+			// obsługa gracza
 			m_player->update(App, m_deltaTime);
 			m_player->draw(App);
+
 
 			// rysowanie statyczne
 			App.setView(App.getDefaultView());
 			drawGui(App);
+
+
+			
+
+
+			break;
+		}
+
+	case CGame::GAME_OVER :
+		{
+			gDDraw.add("GAME OVER\n");
+
+			
+
+			// rysowanie dynamiczne
+			App.setView(*m_view);
+			m_view->setCenter(m_player->getPosition());
+
+			// rysuj mapę
+			if(gResources.pTmxMap) gResources.drawMap(App);
+
+			// aktualiazuje pociski
+			updateBullets(App);
+
+			// obsługa gracza
+			m_player->draw(App);
+
+			// akutalizacja wrogów
+			updateEnemies(App);
+
+			// aktualizacja ekspolzji
+			updateExplosion(App, m_deltaTime);
+
+			// rysowanie statyczne
+			App.setView(App.getDefaultView());
+
+			// podsumowanie
+			gameOver(App);
+
+			// rysuj GUI
+			drawGui(App);
+
+
+			
+			
+
+
 			break;
 		}
 
@@ -431,13 +502,54 @@ void CGame::updateBullets(sf::RenderWindow & App)
 		std::vector<CollisionObject*> odp = gGame->collisionTree->getObjectsAt( (*it)->fRect.top,  (*it)->fRect.left );
 		BOOST_FOREACH(CollisionObject* obj, odp)
 		{
-			obj->draw(App);
+			//obj->draw(App);
 			if( checkCircleRectangleCollisiton( (*it)->cShape, obj->rShape ) )
 			{
 				(*it)->setToDelete();
 				addExplosion( (*it)->m_sprite.getPosition() );
+				if( (*it)->bulletOwner == CBullet::PLAYER )
+				{
+					//gGame->play("res/audio/explosion2.ogg", false);
+				}
 			}
 		}
+		// #########################################
+
+
+		// sprawdzanie kolizji pociskow wroga z graczem
+		if( (*it)->bulletOwner == CBullet::ENEMY )
+		{
+			if( checkCircleRectangleCollisiton( (*it)->cShape, getPlayer()->m_rShape ) )
+			{
+				(*it)->setToDelete();
+				addExplosion( (*it)->m_sprite.getPosition() );
+				getPlayer()->setHP( getPlayer()->getHP() - (*it)->getBulletDamage() );
+				//gGame->play("res/audio/explosion2.ogg", false);
+			}
+		}
+		// #########################################
+
+
+
+		// sprawdzanie kolizji pociskow gracza z wrogami
+		if( (*it)->bulletOwner == CBullet::PLAYER )
+		{
+			for(std::list< std::shared_ptr<class CEnemy> >::iterator itE = mg_enemiesList.begin(); itE != mg_enemiesList.end(); itE++)
+			{	
+				if( checkCircleRectangleCollisiton( (*it)->cShape, (*itE)->rShape ) )
+				{
+					(*it)->setToDelete();
+					addExplosion( (*it)->m_sprite.getPosition() );
+					(*itE)->setHP( (*itE)->getHP() - (*it)->getBulletDamage() );
+					//gGame->play("res/audio/explosion2.ogg", false);
+				}
+			}
+		}
+	
+		// ##############################################
+
+
+
 
 		if( (*it)->toDelete() )
 		{
@@ -502,4 +614,63 @@ float CGame::findDistance(float fromX, float fromY, float toX, float toY)
 	float b = abs( fromY - toY );
 
 	return sqrt( (a*a) + (b*b) );
+}
+
+float CGame::findDistance(sf::Vector2f From, sf::Vector2f To)
+{
+	float a = abs( From.x - To.x );
+	float b = abs( From.y - To.y );
+
+	return sqrt( (a*a) + (b*b) );
+}
+
+void CGame::updateEnemies(sf::RenderWindow & App)
+{
+	for(std::list< std::shared_ptr<class CEnemy> >::iterator it = mg_enemiesList.begin(); it != mg_enemiesList.end();  )
+	{
+		if( (*it)->isAlive() )
+		{
+			if( gameState != GAME_OVER )
+			{
+				(*it)->update(App, m_deltaTime);
+			}
+			(*it)->draw(App);
+			it++;
+		}
+		else
+		{
+			it = mg_enemiesList.erase(it);
+			getPlayer()->setStamina( getPlayer()->getStamina() + 20.f );
+			corpseCounter++;
+		}
+
+	}
+	gDDraw.add((float)mg_enemiesList.size(), "Enemies: ");
+}
+
+void CGame::gameOver(sf::RenderWindow & App)
+{
+	if( !m_podsumowane )
+	{
+		std::ostringstream buff;
+		buff<<"Used bullets: "<<bulletCounter;
+		
+		std::ostringstream buff2;
+		buff2<<"Total time: "<<gameTimer.getElapsedTime().asSeconds();
+
+		std::ostringstream buff3;
+		buff3<<"Zombie Killed: "<<corpseCounter;
+
+		add_score_to_internet((unsigned int)(gameTimer.getElapsedTime().asSeconds()), bulletCounter);
+
+		gResources.addTextBox(sf::Vector2f(470, 200), 40, "GAME OVER", "napis", false);
+		gResources.addTextBox(sf::Vector2f(470, 250), 30, std::string(buff.str()), "napis1", false, sf::Color::Blue);
+		gResources.addTextBox(sf::Vector2f(470, 300), 30, std::string(buff2.str()), "napis2", false, sf::Color::Yellow);
+		gResources.addTextBox(sf::Vector2f(470, 350), 30, std::string(buff3.str()), "napis3", false, sf::Color::Green);
+		gResources.addButton(sf::Vector2f(470, 450), 20, "BACK TO MAIN MENU", "backToBack", "nowy", false);
+
+		m_podsumowane = true;
+	}
+
+	App.draw(m_blackGround);
 }
